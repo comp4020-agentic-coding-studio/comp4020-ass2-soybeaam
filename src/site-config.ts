@@ -1,4 +1,4 @@
-import { defineSiteConfig } from "astro-theme-university/types";
+import { defineSiteConfig, type SidebarSection } from "astro-theme-university/types";
 import { slopBranding } from "astro-theme-slop";
 import { courseMeta } from "./course-config";
 
@@ -8,6 +8,22 @@ export const sessionLabels = {
   singular: "Session",
   plural: "Sessions",
 } as const;
+
+// Same destinations as the top nav's `links`, reused as the left-hand
+// sidebar so wayfinding is consistent whichever one a visitor notices first.
+export const sidebarSections: SidebarSection[] = [
+  {
+    title: "Course",
+    items: [
+      { label: "Home", href: "/" },
+      { label: "Lectures", href: "/lectures/" },
+      { label: sessionLabels.plural, href: "/sessions/" },
+      { label: "Assessment", href: "/assessments/" },
+      { label: "People", href: "/people/" },
+      { label: "Policies", href: "/policies/" },
+    ],
+  },
+];
 
 export const graphCollections = ["sessions", "assessments", "lectures", "people"];
 
