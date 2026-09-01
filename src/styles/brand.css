@@ -1,16 +1,24 @@
 /* Google Classroom-inspired brand for The Art of the Excuse.
  *
  * Loaded after the theme's own tokens/base/component layers (as `brandCss` in
- * astro.config.ts), so it wins the cascade without `!important`. Token
- * overrides drive every derived surface colour (--at-bg, --at-nav, --at-link,
- * etc. all key off --at-primary via relative colour syntax in tokens.css);
- * the rules below add the Classroom card banner and a plain white nav strip,
- * which the base theme doesn't derive automatically. */
+ * astro.config.ts), so it wins the cascade without `!important`. Strict
+ * three-colour palette: white background, black text, dark yellow (the Slop
+ * crest's own gold) as the only accent — so surfaces/text are pinned directly
+ * rather than left to tokens.css's default oklch-from-primary derivation
+ * (which tints backgrounds and softens text toward the accent hue). */
 :root {
-  --at-primary: #1e8e3e;
-  --at-secondary: #188038;
-  --at-tertiary: #5f6368;
+  --at-primary: #b97d1c;
+  --at-secondary: #b97d1c;
+  --at-tertiary: #b97d1c;
   --at-border-radius: 0.75rem;
+
+  --at-bg: #fff;
+  --at-bg-alt: #fff;
+  --at-bg-elevated: #fff;
+  --at-text: #000;
+  --at-text-secondary: #000;
+  --at-text-muted: #000;
+  --at-heading: #000;
 }
 
 /* Plain white top bar with a thin rule, instead of a tinted nav surface. */
@@ -35,7 +43,7 @@
   inset-inline: 0;
   inset-block-start: 0;
   block-size: 4.5rem;
-  background: linear-gradient(135deg, var(--at-primary), var(--at-secondary));
+  background: var(--at-primary);
   border-start-start-radius: var(--at-border-radius);
   border-start-end-radius: var(--at-border-radius);
 }
