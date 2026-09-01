@@ -1,17 +1,23 @@
 ---
 title: Idris Fenn
 description:
-  A tutor working across the course's first reviews and the practical work that
-  follows them.
+  A teaching associate with a background in linguistics, marking the weekly
+  analysis work and running the case-study sessions.
 affiliation: Slop University School of Invented Disciplines
-role: tutor
+role: teaching associate
 email: idris.fenn@slop.university
 contact: Ask during sessions, or email when a question cannot wait until the next one.
 photo: ./idris-fenn.avif
 photoAlt: A stylised portrait of a person facing the viewer, flat gold and black shapes on warm cream, in a two-ink risograph print
 ---
 
-<!-- STARTER_CONTENT: replace this person entry, then remove this comment. -->
+Idris researches hedging and deflection in spoken language — the "well" and
+"look" and "to be fair" that buy a speaker a second to build their excuse.
+He marks the weekly analysis exercises and runs the group case-study sessions
+from week 8 onward.
 
-Replace this entry. A second person makes the listing, role ordering and
-teacher-reference fields visible before you replace the cast with your own.
+## Getting in touch
+
+Ask during your weekly session first — most marking questions are quicker to
+answer live. Email for anything that needs a written answer, such as a
+challenge to a mark.

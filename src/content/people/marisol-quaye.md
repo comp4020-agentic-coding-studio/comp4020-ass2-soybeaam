@@ -1,8 +1,8 @@
 ---
 title: Marisol Quaye
 description:
-  The founding convenor, responsible for the course's shape and its weekly
-  teaching programme.
+  The founding convenor, a former corporate communications writer who left
+  the industry after being asked to draft one non-apology too many.
 affiliation: Slop University School of Invented Disciplines
 role: convenor
 email: marisol.quaye@slop.university
@@ -11,11 +11,19 @@ photo: ./marisol-quaye.avif
 photoAlt: A stylised portrait of a person in three-quarter view, flat gold and black shapes on warm cream, in a two-ink risograph print
 ---
 
-<!-- STARTER_CONTENT: replace this person entry, then remove this comment. -->
+Marisol spent nine years writing statements for companies that had done
+something wrong and needed to say so without saying so. She now teaches the
+craft from the other side: how to read what a non-apology is actually admitting,
+and — in the capstone — how to write one that holds up under questioning.
 
-Replace this entry. A people page carries a short bio and whatever a student
-needs in order to contact the right person for the right thing --- and nothing
-that will be stale by week 3.
+## Consultation
 
-Consultation hours, contact preferences and the escalation path (who to ask
-first, who to ask when that does not work) are the parts students actually read.
+Drop-in hours are announced each week in the session brief. For anything that
+cannot wait, email — expect a reply within two working days, not an
+instantaneous one; that would defeat the point of the course.
+
+## Escalation
+
+Start with your weekly session for feedback on work. Email Marisol for
+course-level questions (deadlines, extensions, marks). For anything about
+[Idris](/people/idris-fenn/)'s marking specifically, ask Idris first.
