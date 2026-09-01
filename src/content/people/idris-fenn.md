@@ -1,10 +1,10 @@
 ---
 title: Idris Fenn
 description:
-  A teaching associate with a background in linguistics, marking the weekly
-  analysis work and running the case-study sessions.
+  A tutor with a background in linguistics, marking the weekly analysis
+  work and running the case-study sessions.
 affiliation: Slop University School of Invented Disciplines
-role: teaching associate
+role: tutor
 email: idris.fenn@slop.university
 contact: Ask during sessions, or email when a question cannot wait until the next one.
 photo: ./idris-fenn.avif

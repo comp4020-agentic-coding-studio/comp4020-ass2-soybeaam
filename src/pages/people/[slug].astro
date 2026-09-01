@@ -17,6 +17,7 @@ const { Content } = await render(person);
 const roleLabels: Record<string, string> = {
   convenor: "Convenor",
   tutor: "Tutor",
+  student: "Student",
   guest: "Guest lecturer",
   other: "",
 };
@@ -66,8 +67,12 @@ const description = person.data.description;
         </dd>
       </>
     )}
-    <dt>Contact</dt>
-    <dd>{person.data.contact}</dd>
+    {person.data.contact && (
+      <>
+        <dt>Contact</dt>
+        <dd>{person.data.contact}</dd>
+      </>
+    )}
   </dl>
 
   <Content />
