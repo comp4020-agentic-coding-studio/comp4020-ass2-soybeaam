@@ -53,12 +53,12 @@ export const courseMeta = slopCourseMetaSchema.parse({
   year: 2026,
   level: 1,
   startDate: "2026-02-23",
-  endDate: "2026-05-15",
+  endDate: "2026-05-22",
   description:
-    "Twelve weeks on why nobody ever just says 'I was wrong.' We study the " +
+    "Twelve weeks on why nobody just says 'I was wrong.' We study the " +
     "excuse as a designed object: its grammar, its psychology, its use in " +
-    "boardrooms and courtrooms and toddlers' bedrooms, and what a machine " +
-    "does when it confabulates one. You leave able to build a better one, " +
-    "and to spot a bad one from across the room.",
+    "boardrooms, courtrooms and toddlers' bedrooms, and what a machine does " +
+    "when it confabulates one. You leave able to build a better excuse, and " +
+    "spot a bad one on sight.",
   tags: ["rhetoric", "psychology", "design"],
 }) satisfies CourseMetaInput;

@@ -1,36 +1,32 @@
 ---
 title: Getting started
 description:
-  The first session of the semester — what to have working before you arrive,
-  and what happens once you do
+  The first session — what an excuse is, why it needs its own vocabulary, and
+  the excuse each of you brings to class
 week: 1
-date: 2027-02-22
+date: 2026-02-23
 teachers:
   - marisol-quaye
 spec:
-  - your development environment runs the course's toolchain
-  - you can build and preview the site locally
-  - you have something, however rough, to show the class
+  - you can name three real excuses you have given or received in the last month
+  - you can state, in one sentence, what an excuse does that a plain apology does not
+  - you have picked the excuse you will analyse for week 4
 ---
-
-<!-- STARTER_CONTENT: replace this session, then remove this comment. -->
-
-Replace this page. A session brief tells a student three things: what to bring,
-what will happen, and how to tell afterwards whether it went well.
 
 ## Before the session
 
-The `spec` above is the contract. Write each line so a reader can tell whether
-it has been met without asking you --- that is the difference between a spec and
-a wish.
+Bring three real excuses — yours, a family member's, or one from the news.
+They do not need to be good ones.
 
 ## In the session
 
-Say how the time is actually spent, in the order it happens. If the session runs
-to a repeating shape --- a demo, then feedback, then work time --- name the
-parts and say roughly how long each takes. Students plan against it.
+We open by sorting the excuses you brought into a rough taxonomy on the board:
+denial, justification, and diffusion of responsibility. Then a short lecture
+(see the [linked deck](/lectures/week-01/)) on why "sorry" and an excuse are
+doing different jobs, even when they show up in the same sentence.
 
 ## Afterwards
 
-Say what leaves the session: a mark, a piece of feedback, a decision about the
-next week's work.
+Pick the excuse you will spend week 4's [teardown](/assessments/excuse-teardown/)
+on. It can be one from today or a new one — the only rule is that it has to
+be real, not invented.

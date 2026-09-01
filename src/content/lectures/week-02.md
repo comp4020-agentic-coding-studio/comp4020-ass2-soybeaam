@@ -1,23 +1,22 @@
 ---
-title: Second lecture
+title: The Grammar of Deflection
 description:
-  Week 2 — the first substantive material, and the run-up to the first review
+  Week 2 — the linguistic structures that let an excuse move blame without
+  ever naming it
 week: 2
-date: 2027-03-01
+date: 2026-03-02
 teachers:
   - idris-fenn
 related:
-  - sessions/02-first-review
-  - assessments/assignment-1
+  - sessions/02-grammar-of-deflection
 ---
 
-<!-- STARTER_CONTENT: replace this lecture, then remove this comment. -->
-
-Replace this page. It exists so the lectures listing sorts by week and the
-related block has more than one edge to draw.
+Where week 1 asked *what* an excuse does, week 2 asks *how* — down to the
+level of the sentence.
 
 ## Outline
 
-- the first substantive material, and where it shows up in practice
-- what the first review is looking for
-- reading before next week
+- passive voice as agent-removal: "mistakes were made"
+- hedges that buy time: "look", "to be fair", "in fairness"
+- nominalisation: turning an action into a noun to hide who did it
+- reading before next week: none — bring your three rewrites from the workshop

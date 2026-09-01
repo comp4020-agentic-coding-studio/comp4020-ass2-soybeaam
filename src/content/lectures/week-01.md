@@ -1,10 +1,10 @@
 ---
-title: Opening lecture
+title: Why We Excuse
 description:
-  The first lecture — what the course is, why it is shaped this way, and what
-  happens in week 1
+  The opening lecture — what an excuse is for, and the three-part taxonomy the
+  rest of the course builds on
 week: 1
-date: 2027-02-22
+date: 2026-02-23
 teachers:
   - marisol-quaye
 slides: /decks/week-01/
@@ -12,19 +12,12 @@ related:
   - sessions/01-getting-started
 ---
 
-<!-- STARTER_CONTENT: replace this lecture, then remove this comment. -->
-
-Replace this page. A lecture entry says what was covered and links to the pages
-that own the detail, so the lecture stays short and nothing is explained twice.
-
-The `related:` ref above is a graph edge: it renders on this page and on the
-session's, so declare a connection once, on whichever side is convenient.
-
-The page renders its `slides:` link automatically. Decks are markdown too,
-under `src/decks/`; the path is part of the lecture's API metadata.
+An excuse is not an apology, and confusing the two is the single most common
+mistake in reading one. An apology accepts a fact; an excuse renegotiates it.
 
 ## Outline
 
-- what the course is for
-- how the weeks are shaped
-- what to do before the first session
+- what an excuse is doing that "sorry" is not
+- the three-part taxonomy: denial, justification, diffusion of responsibility
+- why the taxonomy will keep breaking all semester, and why that is useful
+- reading before week 2: none — bring your own excuses instead
