@@ -1,12 +1,12 @@
 ---
 import MdxPageLayout from "astro-theme-university/layouts/MdxPageLayout.astro";
-import Sidebar from "astro-theme-university/components/Sidebar.astro";
 import "astro-theme-university/styles/sidebar.css";
-import { sidebarSections, siteConfig } from "../site-config";
+import AppSidebar from "../components/AppSidebar.astro";
+import { siteConfig } from "../site-config";
 ---
 
 <MdxPageLayout siteConfig={siteConfig} {...Astro.props}>
-  <Sidebar sections={sidebarSections} currentPath={Astro.url.pathname} />
+  <AppSidebar />
   <div class="at-sidebar-content">
     <slot />
   </div>

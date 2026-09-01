@@ -19,6 +19,30 @@
   --at-text-secondary: #000;
   --at-text-muted: #000;
   --at-heading: #000;
+
+  /* Fill the screen: shrink the outer gutter, drop the reserved accent-rule
+     inset, and let the content column use the full available width instead
+     of capping at the theme's default reading-width measure. */
+  --at-gutter: var(--at-spacing-sm);
+  --at-content-inset: 0px;
+  --at-content-width: 100%;
+}
+
+/* The accent rule (body::after) is positioned from --at-content-inset, which
+   is now 0 — drop the rule rather than have it collapse onto the gutter. */
+body::after {
+  display: none;
+}
+
+/* Narrower sidebar than the theme's default 16rem, with the reserved grid
+   gutter (--at-sidebar-inset, set by sidebar.css from the same 16rem figure)
+   shrunk to match so the content column doesn't reserve unused space. */
+body:has(.at-sidebar) {
+  --at-sidebar-inset: calc(11rem + var(--at-spacing-2xl));
+}
+
+.at-main > .at-sidebar {
+  width: 11rem;
 }
 
 /* Plain white top bar with a thin rule, instead of a tinted nav surface. */

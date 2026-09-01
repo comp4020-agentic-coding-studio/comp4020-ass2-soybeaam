@@ -11,20 +11,13 @@ const people = await getPublishedCollection("people");
 const sections = [
   { role: "convenor", heading: "Convenor" },
   { role: "tutor", heading: "Tutors" },
-  { role: "tutor-2026", heading: "2026 Tutors" },
-  { role: "student", heading: "Students" },
 ];
 
-// Only convenor/tutor pages exist as real profiles worth visiting — students
-// are dummy roster entries with no page content, so their rows stay plain
-// text instead of linking anywhere.
-const linkableRoles = new Set(["convenor", "tutor", "tutor-2026"]);
+const linkableRoles = new Set(["convenor", "tutor"]);
 
 const roleLabels: Record<string, string> = {
   convenor: "Convenor",
   tutor: "Tutor",
-  "tutor-2026": "Tutor",
-  student: "Student",
 };
 
 // photoAlt rides the schema's passthrough (definePeopleCollection has no

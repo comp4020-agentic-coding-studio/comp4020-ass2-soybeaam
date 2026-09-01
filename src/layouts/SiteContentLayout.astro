@@ -1,15 +1,14 @@
 ---
 import ContentLayout, { type ContentLayoutProps } from "astro-theme-university/layouts/ContentLayout.astro";
-import Sidebar from "astro-theme-university/components/Sidebar.astro";
 import "astro-theme-university/styles/sidebar.css";
-import { sidebarSections } from "../site-config";
+import AppSidebar from "../components/AppSidebar.astro";
 
 type Props = ContentLayoutProps;
 ---
 
 <ContentLayout {...Astro.props}>
   <slot name="head" slot="head" />
-  <Sidebar sections={sidebarSections} currentPath={Astro.url.pathname} />
+  <AppSidebar />
   <div class="at-sidebar-content">
     <slot />
   </div>

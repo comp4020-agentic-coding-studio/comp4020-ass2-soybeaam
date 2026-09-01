@@ -43,9 +43,3 @@ a student trying to find a date, a reading, or a mark weighting, and confirm
 it still works (`pnpm check`, a manual `pnpm dev` look) rather than looking
 right only in a screenshot.
 
-## Commit as you go
-
-Commit at each real milestone (a section of content, a config change, a new
-spec check) rather than batching everything into one commit at the end —
-`PROCESS.md` cites commits as evidence, and an honest narrative needs real
-commits to point to.

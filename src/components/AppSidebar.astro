@@ -1,0 +1,188 @@
+---
+// Replaces astro-theme-university's stock Sidebar: that component only
+// renders a flat link list, has a fixed 16rem width, and offers no collapse
+// behaviour. This one expands each top-level section into the collection's
+// actual items and adds a CSS-only (no client JS) collapse toggle, while
+// keeping the `.at-sidebar` wrapper as a direct child of `.at-main` so the
+// theme's own grid-placement rules in sidebar.css still apply.
+import { getPublishedCollection } from "astro-course-university/content";
+import { withBase } from "astro-theme-university/url";
+import Icon from "astro-theme-university/components/Icon.astro";
+import { sidebarSections } from "../site-config";
+
+const currentPath = Astro.url.pathname;
+
+type Item = { label: string; href: string };
+
+async function itemsFor(collection?: "sessions" | "lectures" | "assessments" | "people"): Promise<Item[] | undefined> {
+  if (!collection) return undefined;
+  const entries = await getPublishedCollection(collection);
+  if (collection === "sessions" || collection === "lectures") {
+    return entries
+      .slice()
+      .sort((a, b) => (a.data as { week: number }).week - (b.data as { week: number }).week)
+      .map((entry) => ({
+        label: `Week ${(entry.data as { week: number }).week}: ${entry.data.title}`,
+        href: withBase(`/${collection}/${entry.id}/`),
+      }));
+  }
+  return entries
+    .slice()
+    .sort((a, b) => a.data.title.localeCompare(b.data.title))
+    .map((entry) => ({ label: entry.data.title, href: withBase(`/${collection}/${entry.id}/`) }));
+}
+
+const sections = await Promise.all(
+  sidebarSections.map(async (section) => ({
+    ...section,
+    href: withBase(section.href),
+    items: await itemsFor(section.collection),
+  })),
+);
+
+function sectionIsCurrent(sectionHref: string): boolean {
+  return currentPath.startsWith(sectionHref);
+}
+---
+
+<input type="checkbox" id="sidebar-collapsed" class="sidebar-collapsed-toggle" />
+<label for="sidebar-collapsed" class="sidebar-toggle-label">
+  <Icon name="menu" size="1.25rem" />
+  <span class="sr-only">Toggle sidebar</span>
+</label>
+
+<div class="at-sidebar">
+  <nav aria-label="Sections">
+    <ul>
+      {
+        sections.map((section) => (
+          <li>
+            {section.items && section.items.length > 0 ? (
+              <details open={sectionIsCurrent(section.href)}>
+                <summary>{section.title}</summary>
+                <ul class="sidebar-items">
+                  <li>
+                    <a href={section.href} aria-current={currentPath === section.href ? "page" : undefined}>
+                      Overview
+                    </a>
+                  </li>
+                  {section.items.map((item) => (
+                    <li>
+                      <a href={item.href} aria-current={currentPath === item.href ? "page" : undefined}>
+                        {item.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            ) : (
+              <a href={section.href} aria-current={currentPath === section.href ? "page" : undefined}>
+                {section.title}
+              </a>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+</div>
+
+<style>
+  .sidebar-collapsed-toggle {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .sidebar-toggle-label {
+    position: fixed;
+    inset-block-start: calc(var(--at-nav-height, 3.5rem) + var(--at-spacing-sm));
+    inset-inline-start: var(--at-spacing-sm);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 2.25rem;
+    block-size: 2.25rem;
+    border: 1px solid var(--at-divider, #000);
+    border-radius: var(--at-border-radius);
+    background: var(--at-bg);
+    cursor: pointer;
+  }
+
+  .at-sidebar nav > ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .at-sidebar li + li {
+    margin-block-start: var(--at-spacing-sm);
+  }
+
+  .at-sidebar a {
+    display: block;
+    padding: var(--at-spacing-xs) var(--at-spacing-sm);
+    border-radius: var(--at-border-radius);
+    color: var(--at-text-secondary);
+    text-decoration: none;
+  }
+
+  .at-sidebar a:hover,
+  .at-sidebar a:focus-visible {
+    background: var(--at-bg-alt, #f5f5f5);
+  }
+
+  .at-sidebar a[aria-current="page"] {
+    background: var(--at-primary);
+    color: #fff;
+  }
+
+  .at-sidebar summary {
+    cursor: pointer;
+    list-style: none;
+    padding: var(--at-spacing-xs) var(--at-spacing-sm);
+    border-radius: var(--at-border-radius);
+    color: var(--at-text);
+    font-weight: 600;
+  }
+
+  .at-sidebar summary:hover,
+  .at-sidebar summary:focus-visible {
+    background: var(--at-bg-alt, #f5f5f5);
+  }
+
+  .sidebar-items {
+    list-style: none;
+    margin: var(--at-spacing-xs) 0 0;
+    padding-inline-start: var(--at-spacing-sm);
+    font-size: var(--at-font-size-sm);
+  }
+
+  /* Collapse: hide the sidebar and reclaim its reserved grid gutter. */
+  .sidebar-collapsed-toggle:checked ~ .at-sidebar {
+    width: 0;
+    min-width: 0;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    border: none;
+  }
+
+  :global(body:has(.sidebar-collapsed-toggle:checked)) {
+    --at-sidebar-inset: 0px;
+  }
+</style>

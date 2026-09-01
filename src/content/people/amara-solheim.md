@@ -4,7 +4,7 @@ description:
   A 2026-cohort tutor with a background in cross-cultural communication,
   marking the cross-cultural-excuses unit and running its comparison seminar.
 affiliation: Slop University School of Invented Disciplines
-role: tutor-2026
+role: tutor
 email: amara.solheim@slop.university
 contact: Ask during sessions, or email for anything that needs a written answer.
 ---

@@ -4,7 +4,7 @@ description:
   A 2026-cohort tutor with a background in workplace mediation, running the
   small-excuses marking and the blame-shifting week discussion groups.
 affiliation: Slop University School of Invented Disciplines
-role: tutor-2026
+role: tutor
 email: theo.marsh@slop.university
 contact: Ask during sessions, or email for anything that needs a written answer.
 ---

@@ -4,7 +4,7 @@ description:
   A 2026-cohort tutor with a background in theatre directing, running the
   case-study presentations and coaching delivery for the capstone defence.
 affiliation: Slop University School of Invented Disciplines
-role: tutor-2026
+role: tutor
 email: felix.brandt@slop.university
 contact: Ask during sessions, or email for anything that needs a written answer.
 ---
