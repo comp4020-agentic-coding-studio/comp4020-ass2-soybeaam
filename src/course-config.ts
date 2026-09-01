@@ -46,17 +46,19 @@ export const slopCourseMetaSchema = z
 // The code's last three digits were assigned to this repo when it was
 // provisioned, and no other course in the cohort has them. Change the first
 // digit to your course's level (and `level` to match); keep the other three.
-// STARTER_CONTENT: replace this course record, then remove this comment.
 export const courseMeta = slopCourseMetaSchema.parse({
   code: "SLOP1626",
-  title: "Course Title Goes Here",
+  title: "The Art of the Excuse",
   session: "Semester 1",
-  year: 2027,
+  year: 2026,
   level: 1,
-  startDate: "2027-02-22",
-  endDate: "2027-05-28",
+  startDate: "2026-02-23",
+  endDate: "2026-05-15",
   description:
-    "One concise paragraph explaining what this course is, who it is for, " +
-    "and why somebody would choose to spend a semester taking it.",
-  tags: ["replace me"],
+    "Twelve weeks on why nobody ever just says 'I was wrong.' We study the " +
+    "excuse as a designed object: its grammar, its psychology, its use in " +
+    "boardrooms and courtrooms and toddlers' bedrooms, and what a machine " +
+    "does when it confabulates one. You leave able to build a better one, " +
+    "and to spot a bad one from across the room.",
+  tags: ["rhetoric", "psychology", "design"],
 }) satisfies CourseMetaInput;
