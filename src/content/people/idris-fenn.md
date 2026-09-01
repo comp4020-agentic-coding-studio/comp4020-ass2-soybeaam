@@ -8,7 +8,7 @@ role: teaching associate
 email: idris.fenn@slop.university
 contact: Ask during sessions, or email when a question cannot wait until the next one.
 photo: ./idris-fenn.avif
-photoAlt: A stylised portrait of a person facing the viewer, flat gold and black shapes on warm cream, in a two-ink risograph print
+photoAlt: A stylised silhouette portrait, flat dark-brown shapes with a gold fringe and collar on warm cream, in a two-ink risograph print
 ---
 
 Idris researches hedging and deflection in spoken language — the "well" and
