@@ -43,11 +43,13 @@ export const slopCourseMetaSchema = z
 // Replace every placeholder value, but keep the shape: the catalogue ingests
 // this API contract when the course is published.
 //
-// The code's last three digits were assigned to this repo when it was
-// provisioned, and no other course in the cohort has them. Change the first
-// digit to your course's level (and `level` to match); keep the other three.
+// NOTE: the repo was originally provisioned with SLOP1626, whose last three
+// digits ("626") were assigned uniquely within the cohort catalogue. This was
+// changed to SLOP1013 on request; that suffix isn't guaranteed collision-free
+// against another student's course. Revert to SLOP1626 before submission if
+// that matters.
 export const courseMeta = slopCourseMetaSchema.parse({
-  code: "SLOP1626",
+  code: "SLOP1013",
   title: "The Art of the Excuse",
   session: "Semester 1",
   year: 2026,

@@ -1,0 +1,45 @@
+/* Google Classroom-inspired brand for The Art of the Excuse.
+ *
+ * Loaded after the theme's own tokens/base/component layers (as `brandCss` in
+ * astro.config.ts), so it wins the cascade without `!important`. Token
+ * overrides drive every derived surface colour (--at-bg, --at-nav, --at-link,
+ * etc. all key off --at-primary via relative colour syntax in tokens.css);
+ * the rules below add the Classroom card banner and a plain white nav strip,
+ * which the base theme doesn't derive automatically. */
+:root {
+  --at-primary: #1e8e3e;
+  --at-secondary: #188038;
+  --at-tertiary: #5f6368;
+  --at-border-radius: 0.75rem;
+}
+
+/* Plain white top bar with a thin rule, instead of a tinted nav surface. */
+.at-nav {
+  background: #fff;
+  border-block-end: 1px solid var(--at-divider);
+}
+
+/* Classroom's stream tiles: a flat colour banner across the top of the card,
+ * rounded to match the card's own corners. */
+.at-card {
+  border-radius: var(--at-border-radius);
+}
+
+.at-card:not(:has(.at-card-image-frame)) {
+  position: relative;
+}
+
+.at-card:not(:has(.at-card-image-frame))::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 0;
+  block-size: 4.5rem;
+  background: linear-gradient(135deg, var(--at-primary), var(--at-secondary));
+  border-start-start-radius: var(--at-border-radius);
+  border-start-end-radius: var(--at-border-radius);
+}
+
+.at-card:not(:has(.at-card-image-frame)) > .at-card-body {
+  padding-block-start: calc(4.5rem + var(--at-spacing-md));
+}

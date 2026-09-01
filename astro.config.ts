@@ -1,3 +1,4 @@
+import { fileURLToPath } from "node:url";
 import { defineConfig } from "astro/config";
 import courseGraph from "astro-course-university";
 import universityTheme from "astro-theme-university";
@@ -8,6 +9,11 @@ import { gitOrigin, resolveDeployment } from "./scripts/pages-base.ts";
 
 // Derived, never hardcoded --- see scripts/pages-base.ts for why.
 const { site, base } = resolveDeployment(process.env, gitOrigin);
+
+// brandCss is injected as a bare `import "<spec>"` string into a virtual
+// module with no directory context of its own, so a relative "./" path can't
+// resolve --- it needs a real filesystem path.
+const brandCssPath = fileURLToPath(new URL("./src/styles/brand.css", import.meta.url));
 
 export default defineConfig({
   site,
@@ -22,7 +28,10 @@ export default defineConfig({
       defaultLayout: "src/layouts/PageLayout.astro",
       // The whole brand choice: three colour tokens and a set of lockups. Keep
       // institutional brand packages and assets out of this fictional site.
-      brandCss: "astro-theme-slop/slop.css",
+      // Colour/card treatment is ours (Google Classroom-style green + banner
+      // cards); the Slop wordmark/crest assets are still supplied by
+      // slopBranding in site-config.ts.
+      brandCss: brandCssPath,
       imageFormat: "avif",
       llmsTxt: true,
       // The theme owns the markdown plugin chain, so astromotion's slide
