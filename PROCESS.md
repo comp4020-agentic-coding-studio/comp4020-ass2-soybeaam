@@ -1,9 +1,5 @@
 # Process overview
 
-<!-- TEMPLATE: this file is a shape to fill in, not a form. Replace everything
-     in it with your own overview, and delete this comment — `pnpm
-     check:evidence` will remind you if it's still here. -->
-
 Written by you, for a reader: how you got from the brief to the harness and
 agentic workflow behind this submission. Markers read this file and follow its
 citations; they don't trawl the repo for evidence you didn't point at.
@@ -16,31 +12,61 @@ cover every deliverable.
 
 ## What I built
 
-One paragraph: the thing, and the idea behind it.
+**The Art of the Excuse**, a fictional twelve-week course for Slop University
+on the rhetoric, psychology, and design of excuses — from a toddler's alibi to
+a chatbot's confabulated justification — taught through a taxonomy of denial,
+justification, and diffusion of responsibility that the course builds in
+week 1 and spends the rest of the semester stress-testing.
 
 ## How I got here
 
-The account of the process: how the work actually went, and how you knew the
-result was right. Tell it in whatever order makes it clear. A weekly prototype
-needs a paragraph or two; an assignment needs more.
+I asked Claude for course ideas fitting the brief's constraint — niche enough
+no real curriculum committee would approve it, but with real disciplinary
+depth. From five options it offered, I picked "The Art of the Excuse" for
+having the most obvious backbone (rhetoric and social psychology) to sustain
+twelve distinct weeks without repeating itself.
 
-Cite the record as you go, as links whose text is the commit hash or range and
-whose target is this repo's commit or compare URL, so a reader clicks straight
-to the evidence:
+Before writing content, Claude explored the template's actual schema —
+`src/content.config.ts`'s four collections, `course-config.ts`'s validated
+fields, and existing placeholder files — rather than guessing the shape, and
+proposed a plan I approved before any file changed: course meta first, then
+people, then all twelve weeks in three passes, then custom spec checks, then
+this file.
 
-- one commit: [`a1b2c3d`](https://github.com/YOUR-ORG/YOUR-REPO/commit/a1b2c3d)
-- a range:
-  [`a1b2c3d...e4f5a6b`](https://github.com/YOUR-ORG/YOUR-REPO/compare/a1b2c3d...e4f5a6b)
+[`c43cfb8`](https://github.com/comp4020-agentic-coding-studio/comp4020-ass2-soybeaam/commit/c43cfb8)
+set the course record, homepage copy, and policies page. This is where I made
+the one deliberate policy joke — extensions are not granted for "my
+excuse-writing course made me realise my excuse wasn't good enough" — that I
+kept because it's a claim the course's own content backs up, not a throwaway
+line.
 
-To pair a prompt with the commit it produced, quote the prompt (curated, not a
-full transcript) next to the citation:
+[`5039403`](https://github.com/comp4020-agentic-coding-studio/comp4020-ass2-soybeaam/commit/5039403)
+gave the two teaching staff real backstories (a convenor who used to write
+corporate non-apologies for a living) instead of generic bios, so the
+`related:` links between people and their teaching weeks mean something.
 
-> the prompt, verbatim
+[`fa3d3c7`](https://github.com/comp4020-agentic-coding-studio/comp4020-ass2-soybeaam/commit/fa3d3c7)
+is the largest commit: all twelve session/lecture pairs and the four
+assessments. Building this, `pnpm check` caught two real mistakes rather than
+me eyeballing them — a `spec/data-integrity.test.ts` failure showed week 12
+fell after my first-guess `endDate`, and the build itself rejected a
+`marking.description` string that read as YAML because it contained a bare
+colon (fixed with a folded `>` scalar). Both fixes are recorded in
+`CLAUDE.md` so I don't repeat them.
 
-Screenshots are welcome where one carries the point better than a sentence does.
-Commit the file to this repo and link it with a **relative** path, which is what
-makes it render on GitHub: `![alt text](docs/before.png)`. Images don't count
-towards the word count and don't replace the citation.
+[`65e5810`](https://github.com/comp4020-agentic-coding-studio/comp4020-ass2-soybeaam/commit/65e5810)
+adds `spec/course-shape.test.ts`: it checks the promises specific to *this*
+course rather than the platform's generic ones — exactly twelve weeks,
+assessment weights summing to 100, at least one lecture with a resolvable
+slide deck, and every session/lecture pair cross-linked. I chose these four
+because they're the ones a careless edit could silently break without a human
+noticing (a thirteenth week, a rounding error in weights), not because they
+were easy to write.
+
+I knew the result was right when `pnpm check` was green after each commit,
+not just at the end, and when I walked the built site myself — homepage,
+weeks 1, 6 and 12, an assessment, the week-1 deck, and the policies page — the
+same tour the assessment page says a marker runs.
 
 ## Before you ship
 
