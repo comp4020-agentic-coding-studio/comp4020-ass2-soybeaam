@@ -32,6 +32,17 @@ Twelve of each, one per week, and each pair references the other via
 `related:` (declare the edge on whichever side is convenient — it renders on
 both). `spec/course-shape.test.ts` enforces both the count and the cross-link.
 
+## Design priorities: efficiency, usability, understandability, functionality
+
+Site design and layout decisions (theme, navigation, card/content structure)
+should optimise for a visitor getting to the information they need quickly
+and without confusion — not for decoration. When restyling or adding UI,
+prefer the simpler, more legible option over a more elaborate one, check
+that it doesn't add friction (extra clicks, unclear labels, dense pages) for
+a student trying to find a date, a reading, or a mark weighting, and confirm
+it still works (`pnpm check`, a manual `pnpm dev` look) rather than looking
+right only in a screenshot.
+
 ## Commit as you go
 
 Commit at each real milestone (a section of content, a config change, a new
