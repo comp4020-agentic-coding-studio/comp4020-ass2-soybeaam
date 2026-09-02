@@ -43,3 +43,4 @@ a student trying to find a date, a reading, or a mark weighting, and confirm
 it still works (`pnpm check`, a manual `pnpm dev` look) rather than looking
 right only in a screenshot.
 
+## You are allowed to change .astro files

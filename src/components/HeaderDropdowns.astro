@@ -1,0 +1,115 @@
+---
+// Enhances the theme's own header nav (astro-theme-university's Nav.astro)
+// with two quick-access dropdowns (Lectures, Assessment) without forking it:
+// Nav.astro renders a flat NavLink[] with no nested-items support, and
+// BaseLayout.astro gives no slot/prop to swap it out. So this component
+// renders <template> link lists (never part of the layout itself) and a
+// client script matches them to the already-rendered <a> in `.at-nav-links`
+// by pathname, then clones the toggle+panel in as siblings. The underlying
+// links are untouched, so with JS disabled these are just plain nav links.
+import { getPublishedCollection } from "astro-course-university/content";
+import { withBase } from "astro-theme-university/url";
+import Icon from "astro-theme-university/components/Icon.astro";
+
+const lectures = (await getPublishedCollection("lectures"))
+  .slice()
+  .sort((a, b) => (a.data as { week: number }).week - (b.data as { week: number }).week)
+  .map((entry) => ({
+    label: `Week ${(entry.data as { week: number }).week}`,
+    href: withBase(`/lectures/${entry.id}/`),
+  }));
+
+const assessments = (await getPublishedCollection("assessments"))
+  .slice()
+  .sort((a, b) => new Date(a.data.due).getTime() - new Date(b.data.due).getTime())
+  .map((entry) => ({ label: entry.data.title, href: withBase(`/assessments/${entry.id}/`) }));
+
+const dropdowns = [
+  { target: withBase("/lectures/"), label: "Lectures", items: lectures },
+  { target: withBase("/assessments/"), label: "Assessment", items: assessments },
+];
+---
+
+{
+  dropdowns.map((dropdown) => (
+    <template data-at-dropdown-for={dropdown.target}>
+      <button
+        type="button"
+        class="at-nav-dropdown-toggle"
+        aria-expanded="false"
+        aria-label={`${dropdown.label} menu`}
+      >
+        <Icon name="nav-arrow-down" size="0.9rem" />
+      </button>
+      <div class="at-nav-dropdown-panel" role="menu">
+        <ul>
+          {dropdown.items.map((item) => (
+            <li role="none">
+              <a href={item.href} role="menuitem">
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </template>
+  ))
+}
+
+<script>
+  function setupNavDropdowns() {
+    const templates = document.querySelectorAll<HTMLTemplateElement>("template[data-at-dropdown-for]");
+
+    for (const template of templates) {
+      const target = template.dataset.atDropdownFor;
+      if (!target) continue;
+      const targetPath = new URL(target, window.location.origin).pathname;
+
+      for (const link of document.querySelectorAll<HTMLAnchorElement>(".at-nav-links a")) {
+        if (link.pathname !== targetPath) continue;
+
+        const item = link.closest("li");
+        if (!item || item.hasAttribute("data-at-dropdown-ready")) continue;
+        item.setAttribute("data-at-dropdown-ready", "true");
+        item.classList.add("at-nav-dropdown-host");
+
+        const fragment = template.content.cloneNode(true) as DocumentFragment;
+        item.append(...fragment.childNodes);
+
+        const toggle = item.querySelector<HTMLButtonElement>(".at-nav-dropdown-toggle");
+        const panel = item.querySelector<HTMLElement>(".at-nav-dropdown-panel");
+        if (!toggle || !panel) continue;
+
+        const close = () => {
+          toggle.setAttribute("aria-expanded", "false");
+          item.classList.remove("is-open");
+        };
+
+        toggle.addEventListener("click", (event) => {
+          event.stopPropagation();
+          const isOpen = item.classList.contains("is-open");
+          if (isOpen) {
+            close();
+          } else {
+            toggle.setAttribute("aria-expanded", "true");
+            item.classList.add("is-open");
+          }
+        });
+
+        item.addEventListener("keydown", (event) => {
+          if (event.key === "Escape") {
+            close();
+            toggle.focus();
+          }
+        });
+
+        document.addEventListener("click", (event) => {
+          if (!item.contains(event.target as Node)) close();
+        });
+      }
+    }
+  }
+
+  setupNavDropdowns();
+  document.addEventListener("astro:page-load", setupNavDropdowns);
+</script>

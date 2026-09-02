@@ -17,13 +17,22 @@ export const sidebarSections: {
   title: string;
   href: string;
   collection?: "sessions" | "lectures" | "assessments" | "people";
+  icon: string;
+  /** Render a divider after this section, grouping it apart from what follows. */
+  dividerAfter?: boolean;
 }[] = [
-  { title: "Home", href: "/" },
-  { title: "Lectures", href: "/lectures/", collection: "lectures" },
-  { title: sessionLabels.plural, href: "/sessions/", collection: "sessions" },
-  { title: "Assessment", href: "/assessments/", collection: "assessments" },
-  { title: "People", href: "/people/" },
-  { title: "Policies", href: "/policies/" },
+  { title: "Home", href: "/", icon: "home", dividerAfter: true },
+  { title: "Lectures", href: "/lectures/", collection: "lectures", icon: "book" },
+  {
+    title: sessionLabels.plural,
+    href: "/sessions/",
+    collection: "sessions",
+    icon: "presentation",
+    dividerAfter: true,
+  },
+  { title: "Assessment", href: "/assessments/", collection: "assessments", icon: "task-list" },
+  { title: "People", href: "/people/", icon: "group" },
+  { title: "Policies", href: "/policies/", icon: "shield-check" },
 ];
 
 export const graphCollections = ["sessions", "assessments", "lectures", "people"];

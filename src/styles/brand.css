@@ -26,6 +26,14 @@
   --at-gutter: var(--at-spacing-sm);
   --at-content-inset: 0px;
   --at-content-width: 100%;
+
+  /* The theme's own 6.5rem default assumes a full logo lockup; ours is a
+     plain text wordmark plus a row of links, so pin an actual height (nav
+     content never exceeds this) rather than inherit a value that's nearly
+     twice the real thing — anything that positions itself relative to the
+     nav (the sidebar's sticky offset, the collapse toggle, scroll-padding)
+     depends on this being accurate. */
+  --at-nav-height: calc(2.5rem + 2 * var(--at-spacing-sm) + 4px);
 }
 
 /* The accent rule (body::after) is positioned from --at-content-inset, which
@@ -34,19 +42,49 @@ body::after {
   display: none;
 }
 
-/* Narrower sidebar than the theme's default 16rem, with the reserved grid
-   gutter (--at-sidebar-inset, set by sidebar.css from the same 16rem figure)
-   shrunk to match so the content column doesn't reserve unused space. */
+/* Narrower sidebar than the theme's default 16rem. Zeroing the gutter on
+   sidebar pages (rather than just shrinking the inset) makes the reserved
+   left/right tracks exactly match the sidebar's own width, so it sits flush
+   against both the viewport's left edge and the content box's left edge —
+   no gutter gap on either side. */
 body:has(.at-sidebar) {
-  --at-sidebar-inset: calc(11rem + var(--at-spacing-2xl));
+  --at-gutter: 0px;
+  --at-sidebar-inset: 11rem;
+  /* Pull the nav brand out of the content column and flush against the
+     viewport's left edge, matching the sidebar below it. */
+  --at-logo-offset-x: calc(-1 * (var(--at-gutter) + var(--at-sidebar-inset)));
 }
 
 .at-main > .at-sidebar {
   width: 11rem;
-  background: #000;
-  color: #fff;
+  margin-inline-end: 0;
+  background: #fff;
+  color: #000;
   padding-inline: var(--at-spacing-sm);
-  border-inline-end: 4px solid var(--at-primary);
+  border-inline-end: 4px solid #000;
+  /* The theme's own default sticks the sidebar --at-spacing-lg below the
+     nav — drop that so it sticks flush against the nav's bottom edge
+     instead of leaving a gap once scrolled. */
+  inset-block-start: var(--at-nav-height);
+  /* Once stuck, cap the sidebar to the remaining viewport height and let it
+     scroll internally rather than running off the bottom of the screen. */
+  max-height: calc(100dvh - var(--at-nav-height));
+  overflow-y: auto;
+}
+
+/* Extend .at-main's own span and let the content box ride along it, so the
+   content box absorbs the (now sidebar-less) right-hand gutter track instead
+   of leaving it as dead space — the box reaches the viewport's right edge. */
+body:has(.at-sidebar) .at-main {
+  grid-column: full-start / full-end;
+  /* The theme's own top padding here is what left a gap between the nav and
+     the sidebar at rest — the sidebar's own sticky offset above only
+     governs its position once scrolled, not its initial flow position. */
+  padding-block-start: 0;
+}
+
+.at-main > .at-sidebar-content {
+  grid-column: content-start / full-end;
 }
 
 /* Boxed layout: header, sidebar, content and footer each read as their own
@@ -56,6 +94,26 @@ body:has(.at-sidebar) {
 .at-nav {
   background: #fff;
   border-block-end: 4px solid #000;
+}
+
+.at-nav-inner {
+  padding-block: var(--at-spacing-sm);
+  /* Pins the nav's real height so --at-nav-height (above) stays accurate. */
+  min-block-size: 2.5rem;
+}
+
+/* The nav's right-aligned content (search, links, dropdown toggles) sits in
+   the sidebar-dependent "content" column by default, so its right edge
+   moves whenever the sidebar's collapse state changes --at-sidebar-inset.
+   Extend it to the viewport edge — a fixed line unaffected by collapse —
+   the same way .at-sidebar-content already escapes that column below. */
+body:has(.at-sidebar) .at-nav-inner {
+  grid-column: content-start / full-end;
+  padding-inline-end: var(--at-spacing-lg);
+}
+
+.at-nav-logo {
+  height: 2rem;
 }
 
 .at-sidebar-content {
@@ -91,4 +149,77 @@ body:has(.at-sidebar) {
 
 .at-card:not(:has(.at-card-image-frame)) > .at-card-body {
   padding-block-start: calc(4.5rem + var(--at-spacing-md));
+}
+
+/* Header quick-link dropdowns (Lectures, Assessment): with the sidebar now
+ * the primary nav, the header becomes a slim utility bar. Once the sidebar
+ * is available (>=640px, matching Nav.astro's own hamburger breakpoint),
+ * hide Sessions — Lectures/Assessment carry a dropdown for fast access
+ * while scrolled, and People/Policies stay visible as plain header links.
+ * Below that breakpoint the header list is the only nav on the page, so
+ * every link (and the dropdown host's own link) stays visible and plain. */
+@media (width >= 640px) {
+  .at-nav-links > li:nth-child(2) {
+    display: none;
+  }
+}
+
+.at-nav-dropdown-host {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.at-nav-dropdown-toggle {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--at-spacing-2xs, 0.25rem);
+  margin-inline-start: var(--at-spacing-2xs, 0.25rem);
+  border: none;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.at-nav-dropdown-toggle svg {
+  transition: transform 0.15s ease;
+}
+
+.at-nav-dropdown-toggle[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+
+.at-nav-dropdown-panel {
+  position: absolute;
+  inset-block-start: 100%;
+  inset-inline-start: 0;
+  z-index: 20;
+  min-width: 12rem;
+  margin-block-start: var(--at-spacing-xs);
+  background: var(--at-bg);
+  border: 4px solid #000;
+  display: none;
+}
+
+.at-nav-dropdown-host.is-open .at-nav-dropdown-panel {
+  display: block;
+}
+
+.at-nav-dropdown-panel ul {
+  list-style: none;
+  margin: 0;
+  padding: var(--at-spacing-xs) 0;
+}
+
+.at-nav-dropdown-panel a {
+  display: block;
+  padding: var(--at-spacing-xs) var(--at-spacing-sm);
+  color: var(--at-text);
+  text-decoration: none;
+}
+
+.at-nav-dropdown-panel a:hover,
+.at-nav-dropdown-panel a:focus-visible {
+  background: var(--at-primary);
+  color: #fff;
 }

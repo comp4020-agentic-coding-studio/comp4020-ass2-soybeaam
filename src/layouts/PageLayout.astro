@@ -2,11 +2,13 @@
 import MdxPageLayout from "astro-theme-university/layouts/MdxPageLayout.astro";
 import "astro-theme-university/styles/sidebar.css";
 import AppSidebar from "../components/AppSidebar.astro";
+import HeaderDropdowns from "../components/HeaderDropdowns.astro";
 import { siteConfig } from "../site-config";
 ---
 
 <MdxPageLayout siteConfig={siteConfig} {...Astro.props}>
   <AppSidebar />
+  <HeaderDropdowns />
   <div class="at-sidebar-content">
     <slot />
   </div>

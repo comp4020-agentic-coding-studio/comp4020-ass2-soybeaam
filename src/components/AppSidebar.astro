@@ -56,10 +56,16 @@ function sectionIsCurrent(sectionHref: string): boolean {
     <ul>
       {
         sections.map((section) => (
-          <li>
+          <li class:list={["sidebar-section", { "sidebar-divider-after": section.dividerAfter }]}>
             {section.items && section.items.length > 0 ? (
               <details open={sectionIsCurrent(section.href)}>
-                <summary>{section.title}</summary>
+                <summary>
+                  <span class="sidebar-row-label">
+                    <Icon name={section.icon} size="1rem" />
+                    <span>{section.title}</span>
+                  </span>
+                  <Icon name="nav-arrow-down" size="1rem" class="sidebar-chevron" />
+                </summary>
                 <ul class="sidebar-items">
                   <li>
                     <a href={section.href} aria-current={currentPath === section.href ? "page" : undefined}>
@@ -76,8 +82,13 @@ function sectionIsCurrent(sectionHref: string): boolean {
                 </ul>
               </details>
             ) : (
-              <a href={section.href} aria-current={currentPath === section.href ? "page" : undefined}>
-                {section.title}
+              <a
+                class="sidebar-row-label sidebar-top-link"
+                href={section.href}
+                aria-current={currentPath === section.href ? "page" : undefined}
+              >
+                <Icon name={section.icon} size="1rem" />
+                <span>{section.title}</span>
               </a>
             )}
           </li>
@@ -135,13 +146,23 @@ function sectionIsCurrent(sectionHref: string): boolean {
   .at-sidebar a {
     display: block;
     padding: var(--at-spacing-xs) var(--at-spacing-sm);
-    color: #fff;
+    color: #000;
     text-decoration: none;
+  }
+
+  /* Higher specificity than .at-sidebar a above, so the flex layout below
+     isn't silently overridden back to block — needed for the plain
+     top-level links (Home/People/Policies) that have no <details> wrapper
+     and so don't go through the .at-sidebar summary flex rule instead. */
+  .at-sidebar a.sidebar-top-link {
+    display: flex;
+    align-items: center;
+    gap: var(--at-spacing-xs);
   }
 
   .at-sidebar a:hover,
   .at-sidebar a:focus-visible {
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(0, 0, 0, 0.08);
   }
 
   .at-sidebar a[aria-current="page"] {
@@ -150,23 +171,75 @@ function sectionIsCurrent(sectionHref: string): boolean {
   }
 
   .at-sidebar summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--at-spacing-xs);
     cursor: pointer;
     list-style: none;
     padding: var(--at-spacing-xs) var(--at-spacing-sm);
-    color: #fff;
+    color: #000;
     font-weight: 600;
+  }
+
+  .at-sidebar summary::-webkit-details-marker {
+    display: none;
   }
 
   .at-sidebar summary:hover,
   .at-sidebar summary:focus-visible {
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(0, 0, 0, 0.08);
+  }
+
+  .sidebar-row-label {
+    display: flex;
+    align-items: center;
+    gap: var(--at-spacing-xs);
+  }
+
+  .sidebar-top-link {
+    display: flex;
+    align-items: center;
+    gap: var(--at-spacing-xs);
+  }
+
+  .sidebar-chevron {
+    flex-shrink: 0;
+    transition: transform 0.15s ease;
+  }
+
+  details[open] > summary .sidebar-chevron {
+    transform: rotate(180deg);
+  }
+
+  .sidebar-divider-after {
+    padding-block-end: var(--at-spacing-sm);
+    margin-block-end: var(--at-spacing-sm);
+    border-block-end: 1px solid rgba(0, 0, 0, 0.2);
   }
 
   .sidebar-items {
     list-style: none;
     margin: var(--at-spacing-xs) 0 0;
     padding-inline-start: var(--at-spacing-sm);
+    border-inline-start: 2px solid rgba(0, 0, 0, 0.2);
     font-size: var(--at-font-size-sm);
+  }
+
+  /* Tighter rhythm than the top-level sections, so the nested items read as
+     one grouped list under their section rather than as more top-level
+     entries. */
+  .sidebar-items li + li {
+    margin-block-start: 0;
+  }
+
+  .sidebar-items a {
+    padding-block: var(--at-spacing-2xs, 0.25rem);
+    color: rgba(0, 0, 0, 0.75);
+  }
+
+  .sidebar-items a[aria-current="page"] {
+    color: #fff;
   }
 
   /* Collapse: hide the sidebar and reclaim its reserved grid gutter. */

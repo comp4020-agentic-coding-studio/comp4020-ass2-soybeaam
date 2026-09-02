@@ -1,0 +1,111 @@
+---
+// The page's own <h1>/copy live here rather than in 404.mdx's frontmatter,
+// because MdxPageLayout has no prop to suppress its automatic <p class="lead">
+// under a title/description --- and this page needs a plain paragraph plus a
+// search form, not that lead treatment. Drives the theme's existing Pagefind
+// dialog (SearchDialog.astro) rather than reimplementing search.
+import { Image } from "astro:assets";
+import { withBase } from "astro-theme-university/url";
+import card from "../assets/images/card.png";
+---
+
+<div class="not-found-search">
+  <div class="not-found-copy">
+    <h1>404 Error</h1>
+    <p>Sorry, the page you are looking for doesn't exist or has been moved. Try searching our site:</p>
+    <form class="not-found-form" method="get" action={withBase("/")} data-not-found-search-form>
+      <input
+        type="search"
+        name="q"
+        placeholder="Search our site"
+        aria-label="Search our site"
+        data-not-found-search-input
+      />
+      <button type="submit">Search</button>
+    </form>
+  </div>
+  <div class="not-found-image">
+    <Image src={card} alt="" />
+  </div>
+</div>
+
+<script>
+  function setupNotFoundSearch() {
+    const form = document.querySelector<HTMLFormElement>("[data-not-found-search-form]");
+    if (!form || form.hasAttribute("data-at-initialized")) return;
+    form.setAttribute("data-at-initialized", "true");
+
+    form.addEventListener("submit", (event) => {
+      const input = form.querySelector<HTMLInputElement>("[data-not-found-search-input]");
+      const query = input?.value ?? "";
+      if (!query) return;
+
+      const searchInput = document.querySelector<HTMLInputElement>("[data-at-search-input]");
+      if (!searchInput) return;
+
+      event.preventDefault();
+      searchInput.value = query;
+      searchInput.dispatchEvent(new Event("input", { bubbles: true }));
+      document.dispatchEvent(new CustomEvent("at-search-open"));
+    });
+  }
+
+  setupNotFoundSearch();
+  document.addEventListener("astro:page-load", setupNotFoundSearch);
+</script>
+
+<style>
+  .not-found-search {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--at-spacing-xl, 2rem);
+    align-items: center;
+  }
+
+  .not-found-copy h1 {
+    margin-block-end: var(--at-spacing-sm);
+  }
+
+  .not-found-copy p {
+    margin-block-end: var(--at-spacing-lg);
+  }
+
+  .not-found-form {
+    display: flex;
+    border: 4px solid #000;
+  }
+
+  .not-found-form input {
+    flex: 1;
+    min-width: 0;
+    padding: var(--at-spacing-sm);
+    border: none;
+    font: inherit;
+  }
+
+  .not-found-form button {
+    padding: var(--at-spacing-sm) var(--at-spacing-md);
+    border: none;
+    border-inline-start: 4px solid #000;
+    background: var(--at-primary);
+    color: #fff;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .not-found-image :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  @media (width < 640px) {
+    .not-found-search {
+      grid-template-columns: 1fr;
+    }
+
+    .not-found-image {
+      order: -1;
+    }
+  }
+</style>

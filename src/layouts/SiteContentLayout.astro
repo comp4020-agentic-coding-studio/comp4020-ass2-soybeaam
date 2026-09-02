@@ -2,6 +2,7 @@
 import ContentLayout, { type ContentLayoutProps } from "astro-theme-university/layouts/ContentLayout.astro";
 import "astro-theme-university/styles/sidebar.css";
 import AppSidebar from "../components/AppSidebar.astro";
+import HeaderDropdowns from "../components/HeaderDropdowns.astro";
 
 type Props = ContentLayoutProps;
 ---
@@ -9,6 +10,7 @@ type Props = ContentLayoutProps;
 <ContentLayout {...Astro.props}>
   <slot name="head" slot="head" />
   <AppSidebar />
+  <HeaderDropdowns />
   <div class="at-sidebar-content">
     <slot />
   </div>
