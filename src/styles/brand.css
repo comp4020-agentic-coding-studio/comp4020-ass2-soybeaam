@@ -46,13 +46,26 @@ body:has(.at-sidebar) {
   background: #000;
   color: #fff;
   padding-inline: var(--at-spacing-sm);
-  border-inline-end: 3px solid var(--at-primary);
+  border-inline-end: 4px solid var(--at-primary);
 }
 
-/* Plain white top bar with a thin rule, instead of a tinted nav surface. */
+/* Boxed layout: header, sidebar, content and footer each read as their own
+ * bold-bordered region (a plain-link-list wireframe with thick outlines
+ * around header/sidebar/content/footer), kept to the site's three-colour
+ * palette (black border in place of the wireframe's blue). */
 .at-nav {
   background: #fff;
-  border-block-end: 1px solid var(--at-divider);
+  border-block-end: 4px solid #000;
+}
+
+.at-sidebar-content {
+  border: 4px solid #000;
+  margin-block: var(--at-spacing-sm);
+  padding: var(--at-spacing-lg);
+}
+
+.at-footer {
+  border-block-start: 4px solid #000;
 }
 
 /* Classroom's stream tiles: a flat colour banner across the top of the card,
