@@ -22,7 +22,7 @@ export const sidebarSections: {
   { title: "Lectures", href: "/lectures/", collection: "lectures" },
   { title: sessionLabels.plural, href: "/sessions/", collection: "sessions" },
   { title: "Assessment", href: "/assessments/", collection: "assessments" },
-  { title: "People", href: "/people/", collection: "people" },
+  { title: "People", href: "/people/" },
   { title: "Policies", href: "/policies/" },
 ];
 

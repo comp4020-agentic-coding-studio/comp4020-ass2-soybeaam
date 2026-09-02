@@ -10,7 +10,7 @@
   --at-primary: #b97d1c;
   --at-secondary: #b97d1c;
   --at-tertiary: #b97d1c;
-  --at-border-radius: 0.75rem;
+  --at-border-radius: 0;
 
   --at-bg: #fff;
   --at-bg-alt: #fff;
@@ -43,6 +43,10 @@ body:has(.at-sidebar) {
 
 .at-main > .at-sidebar {
   width: 11rem;
+  background: #000;
+  color: #fff;
+  padding-inline: var(--at-spacing-sm);
+  border-inline-end: 3px solid var(--at-primary);
 }
 
 /* Plain white top bar with a thin rule, instead of a tinted nav surface. */
