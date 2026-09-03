@@ -73,9 +73,7 @@ body:has(.at-sidebar) {
   background: #fafafa;
   color: #000;
   padding-inline: var(--at-spacing-sm);
-  /* Leaves room for the collapse toggle button, which floats fixed over the
-     sidebar's own top-left corner. */
-  padding-block-start: calc(2.25rem + var(--at-spacing-md));
+  padding-block-start: var(--at-spacing-md);
   border-inline-end: 1px solid rgba(0, 0, 0, 0.1);
   overflow-y: auto;
   /* Take the sidebar out of .at-main's grid flow entirely and pin it to the
@@ -122,6 +120,16 @@ body:has(.at-sidebar) .at-main {
 .at-nav {
   background: #fff;
   border-block-end: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+/* The sidebar carries its own logo + site name in its header row now, so on
+   desktop (where the sidebar is visible) drop the nav bar's copy rather than
+   showing the brand twice. Below 768px the sidebar (and its header) is
+   hidden entirely, so the nav keeps its own brand as the only wordmark. */
+@media (width >= 769px) {
+  body:has(.at-sidebar) .at-nav-brand {
+    display: none;
+  }
 }
 
 .at-nav-inner {

@@ -8,7 +8,7 @@
 import { getPublishedCollection } from "astro-course-university/content";
 import { withBase } from "astro-theme-university/url";
 import Icon from "astro-theme-university/components/Icon.astro";
-import { sidebarSections } from "../site-config";
+import { sidebarSections, siteConfig } from "../site-config";
 
 const currentPath = Astro.url.pathname;
 
@@ -46,12 +46,18 @@ function sectionIsCurrent(sectionHref: string): boolean {
 ---
 
 <input type="checkbox" id="sidebar-collapsed" class="sidebar-collapsed-toggle" />
-<label for="sidebar-collapsed" class="sidebar-toggle-label">
-  <Icon name="menu" size="1.25rem" />
-  <span class="sr-only">Toggle sidebar</span>
-</label>
 
 <div class="at-sidebar">
+  <div class="sidebar-brand-row">
+    <label for="sidebar-collapsed" class="sidebar-toggle-label">
+      <Icon name="menu" size="1.25rem" />
+      <span class="sr-only">Toggle sidebar</span>
+    </label>
+    <a href={withBase("/")} class="sidebar-brand">
+      <img src={siteConfig.logoCompact.src} width={siteConfig.logoCompact.width} height={siteConfig.logoCompact.height} alt="" class="sidebar-brand-mark" />
+      <span class="sidebar-brand-name">{siteConfig.name}</span>
+    </a>
+  </div>
   <nav aria-label="Sections">
     <ul>
       {
@@ -118,11 +124,17 @@ function sectionIsCurrent(sectionHref: string): boolean {
     white-space: nowrap;
   }
 
+  .sidebar-brand-row {
+    display: flex;
+    align-items: center;
+    gap: var(--at-spacing-xs);
+    padding-block-end: var(--at-spacing-sm);
+    margin-block-end: var(--at-spacing-sm);
+    border-block-end: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
   .sidebar-toggle-label {
-    position: fixed;
-    inset-block-start: calc(var(--at-nav-height, 3.5rem) + var(--at-spacing-sm));
-    inset-inline-start: var(--at-spacing-sm);
-    z-index: 21;
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -144,6 +156,38 @@ function sectionIsCurrent(sectionHref: string): boolean {
     background: var(--at-primary);
     border-color: var(--at-primary);
     color: #fff;
+  }
+
+  .sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: var(--at-spacing-xs);
+    min-width: 0;
+    text-decoration: none;
+    color: #000;
+  }
+
+  .sidebar-brand-mark {
+    flex-shrink: 0;
+    inline-size: 1.5rem;
+    block-size: 1.5rem;
+  }
+
+  .sidebar-brand-name {
+    font-weight: 700;
+    font-size: var(--at-font-size-sm);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .sidebar-collapsed-toggle:checked ~ .at-sidebar .sidebar-brand-name,
+  .sidebar-collapsed-toggle:checked ~ .at-sidebar .sidebar-brand-mark {
+    display: none;
+  }
+
+  .sidebar-collapsed-toggle:checked ~ .at-sidebar .sidebar-brand-row {
+    justify-content: center;
   }
 
   .at-sidebar nav > ul {
