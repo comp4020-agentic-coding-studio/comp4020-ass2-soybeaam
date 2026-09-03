@@ -161,29 +161,66 @@ body:has(.at-sidebar) .at-nav-inner {
   border-block-start: 1px solid rgba(0, 0, 0, 0.15);
 }
 
-/* Classroom's stream tiles: a flat colour banner across the top of the card,
- * rounded to match the card's own corners. */
+/* List-style card grids: one bordered list of rows instead of a tiled wall
+ * of boxes. A row scans faster than a card for exactly the content these
+ * grids hold (a title plus a line or two of detail — lecture/session/
+ * assessment names, the homepage's "where to go next" links), and a single
+ * column reads top-to-bottom the same way at every viewport width instead
+ * of reflowing between 1/2/3 columns. */
+.at-card-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.at-card-grid > .at-card + .at-card {
+  border-block-start: 1px solid rgba(0, 0, 0, 0.1);
+}
+
 .at-card {
-  border-radius: var(--at-border-radius);
+  display: flex;
+  align-items: center;
+  gap: var(--at-spacing-md);
+  padding: var(--at-spacing-sm) var(--at-spacing-md);
+  border-radius: 0;
+  background: var(--at-bg);
+  transition: background-color 0.15s ease;
 }
 
-.at-card:not(:has(.at-card-image-frame)) {
-  position: relative;
+a.at-card:hover,
+a.at-card:focus-visible {
+  background: rgba(185, 125, 28, 0.08);
 }
 
-.at-card:not(:has(.at-card-image-frame))::before {
-  content: "";
-  position: absolute;
-  inset-inline: 0;
-  inset-block-start: 0;
-  block-size: 4.5rem;
-  background: var(--at-primary);
-  border-start-start-radius: var(--at-border-radius);
-  border-start-end-radius: var(--at-border-radius);
+.at-card-image-frame {
+  flex-shrink: 0;
+  inline-size: 3.5rem;
+  block-size: 3.5rem;
+  border-radius: 0.375rem;
 }
 
-.at-card:not(:has(.at-card-image-frame)) > .at-card-body {
-  padding-block-start: calc(4.5rem + var(--at-spacing-md));
+.at-card-image {
+  aspect-ratio: 1;
+  border-radius: inherit;
+}
+
+.at-card-body {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+}
+
+.at-card-title {
+  font-size: 1rem;
+}
+
+.at-card-body p {
+  margin-block: var(--at-spacing-2xs, 0.25rem) 0;
+  color: var(--at-text-secondary);
+  font-size: 0.9rem;
 }
 
 .at-nav-dropdown-host {
