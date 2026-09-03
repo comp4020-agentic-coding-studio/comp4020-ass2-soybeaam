@@ -49,7 +49,10 @@ body::after {
    no gutter gap on either side. */
 body:has(.at-sidebar) {
   --at-gutter: 0px;
-  --at-sidebar-inset: 11rem;
+  /* The sidebar itself is flush (no outer margin) now, so the inset is just
+     its own width — box-sizing:border-box (base.css) already folds its
+     border into that 15rem, no margin/border term to add. */
+  --at-sidebar-inset: 15rem;
   /* Pull the nav brand out of the content column and flush against the
      viewport's left edge, matching the sidebar below it. */
   --at-logo-offset-x: calc(-1 * (var(--at-gutter) + var(--at-sidebar-inset)));
@@ -68,13 +71,15 @@ body:has(.at-sidebar) {
 }
 
 .at-main > .at-sidebar {
-  width: 11rem;
-  margin-inline-end: 0;
-  background: #fafafa;
+  width: 15rem;
+  margin: 0;
+  background: #fff;
   color: #000;
-  padding-inline: var(--at-spacing-sm);
-  padding-block-start: var(--at-spacing-md);
-  border-inline-end: 1px solid rgba(0, 0, 0, 0.1);
+  padding: var(--at-spacing-sm);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-block-start: none;
+  border-inline-start: none;
+  border-radius: 0;
   overflow-y: auto;
   /* Take the sidebar out of .at-main's grid flow entirely and pin it to the
      viewport instead of using the theme's sticky-in-grid default. Two
@@ -90,7 +95,9 @@ body:has(.at-sidebar) {
      underneath (wanted, so it reads as one continuous bar rather than a
      bar that stops short of the sidebar) — z-index 150 puts the sidebar
      above it so the nav's white strip is simply hidden behind the
-     sidebar's own column instead of showing through. */
+     sidebar's own column instead of showing through. Flush against the
+     viewport's left/top/bottom edges — no outer margin or rounded corners,
+     just the single right-hand border to separate it from the content. */
   position: fixed;
   z-index: 150;
   inset-inline-start: 0;
@@ -174,6 +181,18 @@ body:has(.at-sidebar) .at-main > h1 {
 body:has(.at-sidebar) .at-nav-inner {
   grid-column: content-start / full-end;
   padding-inline-end: var(--at-spacing-lg);
+  /* Keep the search button on the same row as the links even when the
+     dropdown-widened link list is close to the available width, rather
+     than letting flex-wrap drop it to a second line. */
+  flex-wrap: nowrap;
+}
+
+.at-nav-links {
+  min-width: 0;
+}
+
+.at-search-trigger {
+  flex-shrink: 0;
 }
 
 .at-nav-logo {
@@ -183,6 +202,31 @@ body:has(.at-sidebar) .at-nav-inner {
 .at-sidebar-content {
   margin-block: var(--at-spacing-sm);
   padding: var(--at-spacing-lg);
+}
+
+/* Breadcrumbs render as a direct .at-main child (a sibling of the h1/.lead
+   ContentLayout inserts ahead of our slot content) so that grid `order` can
+   pull them visually above the h1 without needing to intercept ContentLayout
+   itself — DOM order stays "content, then breadcrumbs" but paint order is
+   "breadcrumbs, then content". */
+.at-main > nav.breadcrumbs {
+  order: -1;
+  position: sticky;
+  inset-block-start: var(--at-nav-height);
+  z-index: 10;
+  background: var(--at-bg);
+  padding-inline: var(--at-spacing-xl);
+  padding-block: var(--at-spacing-sm) var(--at-spacing-xs);
+}
+
+/* On sidebar pages, stretch the breadcrumb strip the same way .at-nav-inner
+   and .at-sidebar-content already do — full-bleed from the sidebar's right
+   edge to the viewport's right edge, and a bottom border so it reads as one
+   continuous strip sitting flush under the nav bar rather than text padded
+   inside the content column. */
+body:has(.at-sidebar) .at-main > nav.breadcrumbs {
+  grid-column: content-start / full-end;
+  border-block-end: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .at-footer {
@@ -204,8 +248,16 @@ body:has(.at-sidebar) .at-nav-inner {
   overflow: hidden;
 }
 
-.at-card-grid > .at-card + .at-card {
+.at-card-grid > .at-card + .at-card,
+.at-card-grid > .week-filter-item + .week-filter-item {
   border-block-start: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Grid components wrap each Card in a `.week-filter-item` for the week
+   multiselect above — an extra DOM layer the theme's own at-card-grid CSS
+   doesn't otherwise need. */
+.week-filter-item[hidden] {
+  display: none;
 }
 
 .at-card {
@@ -304,6 +356,9 @@ a.at-card:focus-visible {
   padding: var(--at-spacing-xs) var(--at-spacing-sm);
   color: var(--at-text);
   text-decoration: none;
+  /* Bold only while the week list is actually in view inside the open
+     dropdown — nowhere else does a week label get this weight. */
+  font-weight: 600;
 }
 
 .at-nav-dropdown-panel a:hover,

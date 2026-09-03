@@ -12,7 +12,7 @@ import { sidebarSections, siteConfig } from "../site-config";
 
 const currentPath = Astro.url.pathname;
 
-type Item = { label: string; href: string };
+type Item = { label: string; week?: number; href: string };
 
 async function itemsFor(collection?: "sessions" | "lectures" | "assessments" | "people"): Promise<Item[] | undefined> {
   if (!collection) return undefined;
@@ -22,7 +22,8 @@ async function itemsFor(collection?: "sessions" | "lectures" | "assessments" | "
       .slice()
       .sort((a, b) => (a.data as { week: number }).week - (b.data as { week: number }).week)
       .map((entry) => ({
-        label: `Week ${(entry.data as { week: number }).week}: ${entry.data.title}`,
+        label: entry.data.title,
+        week: (entry.data as { week: number }).week,
         href: withBase(`/${collection}/${entry.id}/`),
       }));
   }
@@ -49,12 +50,17 @@ function sectionIsCurrent(sectionHref: string): boolean {
 
 <div class="at-sidebar">
   <div class="sidebar-brand-row">
-    <label for="sidebar-collapsed" class="sidebar-toggle-label">
-      <Icon name="menu" size="1.25rem" />
+    <label for="sidebar-collapsed" class="sidebar-toggle-label" title="Toggle sidebar">
+      <img
+        src={siteConfig.logoCompact.src}
+        width={siteConfig.logoCompact.width}
+        height={siteConfig.logoCompact.height}
+        alt=""
+        class="sidebar-toggle-logo"
+      />
       <span class="sr-only">Toggle sidebar</span>
     </label>
     <a href={withBase("/")} class="sidebar-brand">
-      <img src={siteConfig.logoCompact.src} width={siteConfig.logoCompact.width} height={siteConfig.logoCompact.height} alt="" class="sidebar-brand-mark" />
       <span class="sidebar-brand-name">{siteConfig.name}</span>
     </a>
   </div>
@@ -81,7 +87,8 @@ function sectionIsCurrent(sectionHref: string): boolean {
                   {section.items.map((item) => (
                     <li>
                       <a href={item.href} aria-current={currentPath === item.href ? "page" : undefined}>
-                        {item.label}
+                        {item.week !== undefined && <span class="sidebar-item-week">Wk {item.week}</span>}
+                        <span class="sidebar-item-title">{item.label}</span>
                       </a>
                     </li>
                   ))}
@@ -130,9 +137,15 @@ function sectionIsCurrent(sectionHref: string): boolean {
     gap: var(--at-spacing-xs);
     padding-block-end: var(--at-spacing-sm);
     margin-block-end: var(--at-spacing-sm);
-    border-block-end: 1px solid rgba(0, 0, 0, 0.1);
+    /* No visible bar here — the sidebar's own header should blend straight
+       into the rest of the rail instead of reading as a second nav strip
+       stacked on top of the site's real nav bar. */
+    border-block-end: none;
   }
 
+  /* The toggle button IS the crest now (no separate hamburger glyph) — a
+     plain, borderless hit target that scales slightly on hover/press so it
+     still reads as clickable without looking like a generic icon button. */
   .sidebar-toggle-label {
     flex-shrink: 0;
     display: flex;
@@ -140,37 +153,40 @@ function sectionIsCurrent(sectionHref: string): boolean {
     justify-content: center;
     inline-size: 2.25rem;
     block-size: 2.25rem;
-    border: 1px solid rgba(0, 0, 0, 0.15);
     border-radius: 0.375rem;
-    background: var(--at-bg);
-    color: rgba(0, 0, 0, 0.7);
+    background: transparent;
     cursor: pointer;
     transition:
       background-color 0.15s ease,
-      border-color 0.15s ease,
-      color 0.15s ease;
+      transform 0.15s ease;
   }
 
-  .sidebar-toggle-label:hover,
+  .sidebar-toggle-label:hover {
+    background: rgba(0, 0, 0, 0.05);
+    transform: scale(1.06);
+  }
+
+  .sidebar-toggle-label:active {
+    transform: scale(0.96);
+  }
+
   .sidebar-toggle-label:focus-visible {
-    background: var(--at-primary);
-    border-color: var(--at-primary);
-    color: #fff;
+    outline: 2px solid var(--at-primary);
+    outline-offset: 2px;
+  }
+
+  .sidebar-toggle-logo {
+    inline-size: 1.5rem;
+    block-size: 1.5rem;
+    transition: transform 0.15s ease;
   }
 
   .sidebar-brand {
     display: flex;
     align-items: center;
-    gap: var(--at-spacing-xs);
     min-width: 0;
     text-decoration: none;
     color: #000;
-  }
-
-  .sidebar-brand-mark {
-    flex-shrink: 0;
-    inline-size: 1.5rem;
-    block-size: 1.5rem;
   }
 
   .sidebar-brand-name {
@@ -179,15 +195,41 @@ function sectionIsCurrent(sectionHref: string): boolean {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    opacity: 1;
+    max-width: 10rem;
+    transition:
+      opacity 0.2s ease,
+      max-width 0.2s ease;
   }
 
-  .sidebar-collapsed-toggle:checked ~ .at-sidebar .sidebar-brand-name,
-  .sidebar-collapsed-toggle:checked ~ .at-sidebar .sidebar-brand-mark {
-    display: none;
+  .sidebar-collapsed-toggle:checked ~ .at-sidebar .sidebar-brand-name {
+    opacity: 0;
+    max-width: 0;
   }
 
   .sidebar-collapsed-toggle:checked ~ .at-sidebar .sidebar-brand-row {
     justify-content: center;
+    gap: 0;
+  }
+
+  /* The brand-name link's text collapses to max-width:0, but the <a> itself
+     keeps real padding (from the collapsed a/summary padding rule below),
+     so it survives as a second flex child next to the logo and throws off
+     centering — nothing to show once collapsed, so drop it from flow
+     entirely rather than trying to zero it out piecemeal. */
+  .sidebar-collapsed-toggle:checked ~ .at-sidebar .sidebar-brand {
+    display: none;
+  }
+
+  /* Without this, the icon+label flex row still reserves its `gap` even
+     though the label span has collapsed to max-width:0 — the icon ends up
+     visibly off-center by half the gap. Applies to every row shape: plain
+     top-links, the row-label inside them, and <summary> for expandable
+     sections. */
+  .sidebar-collapsed-toggle:checked ~ .at-sidebar .sidebar-row-label,
+  .sidebar-collapsed-toggle:checked ~ .at-sidebar .sidebar-top-link,
+  .sidebar-collapsed-toggle:checked ~ .at-sidebar summary {
+    gap: 0;
   }
 
   .at-sidebar nav > ul {
@@ -223,14 +265,14 @@ function sectionIsCurrent(sectionHref: string): boolean {
 
   .at-sidebar a:hover,
   .at-sidebar a:focus-visible {
-    background: rgba(185, 125, 28, 0.12);
+    background: #f3f3f3;
     color: #000;
   }
 
   .at-sidebar a[aria-current="page"] {
-    background: var(--at-primary);
-    color: #fff;
-    font-weight: 600;
+    background: #ececec;
+    color: #000;
+    font-weight: 700;
   }
 
   .at-sidebar summary {
@@ -242,8 +284,8 @@ function sectionIsCurrent(sectionHref: string): boolean {
     list-style: none;
     border-radius: 0.375rem;
     padding: var(--at-spacing-xs) var(--at-spacing-sm);
-    color: rgba(0, 0, 0, 0.8);
-    font-weight: 600;
+    color: rgba(0, 0, 0, 0.85);
+    font-weight: 700;
     transition: background-color 0.15s ease;
   }
 
@@ -253,8 +295,7 @@ function sectionIsCurrent(sectionHref: string): boolean {
 
   .at-sidebar summary:hover,
   .at-sidebar summary:focus-visible {
-    background: rgba(185, 125, 28, 0.12);
-    color: #000;
+    background: #f3f3f3;
   }
 
   .sidebar-row-label {
@@ -264,12 +305,12 @@ function sectionIsCurrent(sectionHref: string): boolean {
   }
 
   .sidebar-row-label :global(svg) {
-    color: var(--at-primary);
+    color: rgba(0, 0, 0, 0.55);
     flex-shrink: 0;
   }
 
   .at-sidebar a[aria-current="page"] .sidebar-row-label :global(svg) {
-    color: #fff;
+    color: #000;
   }
 
   .sidebar-top-link {
@@ -278,27 +319,37 @@ function sectionIsCurrent(sectionHref: string): boolean {
     gap: var(--at-spacing-xs);
   }
 
-  .sidebar-chevron {
+  /* :global is required here: this class is passed as a prop into the
+     separate Icon.astro component, so the rendered <svg> never carries this
+     file's data-astro-cid scope attribute — a bare `.sidebar-chevron`
+     selector silently never matches it. */
+  :global(.sidebar-chevron) {
     flex-shrink: 0;
     color: rgba(0, 0, 0, 0.4);
-    transition: transform 0.15s ease;
+    opacity: 1;
+    max-width: 1.25rem;
+    min-width: 0;
+    overflow: hidden;
+    transition:
+      transform 0.15s ease,
+      opacity 0.15s ease,
+      max-width 0.2s ease;
   }
 
-  details[open] > summary .sidebar-chevron {
+  details[open] > summary :global(.sidebar-chevron) {
     transform: rotate(180deg);
   }
 
   .sidebar-divider-after {
     padding-block-end: var(--at-spacing-sm);
     margin-block-end: var(--at-spacing-sm);
-    border-block-end: 1px solid rgba(0, 0, 0, 0.1);
+    border-block-end: 1px solid rgba(0, 0, 0, 0.08);
   }
 
   .sidebar-items {
     list-style: none;
     margin: var(--at-spacing-2xs, 0.25rem) 0 0;
-    padding-inline-start: var(--at-spacing-sm);
-    border-inline-start: 2px solid rgba(185, 125, 28, 0.3);
+    padding-inline-start: var(--at-spacing-lg, 1.5rem);
     font-size: var(--at-font-size-sm);
   }
 
@@ -310,27 +361,85 @@ function sectionIsCurrent(sectionHref: string): boolean {
   }
 
   .sidebar-items a {
+    display: flex;
+    align-items: center;
+    gap: var(--at-spacing-2xs, 0.25rem);
     padding-block: var(--at-spacing-2xs, 0.25rem);
     color: rgba(0, 0, 0, 0.65);
+    font-weight: 600;
+    line-height: 1.3;
   }
 
   .sidebar-items a[aria-current="page"] {
-    color: #fff;
+    color: #000;
+  }
+
+  /* Fixed-width "Wk N" tag keeps the title column's left edge aligned down
+     the whole list, instead of titles starting at varying x-positions. */
+  .sidebar-item-week {
+    flex-shrink: 0;
+    inline-size: 2.25rem;
+    color: rgba(0, 0, 0, 0.4);
+    font-weight: 600;
+    font-size: var(--at-font-size-sm);
+  }
+
+  .sidebar-items a[aria-current="page"] .sidebar-item-week {
+    color: rgba(0, 0, 0, 0.55);
   }
 
   /* Collapse: shrink the sidebar to an icon-only rail instead of hiding it
      outright, so the nav stays reachable (matches the "icon rail" pattern,
-     not a fully-hidden drawer). */
+     not a fully-hidden drawer). Width and the text/chevron/submenu bits all
+     transition together (opacity + max-width/max-height rather than an
+     instant display:none) so the rail draws in smoothly instead of the
+     icons visibly snapping into their centred position after the text
+     vanishes. */
+  .at-sidebar {
+    transition: width 0.25s ease;
+  }
+
   .sidebar-collapsed-toggle:checked ~ .at-sidebar {
     width: 3rem;
     min-width: 3rem;
     overflow: hidden;
   }
 
+  .sidebar-row-label span:not(:has(svg)) {
+    opacity: 1;
+    max-width: 10rem;
+    overflow: hidden;
+    white-space: nowrap;
+    transition:
+      opacity 0.15s ease,
+      max-width 0.2s ease;
+  }
+
   .sidebar-collapsed-toggle:checked ~ .at-sidebar .sidebar-row-label span:not(:has(svg)),
-  .sidebar-collapsed-toggle:checked ~ .at-sidebar .sidebar-chevron,
+  .sidebar-collapsed-toggle:checked ~ .at-sidebar :global(.sidebar-chevron) {
+    opacity: 0;
+    max-width: 0;
+    /* Flex items default to min-width:auto (their content's intrinsic
+       size), which wins over max-width:0 and leaves a residual gap that
+       throws off centering — min-width:0 lets max-width actually collapse
+       it to nothing. */
+    min-width: 0;
+    pointer-events: none;
+  }
+
+  .sidebar-items {
+    overflow: hidden;
+    opacity: 1;
+    max-height: 60rem;
+    transition:
+      opacity 0.15s ease,
+      max-height 0.25s ease;
+  }
+
   .sidebar-collapsed-toggle:checked ~ .at-sidebar .sidebar-items {
-    display: none;
+    opacity: 0;
+    max-height: 0;
+    pointer-events: none;
   }
 
   .sidebar-collapsed-toggle:checked ~ .at-sidebar summary,
