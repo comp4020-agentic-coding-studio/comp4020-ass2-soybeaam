@@ -186,19 +186,6 @@ body:has(.at-sidebar) .at-nav-inner {
   padding-block-start: calc(4.5rem + var(--at-spacing-md));
 }
 
-/* Header quick-link dropdowns (Lectures, Assessment): with the sidebar now
- * the primary nav, the header becomes a slim utility bar. Once the sidebar
- * is available (>=640px, matching Nav.astro's own hamburger breakpoint),
- * hide Sessions — Lectures/Assessment carry a dropdown for fast access
- * while scrolled, and People/Policies stay visible as plain header links.
- * Below that breakpoint the header list is the only nav on the page, so
- * every link (and the dropdown host's own link) stays visible and plain. */
-@media (width >= 640px) {
-  .at-nav-links > li:nth-child(2) {
-    display: none;
-  }
-}
-
 .at-nav-dropdown-host {
   position: relative;
   display: flex;
