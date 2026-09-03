@@ -84,13 +84,18 @@ body:has(.at-sidebar) {
      nav; (2) on the home page the hero section renders above .at-main
      entirely (BaseLayout's separate `hero` slot), so a sticky sidebar only
      starts once scrolling reaches .at-main — fixed positioning lets it sit
-     over the hero from the very top instead. z-index 20 stays below the
-     nav (100) but above the hero image/scrim. */
+     over the hero from the very top instead. It now also rises above the
+     nav bar itself (inset-block-start: 0, full 100dvh) rather than
+     starting below it. The nav bar still spans the full page width
+     underneath (wanted, so it reads as one continuous bar rather than a
+     bar that stops short of the sidebar) — z-index 150 puts the sidebar
+     above it so the nav's white strip is simply hidden behind the
+     sidebar's own column instead of showing through. */
   position: fixed;
-  z-index: 20;
+  z-index: 150;
   inset-inline-start: 0;
-  inset-block-start: var(--at-nav-height);
-  block-size: calc(100dvh - var(--at-nav-height));
+  inset-block-start: 0;
+  block-size: 100dvh;
 }
 
 /* Extend .at-main's own span and let the content box ride along it, so the
@@ -115,6 +120,29 @@ body:has(.at-sidebar) .at-main {
 
 .at-main > .at-sidebar-content {
   grid-column: content-start / full-end;
+  /* --at-content-inset is 0 (see :root above), so content-start sits flush
+     against the sidebar/gutter with no breathing room — give the actual
+     text block its own padding instead of relying on that token. */
+  margin-block: var(--at-spacing-lg);
+  padding: var(--at-spacing-xl);
+}
+
+/* The hero title normally relies on --at-content-inset for its side
+   margin too — same fix, since that token is 0 in this theme. */
+.at-hero-title {
+  padding-inline: var(--at-spacing-xl);
+}
+
+/* On heroless pages, ContentLayout renders the <h1>/lead directly into
+   .at-main (ahead of the .at-sidebar-content wrapper above), so they need
+   the same side padding and some top breathing room below the nav. */
+body:has(.at-sidebar) .at-main > h1,
+body:has(.at-sidebar) .at-main > .lead {
+  padding-inline: var(--at-spacing-xl);
+}
+
+body:has(.at-sidebar) .at-main > h1 {
+  padding-block-start: var(--at-spacing-xl);
 }
 
 .at-nav {
