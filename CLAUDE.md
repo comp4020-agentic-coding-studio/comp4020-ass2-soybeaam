@@ -44,3 +44,9 @@ it still works (`pnpm check`, a manual `pnpm dev` look) rather than looking
 right only in a screenshot.
 
 ## You are allowed to change .astro files
+
+## Don't run `pnpm check` unless asked or committing
+
+Only run `pnpm check` when the user explicitly asks for it, or right before a
+commit that touches dates/assessments/session-lecture pairs (per the rules
+above). Don't run it proactively after every small edit.

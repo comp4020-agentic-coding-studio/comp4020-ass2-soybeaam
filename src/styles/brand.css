@@ -55,21 +55,44 @@ body:has(.at-sidebar) {
   --at-logo-offset-x: calc(-1 * (var(--at-gutter) + var(--at-sidebar-inset)));
 }
 
+/* Below 768px the sidebar itself is hidden (further down, and in
+   AppSidebar.astro's own collapse-toggle rule) — but this file's own
+   --at-sidebar-inset above is unlayered, so it would otherwise keep beating
+   the theme's layered mobile reset in sidebar.css and starve the content
+   column of width on narrow viewports even with no sidebar on screen. */
+@media (width <= 768px) {
+  body:has(.at-sidebar) {
+    --at-gutter: var(--at-spacing-md);
+    --at-sidebar-inset: 0px;
+  }
+}
+
 .at-main > .at-sidebar {
   width: 11rem;
   margin-inline-end: 0;
-  background: #fff;
+  background: #fafafa;
   color: #000;
   padding-inline: var(--at-spacing-sm);
-  border-inline-end: 4px solid #000;
-  /* The theme's own default sticks the sidebar --at-spacing-lg below the
-     nav — drop that so it sticks flush against the nav's bottom edge
-     instead of leaving a gap once scrolled. */
-  inset-block-start: var(--at-nav-height);
-  /* Once stuck, cap the sidebar to the remaining viewport height and let it
-     scroll internally rather than running off the bottom of the screen. */
-  max-height: calc(100dvh - var(--at-nav-height));
+  /* Leaves room for the collapse toggle button, which floats fixed over the
+     sidebar's own top-left corner. */
+  padding-block-start: calc(2.25rem + var(--at-spacing-md));
+  border-inline-end: 1px solid rgba(0, 0, 0, 0.1);
   overflow-y: auto;
+  /* Take the sidebar out of .at-main's grid flow entirely and pin it to the
+     viewport instead of using the theme's sticky-in-grid default. Two
+     problems that fixes at once: (1) .at-main places children by DOM order
+     and ContentLayout inserts the page's <h1>/lead before our <slot/>, so a
+     grid-flow sidebar lands a row below them instead of flush under the
+     nav; (2) on the home page the hero section renders above .at-main
+     entirely (BaseLayout's separate `hero` slot), so a sticky sidebar only
+     starts once scrolling reaches .at-main — fixed positioning lets it sit
+     over the hero from the very top instead. z-index 20 stays below the
+     nav (100) but above the hero image/scrim. */
+  position: fixed;
+  z-index: 20;
+  inset-inline-start: 0;
+  inset-block-start: var(--at-nav-height);
+  block-size: calc(100dvh - var(--at-nav-height));
 }
 
 /* Extend .at-main's own span and let the content box ride along it, so the
@@ -83,17 +106,22 @@ body:has(.at-sidebar) .at-main {
   padding-block-start: 0;
 }
 
+/* No sidebar on screen below 768px (see above) — let .at-main sit in the
+   theme's normal narrow-viewport column instead of forcing full width. */
+@media (width <= 768px) {
+  body:has(.at-sidebar) .at-main {
+    grid-column: inset-start / content-end;
+    padding-block-start: var(--at-spacing-lg);
+  }
+}
+
 .at-main > .at-sidebar-content {
   grid-column: content-start / full-end;
 }
 
-/* Boxed layout: header, sidebar, content and footer each read as their own
- * bold-bordered region (a plain-link-list wireframe with thick outlines
- * around header/sidebar/content/footer), kept to the site's three-colour
- * palette (black border in place of the wireframe's blue). */
 .at-nav {
   background: #fff;
-  border-block-end: 4px solid #000;
+  border-block-end: 1px solid rgba(0, 0, 0, 0.15);
 }
 
 .at-nav-inner {
@@ -117,13 +145,12 @@ body:has(.at-sidebar) .at-nav-inner {
 }
 
 .at-sidebar-content {
-  border: 4px solid #000;
   margin-block: var(--at-spacing-sm);
   padding: var(--at-spacing-lg);
 }
 
 .at-footer {
-  border-block-start: 4px solid #000;
+  border-block-start: 1px solid rgba(0, 0, 0, 0.15);
 }
 
 /* Classroom's stream tiles: a flat colour banner across the top of the card,
@@ -197,7 +224,8 @@ body:has(.at-sidebar) .at-nav-inner {
   min-width: 12rem;
   margin-block-start: var(--at-spacing-xs);
   background: var(--at-bg);
-  border: 4px solid #000;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   display: none;
 }
 

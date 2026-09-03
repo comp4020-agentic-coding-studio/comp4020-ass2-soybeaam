@@ -122,15 +122,28 @@ function sectionIsCurrent(sectionHref: string): boolean {
     position: fixed;
     inset-block-start: calc(var(--at-nav-height, 3.5rem) + var(--at-spacing-sm));
     inset-inline-start: var(--at-spacing-sm);
-    z-index: 10;
+    z-index: 21;
     display: flex;
     align-items: center;
     justify-content: center;
     inline-size: 2.25rem;
     block-size: 2.25rem;
-    border: 1px solid var(--at-divider, #000);
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 0.375rem;
     background: var(--at-bg);
+    color: rgba(0, 0, 0, 0.7);
     cursor: pointer;
+    transition:
+      background-color 0.15s ease,
+      border-color 0.15s ease,
+      color 0.15s ease;
+  }
+
+  .sidebar-toggle-label:hover,
+  .sidebar-toggle-label:focus-visible {
+    background: var(--at-primary);
+    border-color: var(--at-primary);
+    color: #fff;
   }
 
   .at-sidebar nav > ul {
@@ -140,14 +153,18 @@ function sectionIsCurrent(sectionHref: string): boolean {
   }
 
   .at-sidebar li + li {
-    margin-block-start: var(--at-spacing-sm);
+    margin-block-start: var(--at-spacing-2xs, 0.25rem);
   }
 
   .at-sidebar a {
     display: block;
+    border-radius: 0.375rem;
     padding: var(--at-spacing-xs) var(--at-spacing-sm);
-    color: #000;
+    color: rgba(0, 0, 0, 0.8);
     text-decoration: none;
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease;
   }
 
   /* Higher specificity than .at-sidebar a above, so the flex layout below
@@ -162,12 +179,14 @@ function sectionIsCurrent(sectionHref: string): boolean {
 
   .at-sidebar a:hover,
   .at-sidebar a:focus-visible {
-    background: rgba(0, 0, 0, 0.08);
+    background: rgba(185, 125, 28, 0.12);
+    color: #000;
   }
 
   .at-sidebar a[aria-current="page"] {
     background: var(--at-primary);
     color: #fff;
+    font-weight: 600;
   }
 
   .at-sidebar summary {
@@ -177,9 +196,11 @@ function sectionIsCurrent(sectionHref: string): boolean {
     gap: var(--at-spacing-xs);
     cursor: pointer;
     list-style: none;
+    border-radius: 0.375rem;
     padding: var(--at-spacing-xs) var(--at-spacing-sm);
-    color: #000;
+    color: rgba(0, 0, 0, 0.8);
     font-weight: 600;
+    transition: background-color 0.15s ease;
   }
 
   .at-sidebar summary::-webkit-details-marker {
@@ -188,13 +209,23 @@ function sectionIsCurrent(sectionHref: string): boolean {
 
   .at-sidebar summary:hover,
   .at-sidebar summary:focus-visible {
-    background: rgba(0, 0, 0, 0.08);
+    background: rgba(185, 125, 28, 0.12);
+    color: #000;
   }
 
   .sidebar-row-label {
     display: flex;
     align-items: center;
     gap: var(--at-spacing-xs);
+  }
+
+  .sidebar-row-label :global(svg) {
+    color: var(--at-primary);
+    flex-shrink: 0;
+  }
+
+  .at-sidebar a[aria-current="page"] .sidebar-row-label :global(svg) {
+    color: #fff;
   }
 
   .sidebar-top-link {
@@ -205,6 +236,7 @@ function sectionIsCurrent(sectionHref: string): boolean {
 
   .sidebar-chevron {
     flex-shrink: 0;
+    color: rgba(0, 0, 0, 0.4);
     transition: transform 0.15s ease;
   }
 
@@ -215,14 +247,14 @@ function sectionIsCurrent(sectionHref: string): boolean {
   .sidebar-divider-after {
     padding-block-end: var(--at-spacing-sm);
     margin-block-end: var(--at-spacing-sm);
-    border-block-end: 1px solid rgba(0, 0, 0, 0.2);
+    border-block-end: 1px solid rgba(0, 0, 0, 0.1);
   }
 
   .sidebar-items {
     list-style: none;
-    margin: var(--at-spacing-xs) 0 0;
+    margin: var(--at-spacing-2xs, 0.25rem) 0 0;
     padding-inline-start: var(--at-spacing-sm);
-    border-inline-start: 2px solid rgba(0, 0, 0, 0.2);
+    border-inline-start: 2px solid rgba(185, 125, 28, 0.3);
     font-size: var(--at-font-size-sm);
   }
 
@@ -235,25 +267,51 @@ function sectionIsCurrent(sectionHref: string): boolean {
 
   .sidebar-items a {
     padding-block: var(--at-spacing-2xs, 0.25rem);
-    color: rgba(0, 0, 0, 0.75);
+    color: rgba(0, 0, 0, 0.65);
   }
 
   .sidebar-items a[aria-current="page"] {
     color: #fff;
   }
 
-  /* Collapse: hide the sidebar and reclaim its reserved grid gutter. */
+  /* Collapse: shrink the sidebar to an icon-only rail instead of hiding it
+     outright, so the nav stays reachable (matches the "icon rail" pattern,
+     not a fully-hidden drawer). */
   .sidebar-collapsed-toggle:checked ~ .at-sidebar {
-    width: 0;
-    min-width: 0;
-    padding: 0;
-    margin: 0;
+    width: 3rem;
+    min-width: 3rem;
     overflow: hidden;
-    border: none;
+  }
+
+  .sidebar-collapsed-toggle:checked ~ .at-sidebar .sidebar-row-label span:not(:has(svg)),
+  .sidebar-collapsed-toggle:checked ~ .at-sidebar .sidebar-chevron,
+  .sidebar-collapsed-toggle:checked ~ .at-sidebar .sidebar-items {
+    display: none;
+  }
+
+  .sidebar-collapsed-toggle:checked ~ .at-sidebar summary,
+  .sidebar-collapsed-toggle:checked ~ .at-sidebar a {
+    justify-content: center;
+    padding-inline: var(--at-spacing-2xs, 0.25rem);
+  }
+
+  .sidebar-collapsed-toggle:checked ~ .at-sidebar .sidebar-divider-after {
+    border-block-end: none;
+    padding-block-end: 0;
   }
 
   :global(body:has(.sidebar-collapsed-toggle:checked)) {
-    --at-sidebar-inset: 0px;
+    --at-sidebar-inset: 3rem;
+  }
+
+  /* Below the theme's own mobile breakpoint (sidebar.css hides .at-sidebar
+     entirely at <=768px), the sidebar isn't reachable at all — so the
+     collapse toggle that would otherwise open/close it shouldn't be shown
+     either. */
+  @media (width <= 768px) {
+    .sidebar-toggle-label {
+      display: none;
+    }
   }
 </style>
 

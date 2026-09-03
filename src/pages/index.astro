@@ -3,8 +3,40 @@ import Card from "astro-theme-university/components/Card.astro";
 import CardGrid from "astro-theme-university/components/CardGrid.astro";
 import ContentLayout from "../layouts/SiteContentLayout.astro";
 import heroImage from "../assets/images/hero-home.avif";
+import { getPublishedCollection } from "astro-course-university/content";
+import { withBase } from "astro-theme-university/url";
 import { courseMeta } from "../course-config";
 import { sessionLabels, siteConfig } from "../site-config";
+
+const [lectures, sessions] = await Promise.all([
+  getPublishedCollection("lectures"),
+  getPublishedCollection("sessions"),
+]);
+
+type WeekRow = {
+  week: number;
+  lecture?: { title: string; href: string };
+  session?: { title: string; href: string };
+};
+
+const weeks = new Map<number, WeekRow>();
+for (const entry of lectures) {
+  const week = (entry.data as { week: number }).week;
+  weeks.set(week, {
+    ...weeks.get(week),
+    week,
+    lecture: { title: entry.data.title, href: withBase(`/lectures/${entry.id}/`) },
+  });
+}
+for (const entry of sessions) {
+  const week = (entry.data as { week: number }).week;
+  weeks.set(week, {
+    ...weeks.get(week),
+    week,
+    session: { title: entry.data.title, href: withBase(`/sessions/${entry.id}/`) },
+  });
+}
+const orderedWeeks = [...weeks.values()].sort((a, b) => a.week - b.week);
 ---
 
 <ContentLayout
@@ -37,6 +69,31 @@ import { sessionLabels, siteConfig } from "../site-config";
     manages, or apologises for a living.
   </p>
 
+  <h2>Week by week</h2>
+  <ol class="week-list">
+    {
+      orderedWeeks.map(({ week, lecture, session }) => (
+        <li class="week-row">
+          <span class="week-number">Week {week}</span>
+          <ul class="week-items">
+            {lecture && (
+              <li>
+                <a href={lecture.href}>Lecture: {lecture.title}</a>
+              </li>
+            )}
+            {session && (
+              <li>
+                <a href={session.href}>
+                  {sessionLabels.singular}: {session.title}
+                </a>
+              </li>
+            )}
+          </ul>
+        </li>
+      ))
+    }
+  </ol>
+
   <h2>Where to go next</h2>
   <CardGrid columns={2}>
     <Card title={sessionLabels.plural} href="/sessions/">
@@ -67,5 +124,47 @@ import { sessionLabels, siteConfig } from "../site-config";
     color: var(--at-text-secondary);
     background: var(--at-bg-alt);
     font-size: 0.9rem;
+  }
+
+  .week-list {
+    list-style: none;
+    margin: 0 0 2rem;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--at-spacing-sm);
+  }
+
+  .week-row {
+    padding: var(--at-spacing-sm) var(--at-spacing-md);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 0.375rem;
+    background: var(--at-bg-alt);
+  }
+
+  .week-number {
+    display: block;
+    font-weight: 600;
+    color: var(--at-primary);
+  }
+
+  .week-items {
+    list-style: none;
+    margin: var(--at-spacing-xs) 0 0;
+    padding-inline-start: var(--at-spacing-md);
+    border-inline-start: 2px solid rgba(185, 125, 28, 0.3);
+    display: flex;
+    flex-direction: column;
+    gap: var(--at-spacing-2xs, 0.25rem);
+  }
+
+  .week-items a {
+    color: var(--at-text);
+    text-decoration: none;
+  }
+
+  .week-items a:hover,
+  .week-items a:focus-visible {
+    text-decoration: underline;
   }
 </style>
