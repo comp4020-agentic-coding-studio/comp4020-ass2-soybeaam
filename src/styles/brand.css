@@ -196,7 +196,17 @@ body:has(.at-sidebar) .at-main {
      lead's own padding gives the following content its breathing room. */
   body:has(.at-sidebar):has(.at-hero) .at-main {
     padding-block-start: 0;
+    /* Widen the container so the lead band below can reach both screen edges
+       the way the hero does. Safe to do here rather than only on the lead,
+       because every other .at-main child is already pinned to
+       content-start / content-end further down — they don't move, only this
+       box grows. */
+    grid-column: full-start / full-end;
   }
+
+  /* The matching .lead override lives in the mobile section at the end of the
+     file: it has the same specificity as the desktop rule, so it only wins by
+     coming after it. */
 }
 
 .at-main > .at-sidebar-content {
@@ -291,6 +301,15 @@ body:has(.at-sidebar) .at-hero-title {
    under a picture. */
 body:has(.at-sidebar):has(.at-hero) .at-main > .lead {
   order: -1;
+  /* Full width of the visible page, matching the hero band above it. The
+     hero is `grid-column: full` and runs under the fixed sidebar; the lead
+     starts at `inset-start` instead, which is the sidebar's right edge (and
+     tracks --at-sidebar-inset when the rail collapses), so the two bands end
+     at the same two x positions with no strip of dead space on the right
+     where the lead used to stop at `content-end`. Its existing --page-pad
+     then lands the text on the same x as the hero title, since
+     --at-content-inset is 0. */
+  grid-column: inset-start / full-end;
   margin-block: 0;
   padding-block: var(--at-spacing-md);
   background: rgb(0 0 0 / 80%);
@@ -549,6 +568,34 @@ a.at-card:focus-visible {
    on purpose and media queries add no specificity, so a mobile override only
    wins if it sits after the desktop rule it overrides.
    --------------------------------------------------------------------------- */
+
+@media (width <= 768px) {
+  /* Edge to edge, matching the hero band above it (which is `grid-column:
+     full` at every width). Padded by the gutter as well as --page-pad so the
+     summary text still starts on the same x as the hero title, which sits in
+     the content column — i.e. one gutter in. Without the gutter term the band
+     would bleed correctly but its text would sit a step left of the heading.
+     .at-main is widened to `full` on these pages further up so this can
+     actually reach the edges. */
+  body:has(.at-sidebar):has(.at-hero) .at-main > .lead {
+    grid-column: full-start / full-end;
+    padding-inline: calc(var(--at-gutter) + var(--page-pad));
+  }
+
+  /* The desktop cap still assumes a sidebar's worth of width is gone. On a
+     phone the band has the whole screen, and 3.5vw of a 390px viewport is
+     under 14px, so the clamp bottoms out and the title reads small for a
+     page heading. Give it back a phone-appropriate floor. */
+  body:has(.at-sidebar) .at-hero {
+    min-height: 9rem;
+  }
+
+  body:has(.at-sidebar) .at-hero-title {
+    font-size: clamp(1.5rem, 6vw, 2.25rem);
+    padding-block: var(--at-spacing-md);
+    max-inline-size: none;
+  }
+}
 
 @media (width < 640px) {
   :root {

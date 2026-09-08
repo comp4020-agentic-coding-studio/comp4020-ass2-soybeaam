@@ -43,6 +43,33 @@ a student trying to find a date, a reading, or a mark weighting, and confirm
 it still works (`pnpm check`, a manual `pnpm dev` look) rather than looking
 right only in a screenshot.
 
+## Phone usability is part of every change, not a follow-up
+
+A request phrased about "the page" or "the screen" means both desktop and
+phone. No change ships having been reasoned about at one width only. Before
+calling a layout or styling change done, walk it at ≥1024px, at the 768px
+breakpoint, and at ~390px, and say which widths were actually checked.
+
+Specific to this repo:
+
+- The left sidebar and the right clock/calendar rail are both hidden below
+  768px. Anything whose layout is keyed off `--at-sidebar-inset` or
+  `--at-right-rail-width` needs a narrow-viewport answer, not just a
+  `display: none`.
+- `.at-main` changes column span at 768px and `--page-pad`/`--at-gutter`
+  shrink at 640px. A child pinned to a grid line that its parent no longer
+  covers overhangs the viewport and scrolls the page sideways — check for
+  horizontal scroll at 390px specifically.
+- Touch targets in the hamburger drawer and any new control stay at least
+  2.25rem tall.
+- Hover is not available. Anything reachable only by hover needs a tap or
+  focus route as well.
+
+**Mobile overrides go at the END of `src/styles/brand.css`.** That file is
+deliberately unlayered and media queries add no specificity, so a narrow
+override at equal specificity only wins by source order. Writing one next to
+the desktop rule it is meant to override is a silent no-op.
+
 ## You are allowed to change .astro files
 
 ## Don't run `pnpm check` unless asked or committing
