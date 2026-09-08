@@ -6,6 +6,7 @@ import ContentLayout from "../../layouts/SiteContentLayout.astro";
 import TeachingTeam from "../../components/TeachingTeam.astro";
 import SlidesLink from "../../components/SlidesLink.astro";
 import { formatCourseDate } from "../../lib/dates";
+import { heroForWeek } from "../../lib/hero-images";
 import { graphCollections, siteConfig } from "../../site-config";
 
 export async function getStaticPaths() {
@@ -16,9 +17,20 @@ export async function getStaticPaths() {
 const { lecture } = Astro.props;
 const { Content } = await render(lecture);
 const title = `Week ${lecture.data.week}: ${lecture.data.title}`;
+// Keyed to the week, so a week's lecture and its paired workshop share a
+// backdrop and the pair reads as one week. The pool is smaller than the
+// teaching weeks, so the later weeks reuse an earlier week's image — the
+// image pairs a lecture with its workshop, it doesn't identify the week.
+const hero = heroForWeek(lecture.data.week);
 ---
 
-<ContentLayout title={title} description={lecture.data.description} {...siteConfig}>
+<ContentLayout
+  title={title}
+  description={lecture.data.description}
+  heroImage={hero.image}
+  heroImageAlt={hero.alt}
+  {...siteConfig}
+>
   <p><strong>{formatCourseDate(lecture.data.date)}</strong></p>
   {lecture.data.slides && <SlidesLink href={lecture.data.slides} />}
   <Content />

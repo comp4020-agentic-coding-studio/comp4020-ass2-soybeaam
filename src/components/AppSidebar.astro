@@ -78,20 +78,37 @@ function sectionIsCurrent(sectionHref: string): boolean {
         sections.map((section) => (
           <li class:list={["sidebar-section", { "sidebar-divider-after": section.dividerAfter }]}>
             {section.items && section.items.length > 0 ? (
-              <details open={sectionIsCurrent(section.href)}>
-                <summary>
-                  <span class="sidebar-row-label">
+              <Fragment>
+                {/* Deliberately NOT <details>/<summary>. The section title has to
+                    be a real link to the section's overview page, and an <a>
+                    nested inside a <summary> both navigates AND toggles the
+                    disclosure — inconsistently across browsers. Splitting them
+                    into an independent <a> plus a checkbox-driven <label> makes
+                    "go to the section" and "show the section's pages" two
+                    genuinely separate controls, and reuses the same CSS-only
+                    toggle pattern as the rail collapse above (no client JS). */}
+                <input
+                  type="checkbox"
+                  id={`sidebar-open-${section.collection}`}
+                  class="sidebar-section-toggle"
+                  checked={sectionIsCurrent(section.href)}
+                  data-pagefind-ignore
+                />
+                <div class="sidebar-section-row">
+                  <a
+                    class="sidebar-row-label sidebar-top-link"
+                    href={section.href}
+                    aria-current={currentPath === section.href ? "page" : undefined}
+                  >
                     <Icon name={section.icon} size="1rem" />
                     <span>{section.title}</span>
-                  </span>
-                  <Icon name="nav-arrow-down" size="1rem" class="sidebar-chevron" />
-                </summary>
+                  </a>
+                  <label for={`sidebar-open-${section.collection}`} class="sidebar-disclosure">
+                    <Icon name="nav-arrow-down" size="1rem" class="sidebar-chevron" />
+                    <span class="sr-only">Show {section.title} pages</span>
+                  </label>
+                </div>
                 <ul class="sidebar-items">
-                  <li>
-                    <a href={section.href} aria-current={currentPath === section.href ? "page" : undefined}>
-                      Overview
-                    </a>
-                  </li>
                   {section.items.map((item) => (
                     <li>
                       <a href={item.href} aria-current={currentPath === item.href ? "page" : undefined}>
@@ -101,7 +118,7 @@ function sectionIsCurrent(sectionHref: string): boolean {
                     </li>
                   ))}
                 </ul>
-              </details>
+              </Fragment>
             ) : (
               <a
                 class="sidebar-row-label sidebar-top-link"
@@ -120,8 +137,13 @@ function sectionIsCurrent(sectionHref: string): boolean {
 </div>
 
 <style>
+  /* `fixed`, not `absolute`: activating the label focuses this input, and a
+     browser scrolls a newly focused element into view. Anchored to the
+     sidebar it sits at the sidebar's top, so every toggle yanked the page
+     (and the nav list) back to the top. Anchored to the viewport it is
+     already in view, so there is nothing to scroll to. */
   .sidebar-collapsed-toggle {
-    position: absolute;
+    position: fixed;
     inset-block-start: 0;
     inset-inline-start: 0;
     width: 1px;
@@ -153,8 +175,11 @@ function sectionIsCurrent(sectionHref: string): boolean {
   }
 
   /* The toggle button IS the crest now (no separate hamburger glyph) — a
-     plain, borderless hit target that scales slightly on hover/press so it
-     still reads as clickable without looking like a generic icon button. */
+     plain, borderless hit target. Hover/press change the BACKGROUND only,
+     never a transform: a scale() here made the crest visibly jump under the
+     cursor on every press, and because the collapsed rail is `overflow:
+     hidden` a scaled-up box also got clipped mid-animation. Background
+     feedback reads as clickable without moving anything. */
   .sidebar-toggle-label {
     flex-shrink: 0;
     display: flex;
@@ -165,18 +190,15 @@ function sectionIsCurrent(sectionHref: string): boolean {
     border-radius: 0.375rem;
     background: transparent;
     cursor: pointer;
-    transition:
-      background-color 0.15s ease,
-      transform 0.15s ease;
+    transition: background-color 0.15s ease;
   }
 
   .sidebar-toggle-label:hover {
     background: rgba(0, 0, 0, 0.05);
-    transform: scale(1.06);
   }
 
   .sidebar-toggle-label:active {
-    transform: scale(0.96);
+    background: rgba(0, 0, 0, 0.09);
   }
 
   .sidebar-toggle-label:focus-visible {
@@ -188,7 +210,6 @@ function sectionIsCurrent(sectionHref: string): boolean {
     inline-size: 1.5rem;
     block-size: 1.5rem;
     vertical-align: middle;
-    transition: transform 0.15s ease;
   }
 
   .sidebar-brand {
@@ -238,7 +259,7 @@ function sectionIsCurrent(sectionHref: string): boolean {
      sections. */
   .sidebar-collapsed-toggle:checked ~ .at-sidebar .sidebar-row-label,
   .sidebar-collapsed-toggle:checked ~ .at-sidebar .sidebar-top-link,
-  .sidebar-collapsed-toggle:checked ~ .at-sidebar summary {
+  .sidebar-collapsed-toggle:checked ~ .at-sidebar .sidebar-section-row {
     gap: 0;
   }
 
@@ -285,27 +306,60 @@ function sectionIsCurrent(sectionHref: string): boolean {
     font-weight: 700;
   }
 
-  .at-sidebar summary {
+  /* Off-screen state holder for each expandable section. Out of flow so it
+     leaves no stray row in the nav list, and `fixed` rather than `absolute`
+     for the same reason as .sidebar-collapsed-toggle above: absolute put it
+     at the sidebar's top, and focusing it on label activation scrolled the
+     nav (and the page) back up on every expand. */
+  .sidebar-section-toggle {
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Section header: the overview link takes all remaining width so the whole
+     row (not just the words) is a click target for "go to the section", and
+     the chevron sits at the end as its own separate control. */
+  .sidebar-section-row {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: var(--at-spacing-xs);
-    cursor: pointer;
-    list-style: none;
-    border-radius: 0.375rem;
-    padding: var(--at-spacing-xs) var(--at-spacing-sm);
+  }
+
+  .at-sidebar .sidebar-section-row > a.sidebar-top-link {
+    flex: 1;
+    min-width: 0;
     color: rgba(0, 0, 0, 0.85);
     font-weight: 700;
+  }
+
+  .sidebar-disclosure {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 1.75rem;
+    block-size: 1.75rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
     transition: background-color 0.15s ease;
   }
 
-  .at-sidebar summary::-webkit-details-marker {
-    display: none;
+  .sidebar-disclosure:hover {
+    background: #f3f3f3;
   }
 
-  .at-sidebar summary:hover,
-  .at-sidebar summary:focus-visible {
-    background: #f3f3f3;
+  .sidebar-section-toggle:focus-visible + .sidebar-section-row .sidebar-disclosure {
+    outline: 2px solid var(--at-primary);
+    outline-offset: 1px;
+  }
+
+  /* Chevron points down when closed, flips when the section is open. */
+  .sidebar-section-toggle:checked + .sidebar-section-row :global(.sidebar-chevron) {
+    transform: rotate(180deg);
   }
 
   .sidebar-row-label {
@@ -346,19 +400,20 @@ function sectionIsCurrent(sectionHref: string): boolean {
       max-width 0.2s ease;
   }
 
-  details[open] > summary :global(.sidebar-chevron) {
-    transform: rotate(180deg);
-  }
-
   .sidebar-divider-after {
     padding-block-end: var(--at-spacing-sm);
     margin-block-end: var(--at-spacing-sm);
     border-block-end: 1px solid rgba(0, 0, 0, 0.08);
   }
 
+  /* margin-block-start is 0 here and only added back by the :checked rule
+     below. Left as a constant it applied even when the list was collapsed to
+     max-height:0, so every icon below an open section in the collapsed rail
+     was pushed down by a stray 0.25rem — the "icons move when you press
+     them" effect. */
   .sidebar-items {
     list-style: none;
-    margin: var(--at-spacing-2xs, 0.25rem) 0 0;
+    margin: 0;
     padding-inline-start: var(--at-spacing-lg, 1.5rem);
     font-size: var(--at-font-size-sm);
   }
@@ -437,25 +492,54 @@ function sectionIsCurrent(sectionHref: string): boolean {
     pointer-events: none;
   }
 
+  /* Closed is the default; the section's own checkbox opens it. */
   .sidebar-items {
     overflow: hidden;
-    opacity: 1;
-    max-height: 60rem;
-    transition:
-      opacity 0.15s ease,
-      max-height 0.25s ease;
-  }
-
-  .sidebar-collapsed-toggle:checked ~ .at-sidebar .sidebar-items {
     opacity: 0;
     max-height: 0;
     pointer-events: none;
+    transition:
+      opacity 0.15s ease,
+      max-height 0.25s ease,
+      margin-block-start 0.25s ease;
   }
 
-  .sidebar-collapsed-toggle:checked ~ .at-sidebar summary,
+  .sidebar-section-toggle:checked ~ .sidebar-items {
+    opacity: 1;
+    max-height: 60rem;
+    margin-block-start: var(--at-spacing-2xs, 0.25rem);
+    pointer-events: auto;
+  }
+
+  /* Collapsed to an icon rail: force every section shut regardless of its own
+     checkbox (three classes here vs two in the :checked rule above, so this
+     wins without !important) and take back the margin with it. */
+  .sidebar-collapsed-toggle:checked ~ .at-sidebar .sidebar-items {
+    opacity: 0;
+    max-height: 0;
+    margin-block-start: 0;
+    pointer-events: none;
+  }
+
+  /* The chevron has no room in a 3rem rail and its section can't open there
+     anyway — drop it rather than leave a dead control squeezing the icon. */
+  .sidebar-collapsed-toggle:checked ~ .at-sidebar .sidebar-disclosure {
+    display: none;
+  }
+
   .sidebar-collapsed-toggle:checked ~ .at-sidebar a {
     justify-content: center;
     padding-inline: var(--at-spacing-2xs, 0.25rem);
+  }
+
+  /* The rail is 3rem wide with var(--at-spacing-sm) (0.5rem) of padding on
+     each side (brand.css), leaving 2rem of usable track — so the crest's
+     2.25rem hover box overflowed it and got clipped on the right by the
+     rail's `overflow: hidden`, which is why the grey box looked off-centre
+     around the logo. Match the box to the track exactly. */
+  .sidebar-collapsed-toggle:checked ~ .at-sidebar .sidebar-toggle-label {
+    inline-size: 2rem;
+    block-size: 2rem;
   }
 
   .sidebar-collapsed-toggle:checked ~ .at-sidebar .sidebar-divider-after {

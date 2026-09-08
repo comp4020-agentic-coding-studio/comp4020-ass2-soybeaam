@@ -7,6 +7,7 @@ import Callout from "astro-theme-university/components/Callout.astro";
 import ContentLayout from "../../layouts/SiteContentLayout.astro";
 import MarkingModel from "../../components/MarkingModel.astro";
 import { formatCourseDate } from "../../lib/dates";
+import { heroForSlug } from "../../lib/hero-images";
 import { graphCollections, siteConfig } from "../../site-config";
 
 export async function getStaticPaths() {
@@ -19,11 +20,17 @@ export async function getStaticPaths() {
 
 const { assessment } = Astro.props;
 const { Content } = await render(assessment);
+// Assessments aren't week-numbered, so hash the slug instead: still stable
+// per page (the same brief keeps the same image across builds), just not
+// derivable from a week.
+const hero = heroForSlug(assessment.id);
 ---
 
 <ContentLayout
   title={assessment.data.title}
   description={assessment.data.description}
+  heroImage={hero.image}
+  heroImageAlt={hero.alt}
   {...siteConfig}
 >
   {

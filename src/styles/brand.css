@@ -58,12 +58,54 @@
      nav (the sidebar's sticky offset, the collapse toggle, scroll-padding)
      depends on this being accurate. */
   --at-nav-height: calc(2.5rem + 2 * var(--at-spacing-sm) + 4px);
+
+  /* The right-hand clock/calendar rail's width. Deliberately its own token
+     and not --at-sidebar-inset: the two panels have independent toggles, so
+     tying the right one's width to the left one's is what previously made
+     collapsing the left rail squash the right one into an unusable sliver. */
+  --at-right-rail-width: 15rem;
 }
 
 /* The accent rule (body::after) is positioned from --at-content-inset, which
    is now 0 — drop the rule rather than have it collapse onto the gutter. */
 body::after {
   display: none;
+}
+
+/* Thin, square scrollbars everywhere — the default chrome-heavy bar is wide
+   enough to read as a UI element in its own right, which fights a layout
+   whose whole point is flush edges and hairline dividers. `scrollbar-width`
+   handles Firefox; the ::-webkit- rules do Chrome/Edge/Safari, where `thin`
+   is not honoured. No rounded thumb (--at-border-radius is 0 in this theme,
+   so a pill thumb would be the only curved thing on the page) and no track
+   background, so a scrollable panel doesn't gain a visible stripe when it
+   isn't being scrolled. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.28) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.28);
+  border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.45);
+}
+
+/* Kills the little square where a horizontal and vertical bar meet. */
+::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 /* Narrower sidebar than the theme's default 16rem. Zeroing the gutter on
@@ -147,6 +189,14 @@ body:has(.at-sidebar) .at-main {
     grid-column: inset-start / content-end;
     padding-block-start: var(--at-spacing-lg);
   }
+
+  /* ...except on a hero page, where that padding would open a white gap
+     between the hero band and the dark lead strip that continues it — the
+     one viewport where the two most need to read as a single block. The
+     lead's own padding gives the following content its breathing room. */
+  body:has(.at-sidebar):has(.at-hero) .at-main {
+    padding-block-start: 0;
+  }
 }
 
 .at-main > .at-sidebar-content {
@@ -160,33 +210,44 @@ body:has(.at-sidebar) .at-main {
 
 /* RightSidebar.astro is a fixed-position overlay, not a grid participant, so
    nothing above stops the content/nav/breadcrumb strips from spanning under
-   it to the viewport's right edge — pull them back to content-end (the same
-   line the left-sidebar reservation above already relies on) whenever the
-   right rail is present. Combining both :has() selectors, rather than just
-   adding `.at-right-sidebar` alone, keeps these at a higher specificity than
-   the single-:has() `full-end` rules above so they win regardless of source
-   order. */
-body:has(.at-sidebar):has(.at-right-sidebar) .at-main > .at-sidebar-content,
-body:has(.at-sidebar):has(.at-right-sidebar) .at-main > h1,
-body:has(.at-sidebar):has(.at-right-sidebar) .at-main > .lead,
-body:has(.at-sidebar):has(.at-right-sidebar) .at-nav-inner,
-body:has(.at-sidebar):has(.at-right-sidebar) .at-main > nav.breadcrumbs {
-  grid-column: content-start / content-end;
+   it to the viewport's right edge — they need space reserved for the rail
+   whenever it's open.
+ *
+ * This reserves it with a plain margin in the rail's OWN width token, rather
+ * than (as it did before) pulling these strips back to the grid's
+ * `content-end` line. That line sits `--at-gutter + --at-sidebar-inset` from
+ * the right edge — i.e. the LEFT sidebar's width — so the reservation, and
+ * the rail sized to match it, both shrank to 3rem the moment the left rail
+ * collapsed. That's what forced the right rail to hide itself in sympathy
+ * with a toggle that has nothing to do with it. A margin in independent
+ * units lets the two panels open and close entirely separately, and it
+ * replaces the whole matrix of :has() combinations this used to need.
+ *
+ * Gated above 768px: the rail is hidden below that (no room to overlay from),
+ * and `.at-main` itself stops at `content-end` there, so a margin would only
+ * eat content width for a panel that isn't on screen. */
+@media (width > 768px) {
+  /* `.at-hero` is a SIBLING of `.at-main`, not a child (BaseLayout renders it
+     into its own slot above the main grid), so it needs listing separately —
+     left out, the hero band is the one strip that still runs full-width
+     underneath the open rail. */
+  body:has(.at-sidebar):has(.right-sidebar-toggle:checked) .at-hero,
+  body:has(.at-sidebar):has(.right-sidebar-toggle:checked) .at-main > .at-sidebar-content,
+  body:has(.at-sidebar):has(.right-sidebar-toggle:checked) .at-main > h1,
+  body:has(.at-sidebar):has(.right-sidebar-toggle:checked) .at-main > .lead,
+  body:has(.at-sidebar):has(.right-sidebar-toggle:checked) .at-nav-inner,
+  body:has(.at-sidebar):has(.right-sidebar-toggle:checked) .at-main > nav.breadcrumbs {
+    margin-inline-end: var(--at-right-rail-width);
+  }
 }
 
 @media (width <= 768px) {
   /* `.at-main` is `grid-template-columns: subgrid` (theme components.css), so
      the body's named lines really are live inside it and a child CAN be asked
      to end past its parent. Below 768px `.at-main` itself goes back to
-     `inset-start / content-end` (above), so any child still reaching `full-end`
-     overhangs by exactly the right-hand gutter and scrolls the page sideways.
-     The right rail is hidden at this width anyway, so `content-end` is where
-     these belong. */
-  body:has(.at-sidebar):has(.at-right-sidebar) .at-main > .at-sidebar-content,
-  body:has(.at-sidebar):has(.at-right-sidebar) .at-main > h1,
-  body:has(.at-sidebar):has(.at-right-sidebar) .at-main > .lead,
-  body:has(.at-sidebar):has(.at-right-sidebar) .at-nav-inner,
-  body:has(.at-sidebar):has(.at-right-sidebar) .at-main > nav.breadcrumbs,
+     `inset-start / content-end` (above), so any child still reaching
+     `full-end` overhangs by exactly the right-hand gutter and scrolls the
+     page sideways. */
   body:has(.at-sidebar) .at-main > .at-sidebar-content,
   body:has(.at-sidebar) .at-main > h1,
   body:has(.at-sidebar) .at-main > .lead,
@@ -195,36 +256,46 @@ body:has(.at-sidebar):has(.at-right-sidebar) .at-main > nav.breadcrumbs {
   }
 }
 
-/* The right rail also hides itself when the left sidebar is collapsed
-   (RightSidebar.astro — a 3rem gutter isn't enough room for a clock/
-   calendar) — give that reclaimed gutter back the same way as the
-   mobile case above.
-
-   Gated above 768px: this is the highest-specificity grid-column rule in the
-   file, so left ungated it would beat the narrow-viewport pullbacks above and
-   reintroduce the sideways scroll on any phone whose stored
-   "sidebar-collapsed" flag happens to be set. `.at-main` only spans to
-   `full-end` above 768px anyway, so `full-end` is only ever correct there. */
-@media (width > 768px) {
-  body:has(.at-sidebar):has(.at-right-sidebar):has(.sidebar-collapsed-toggle:checked)
-    .at-main
-    > .at-sidebar-content,
-  body:has(.at-sidebar):has(.at-right-sidebar):has(.sidebar-collapsed-toggle:checked) .at-main > h1,
-  body:has(.at-sidebar):has(.at-right-sidebar):has(.sidebar-collapsed-toggle:checked)
-    .at-main
-    > .lead,
-  body:has(.at-sidebar):has(.at-right-sidebar):has(.sidebar-collapsed-toggle:checked) .at-nav-inner,
-  body:has(.at-sidebar):has(.at-right-sidebar):has(.sidebar-collapsed-toggle:checked)
-    .at-main
-    > nav.breadcrumbs {
-    grid-column: content-start / full-end;
-  }
-}
-
 /* The hero title normally relies on --at-content-inset for its side
    margin too — same fix, since that token is 0 in this theme. */
 .at-hero-title {
   padding-inline: var(--page-pad);
+}
+
+/* Detail pages (week lectures/workshops, assessment briefs) carry titles like
+   "Week 1 Workshop: <long title>", which wrap to three or four lines at the
+   theme's 4.5rem cap and push the date and readings well below the fold. Trim
+   the band and the type on sidebar pages so the heading still reads as a
+   banner without costing a student the thing they came for. */
+body:has(.at-sidebar) .at-hero {
+  min-height: 12rem;
+}
+
+body:has(.at-sidebar) .at-hero-title {
+  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+  padding-block: var(--at-spacing-lg);
+  max-inline-size: 32ch;
+}
+
+/* `.lead` and the breadcrumb bar are both direct .at-main children, with
+   `.lead` first in source; the breadcrumbs only jumped ahead of it because of
+   their `order: -1`. Matching that order lets source order break the tie, so
+   the lead sits flush under the hero band (hero -> lead -> trail -> content)
+   and the two can be styled as one unit. Gated on :has(.at-hero): a heroless
+   page gets an <h1> at the default order 0 instead, and an unguarded -1 here
+   would float the summary above its own page title.
+
+   With that order in place the lead can continue the image band — it picks up
+   the darkest stop of the hero's own bottom scrim, so the two read as one
+   banner containing both heading and summary rather than a caption stranded
+   under a picture. */
+body:has(.at-sidebar):has(.at-hero) .at-main > .lead {
+  order: -1;
+  margin-block: 0;
+  padding-block: var(--at-spacing-md);
+  background: rgb(0 0 0 / 80%);
+  color: rgb(255 255 255 / 88%);
+  max-inline-size: none;
 }
 
 /* On heroless pages, ContentLayout renders the <h1>/lead directly into
@@ -305,14 +376,23 @@ body:has(.at-sidebar) .at-main > h1 {
    pull them visually above the h1 without needing to intercept ContentLayout
    itself — DOM order stays "content, then breadcrumbs" but paint order is
    "breadcrumbs, then content". */
+/* Sticks HIGHER than the nav's real bottom edge, then pays the difference
+   back as top padding so the text still lands clear of the nav. Reason:
+   --at-nav-height is a hand-maintained calc, and any drift between it and
+   the nav's actual rendered height (border widths, a font that reflows the
+   link row) opens a transparent band between the two sticky strips that page
+   content visibly scrolls through. Deliberately overlapping by a whole
+   half-rem makes the seam immune to a few px of drift in either direction,
+   and the nav's z-index:100 against this strip's 10 keeps the overlap
+   invisible — the nav simply paints over it. */
 .at-main > nav.breadcrumbs {
   order: -1;
   position: sticky;
-  inset-block-start: var(--at-nav-height);
+  inset-block-start: calc(var(--at-nav-height) - 0.5rem);
   z-index: 10;
   background: var(--at-bg);
   padding-inline: var(--page-pad);
-  padding-block: var(--at-spacing-sm) var(--at-spacing-xs);
+  padding-block: calc(var(--at-spacing-sm) + 0.5rem) var(--at-spacing-xs);
 }
 
 /* On sidebar pages, stretch the breadcrumb strip the same way .at-nav-inner

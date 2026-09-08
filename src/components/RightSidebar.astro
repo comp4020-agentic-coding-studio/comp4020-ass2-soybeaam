@@ -5,6 +5,11 @@
 // Below the theme's own mobile breakpoint it has nowhere sensible to overlay
 // from, so it clones into the theme's existing hamburger-menu dropdown
 // instead of just disappearing.
+//
+// It carries its own open/close control — a small tab pinned to the right
+// edge — rather than riding on the left sidebar's collapse toggle, so the two
+// panels can be opened and closed independently.
+import Icon from "astro-theme-university/components/Icon.astro";
 ---
 
 <template id="right-sidebar-clock-template">
@@ -21,25 +26,102 @@
   </div>
 </template>
 
+{/* Same CSS-only checkbox pattern the left sidebar uses. brand.css keys the
+    content column's right-hand margin off `:has(.right-sidebar-toggle:checked)`,
+    so opening the rail and reserving space for it stay in step with no JS. */}
+<input type="checkbox" id="right-sidebar-open" class="right-sidebar-toggle" data-pagefind-ignore />
+
+<label for="right-sidebar-open" class="right-sidebar-tab" title="Show calendar" data-pagefind-ignore>
+  <Icon name="nav-arrow-left" size="1.125rem" />
+  <span class="sr-only">Show or hide the calendar panel</span>
+</label>
+
 <div class="at-right-sidebar">
   <div class="right-sidebar-clock-host" data-right-sidebar-clock-host></div>
 </div>
 
 <style>
-  /* Fixed overlay, not a grid participant — but it still needs a gutter
-     reserved for it or it sits on top of the content column (brand.css
-     otherwise extends .at-sidebar-content/.at-nav-inner/breadcrumbs to the
-     viewport's right edge, on the assumption that gutter is unused — see the
-     `body:has(.at-right-sidebar)` overrides added there). Sizing this to
-     the SAME --at-sidebar-inset the left sidebar reserves (rather than an
-     arbitrary width) means the two stay in sync automatically, including
-     when the left sidebar's collapse toggle shrinks that variable to 3rem —
-     no separate collapse-sympathy rule needed. */
+  .right-sidebar-toggle {
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline-end: 0;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  /* The rail's own handle. Pinned to the right edge and vertically centred
+     rather than parked in the nav bar: it has to stay reachable while the
+     rail is open (so it can close it again) and it needs to sit above the
+     rail's own z-index, which the nav can't. It rides inward by exactly the
+     rail's width when open, so it reads as attached to the panel's edge in
+     both states instead of being swallowed by it. */
+  .right-sidebar-tab {
+    position: fixed;
+    inset-inline-end: 0;
+    inset-block-start: 50%;
+    z-index: 120;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 1.75rem;
+    block-size: 3.5rem;
+    background: #fff;
+    color: rgba(0, 0, 0, 0.55);
+    border: 1px solid var(--at-divider);
+    border-inline-end: none;
+    border-start-start-radius: var(--at-radius-inner);
+    border-end-start-radius: var(--at-radius-inner);
+    box-shadow: -0.25rem 0 0.75rem rgba(0, 0, 0, 0.06);
+    cursor: pointer;
+    transform: translateY(-50%);
+    transition:
+      inset-inline-end 0.25s ease,
+      background-color 0.15s ease,
+      color 0.15s ease;
+  }
+
+  .right-sidebar-tab:hover {
+    background: #f3f3f3;
+    color: #000;
+  }
+
+  .right-sidebar-toggle:focus-visible + .right-sidebar-tab {
+    outline: 2px solid var(--at-primary);
+    outline-offset: 2px;
+  }
+
+  .right-sidebar-toggle:checked + .right-sidebar-tab {
+    inset-inline-end: var(--at-right-rail-width);
+  }
+
+  .right-sidebar-toggle:checked + .right-sidebar-tab :global(svg) {
+    transform: rotate(180deg);
+  }
+
+  /* Fixed overlay, not a grid participant — brand.css reserves a matching
+     right-hand margin on the content/nav/breadcrumb strips while this is
+     open, keyed off the same checkbox. Width comes from --at-right-rail-width
+     (brand.css), a token of this panel's own rather than the left sidebar's
+     --at-sidebar-inset, so collapsing the left rail no longer squashes this
+     one. Slides out rather than display:none-ing so the two states read as
+     one panel moving, and so the content margin and the panel animate
+     together. */
   .at-right-sidebar {
     position: fixed;
     inset-block: 0;
     inset-inline-end: 0;
-    width: var(--at-sidebar-inset, 20rem);
+    width: var(--at-right-rail-width, 15rem);
     overflow-y: auto;
     /* Higher than the theme nav's z-index:100 (components.css) so the panel
        actually reads as flush with the top of the viewport instead of being
@@ -49,20 +131,32 @@
     border-inline-start: 1px solid rgba(0, 0, 0, 0.1);
     box-shadow: -0.5rem 0 1.5rem rgba(0, 0, 0, 0.08);
     padding: var(--at-spacing-md);
+    transform: translateX(100%);
+    visibility: hidden;
+    /* `visibility` is stepped, not interpolated, so a plain duration flips it
+       at the halfway point and the panel vanishes mid-slide. Delay it by the
+       full transform duration on the way out (stay visible until the slide
+       finishes) and fire it immediately on the way in. */
+    transition:
+      transform 0.25s ease,
+      visibility 0s linear 0.25s;
   }
 
+  :global(body:has(.right-sidebar-toggle:checked)) .at-right-sidebar {
+    transform: translateX(0);
+    visibility: visible;
+    transition:
+      transform 0.25s ease,
+      visibility 0s;
+  }
+
+  /* No room to overlay from on a phone — the clock/calendar clones into the
+     hamburger drawer instead (see script), so hide both panel and handle. */
   @media (width <= 768px) {
-    .at-right-sidebar {
+    .at-right-sidebar,
+    .right-sidebar-tab {
       display: none;
     }
-  }
-
-  /* Collapsing the left sidebar shrinks --at-sidebar-inset to 3rem — enough
-     for icons on the left, but not enough room for a clock/calendar on the
-     right. Hide rather than render an unusable sliver; brand.css gives the
-     reclaimed gutter back to content in this same state. */
-  :global(body:has(.sidebar-collapsed-toggle:checked)) .at-right-sidebar {
-    display: none;
   }
 
   .right-sidebar-clock-host:empty {
@@ -212,7 +306,21 @@
     }
   }
 
+  // Remember whether the rail was left open, the same way the left sidebar
+  // does — CSS alone can't carry checkbox state across a page navigation.
+  const RAIL_KEY = "right-sidebar-open";
+  function restoreRailState() {
+    const toggle = document.getElementById("right-sidebar-open") as HTMLInputElement | null;
+    if (!toggle || toggle.dataset.bound === "true") return;
+    toggle.checked = localStorage.getItem(RAIL_KEY) === "true";
+    toggle.dataset.bound = "true";
+    toggle.addEventListener("change", () => {
+      localStorage.setItem(RAIL_KEY, String(toggle.checked));
+    });
+  }
+
   function start() {
+    restoreRailState();
     ensureDesktopClock();
     ensureMobileClone();
     renderClock();

@@ -6,6 +6,7 @@ import SpecList from "astro-course-university/components/SpecList.astro";
 import ContentLayout from "../../layouts/SiteContentLayout.astro";
 import TeachingTeam from "../../components/TeachingTeam.astro";
 import { formatCourseDate } from "../../lib/dates";
+import { heroForWeek } from "../../lib/hero-images";
 import { graphCollections, sessionLabels, siteConfig } from "../../site-config";
 
 export async function getStaticPaths() {
@@ -15,11 +16,15 @@ export async function getStaticPaths() {
 
 const { session } = Astro.props;
 const { Content } = await render(session);
+// Same week key as the matching lecture, so the pair reads as one week.
+const hero = heroForWeek(session.data.week);
 ---
 
 <ContentLayout
   title={`Week ${session.data.week} ${sessionLabels.singular}: ${session.data.title}`}
   description={session.data.description}
+  heroImage={hero.image}
+  heroImageAlt={hero.alt}
   {...siteConfig}
 >
   <p><strong>{formatCourseDate(session.data.date)}</strong></p>
