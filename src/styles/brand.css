@@ -13,12 +13,36 @@
   --at-border-radius: 0;
 
   --at-bg: #fff;
-  --at-bg-alt: #fff;
+  /* Neutral, untinted greys. The pinning above exists to stop tokens.css
+     deriving these from --at-primary (which drags every surface and every
+     secondary string toward the gold hue) — it is NOT an "everything is
+     pure black on pure white" rule. Flat #000 for secondary/muted text left
+     card descriptions, due dates, emails and captions indistinguishable
+     from body copy, i.e. no typographic hierarchy anywhere. These greys are
+     hue-free, so they honour the three-colour palette while restoring it. */
+  --at-bg-alt: #f7f7f7;
   --at-bg-elevated: #fff;
   --at-text: #000;
-  --at-text-secondary: #000;
-  --at-text-muted: #000;
+  --at-text-secondary: #4a4a4a;
+  --at-text-muted: #6b6b6b;
   --at-heading: #000;
+
+  /* One divider colour and one hairline value, instead of the same
+     rgba(0,0,0,0.1)/0.15/0.08 retyped a dozen times across this file and
+     the components. --at-divider is also what the theme's own components
+     (PeopleGrid's row borders) already read. */
+  --at-divider: rgba(0, 0, 0, 0.12);
+  --at-divider-strong: rgba(0, 0, 0, 0.18);
+  /* One radius scale. --at-border-radius stays 0 (square inputs/buttons is
+     the deliberate look); these two are for the larger grouped surfaces
+     that were each hardcoding their own value. */
+  --at-radius-panel: 0.5rem;
+  --at-radius-inner: 0.375rem;
+
+  /* Side padding for the content column, breadcrumbs and hero title. One
+     token so the phone override below is a single edit rather than five,
+     and so the theme's full-bleed-image rule can pull the same number. */
+  --page-pad: var(--at-spacing-xl);
 
   /* Fill the screen: shrink the outer gutter, drop the reserved accent-rule
      inset, and let the content column use the full available width instead
@@ -76,7 +100,7 @@ body:has(.at-sidebar) {
   background: #fff;
   color: #000;
   padding: var(--at-spacing-sm);
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--at-divider);
   border-block-start: none;
   border-inline-start: none;
   border-radius: 0;
@@ -131,13 +155,76 @@ body:has(.at-sidebar) .at-main {
      against the sidebar/gutter with no breathing room — give the actual
      text block its own padding instead of relying on that token. */
   margin-block: var(--at-spacing-lg);
-  padding: var(--at-spacing-xl);
+  padding: var(--page-pad);
+}
+
+/* RightSidebar.astro is a fixed-position overlay, not a grid participant, so
+   nothing above stops the content/nav/breadcrumb strips from spanning under
+   it to the viewport's right edge — pull them back to content-end (the same
+   line the left-sidebar reservation above already relies on) whenever the
+   right rail is present. Combining both :has() selectors, rather than just
+   adding `.at-right-sidebar` alone, keeps these at a higher specificity than
+   the single-:has() `full-end` rules above so they win regardless of source
+   order. */
+body:has(.at-sidebar):has(.at-right-sidebar) .at-main > .at-sidebar-content,
+body:has(.at-sidebar):has(.at-right-sidebar) .at-main > h1,
+body:has(.at-sidebar):has(.at-right-sidebar) .at-main > .lead,
+body:has(.at-sidebar):has(.at-right-sidebar) .at-nav-inner,
+body:has(.at-sidebar):has(.at-right-sidebar) .at-main > nav.breadcrumbs {
+  grid-column: content-start / content-end;
+}
+
+@media (width <= 768px) {
+  /* `.at-main` is `grid-template-columns: subgrid` (theme components.css), so
+     the body's named lines really are live inside it and a child CAN be asked
+     to end past its parent. Below 768px `.at-main` itself goes back to
+     `inset-start / content-end` (above), so any child still reaching `full-end`
+     overhangs by exactly the right-hand gutter and scrolls the page sideways.
+     The right rail is hidden at this width anyway, so `content-end` is where
+     these belong. */
+  body:has(.at-sidebar):has(.at-right-sidebar) .at-main > .at-sidebar-content,
+  body:has(.at-sidebar):has(.at-right-sidebar) .at-main > h1,
+  body:has(.at-sidebar):has(.at-right-sidebar) .at-main > .lead,
+  body:has(.at-sidebar):has(.at-right-sidebar) .at-nav-inner,
+  body:has(.at-sidebar):has(.at-right-sidebar) .at-main > nav.breadcrumbs,
+  body:has(.at-sidebar) .at-main > .at-sidebar-content,
+  body:has(.at-sidebar) .at-main > h1,
+  body:has(.at-sidebar) .at-main > .lead,
+  body:has(.at-sidebar) .at-main > nav.breadcrumbs {
+    grid-column: content-start / content-end;
+  }
+}
+
+/* The right rail also hides itself when the left sidebar is collapsed
+   (RightSidebar.astro — a 3rem gutter isn't enough room for a clock/
+   calendar) — give that reclaimed gutter back the same way as the
+   mobile case above.
+
+   Gated above 768px: this is the highest-specificity grid-column rule in the
+   file, so left ungated it would beat the narrow-viewport pullbacks above and
+   reintroduce the sideways scroll on any phone whose stored
+   "sidebar-collapsed" flag happens to be set. `.at-main` only spans to
+   `full-end` above 768px anyway, so `full-end` is only ever correct there. */
+@media (width > 768px) {
+  body:has(.at-sidebar):has(.at-right-sidebar):has(.sidebar-collapsed-toggle:checked)
+    .at-main
+    > .at-sidebar-content,
+  body:has(.at-sidebar):has(.at-right-sidebar):has(.sidebar-collapsed-toggle:checked) .at-main > h1,
+  body:has(.at-sidebar):has(.at-right-sidebar):has(.sidebar-collapsed-toggle:checked)
+    .at-main
+    > .lead,
+  body:has(.at-sidebar):has(.at-right-sidebar):has(.sidebar-collapsed-toggle:checked) .at-nav-inner,
+  body:has(.at-sidebar):has(.at-right-sidebar):has(.sidebar-collapsed-toggle:checked)
+    .at-main
+    > nav.breadcrumbs {
+    grid-column: content-start / full-end;
+  }
 }
 
 /* The hero title normally relies on --at-content-inset for its side
    margin too — same fix, since that token is 0 in this theme. */
 .at-hero-title {
-  padding-inline: var(--at-spacing-xl);
+  padding-inline: var(--page-pad);
 }
 
 /* On heroless pages, ContentLayout renders the <h1>/lead directly into
@@ -145,16 +232,16 @@ body:has(.at-sidebar) .at-main {
    the same side padding and some top breathing room below the nav. */
 body:has(.at-sidebar) .at-main > h1,
 body:has(.at-sidebar) .at-main > .lead {
-  padding-inline: var(--at-spacing-xl);
+  padding-inline: var(--page-pad);
 }
 
 body:has(.at-sidebar) .at-main > h1 {
-  padding-block-start: var(--at-spacing-xl);
+  padding-block-start: var(--page-pad);
 }
 
 .at-nav {
   background: #fff;
-  border-block-end: 1px solid rgba(0, 0, 0, 0.15);
+  border-block-end: 1px solid var(--at-divider-strong);
 }
 
 /* The sidebar carries its own logo + site name in its header row now, so on
@@ -177,14 +264,23 @@ body:has(.at-sidebar) .at-main > h1 {
    the sidebar-dependent "content" column by default, so its right edge
    moves whenever the sidebar's collapse state changes --at-sidebar-inset.
    Extend it to the viewport edge — a fixed line unaffected by collapse —
-   the same way .at-sidebar-content already escapes that column below. */
-body:has(.at-sidebar) .at-nav-inner {
-  grid-column: content-start / full-end;
-  padding-inline-end: var(--at-spacing-lg);
-  /* Keep the search button on the same row as the links even when the
-     dropdown-widened link list is close to the available width, rather
-     than letting flex-wrap drop it to a second line. */
-  flex-wrap: nowrap;
+   the same way .at-sidebar-content already escapes that column below.
+
+   Gated at the theme's own nav breakpoint: below 640px the nav collapses to
+   a hamburger, and the drawer works by letting `.at-nav-links-wrapper`
+   (width:100%; order:3) WRAP onto a second flex row — so `flex-wrap: nowrap`
+   here squashed the mobile menu flat, and the extra right-hand padding made
+   the phone nav visibly asymmetric against its `--at-gutter` left edge. Both
+   are desktop-only concerns. */
+@media (width >= 640px) {
+  body:has(.at-sidebar) .at-nav-inner {
+    grid-column: content-start / full-end;
+    padding-inline-end: var(--at-spacing-lg);
+    /* Keep the search button on the same row as the links even when the
+       dropdown-widened link list is close to the available width, rather
+       than letting flex-wrap drop it to a second line. */
+    flex-wrap: nowrap;
+  }
 }
 
 .at-nav-links {
@@ -215,7 +311,7 @@ body:has(.at-sidebar) .at-nav-inner {
   inset-block-start: var(--at-nav-height);
   z-index: 10;
   background: var(--at-bg);
-  padding-inline: var(--at-spacing-xl);
+  padding-inline: var(--page-pad);
   padding-block: var(--at-spacing-sm) var(--at-spacing-xs);
 }
 
@@ -226,11 +322,11 @@ body:has(.at-sidebar) .at-nav-inner {
    inside the content column. */
 body:has(.at-sidebar) .at-main > nav.breadcrumbs {
   grid-column: content-start / full-end;
-  border-block-end: 1px solid rgba(0, 0, 0, 0.08);
+  border-block-end: 1px solid var(--at-divider);
 }
 
 .at-footer {
-  border-block-start: 1px solid rgba(0, 0, 0, 0.15);
+  border-block-start: 1px solid var(--at-divider-strong);
 }
 
 /* List-style card grids: one bordered list of rows instead of a tiled wall
@@ -243,14 +339,14 @@ body:has(.at-sidebar) .at-main > nav.breadcrumbs {
   display: flex;
   flex-direction: column;
   gap: 0;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 0.5rem;
+  border: 1px solid var(--at-divider);
+  border-radius: var(--at-radius-panel);
   overflow: hidden;
 }
 
 .at-card-grid > .at-card + .at-card,
 .at-card-grid > .week-filter-item + .week-filter-item {
-  border-block-start: 1px solid rgba(0, 0, 0, 0.1);
+  border-block-start: 1px solid var(--at-divider);
 }
 
 /* Grid components wrap each Card in a `.week-filter-item` for the week
@@ -279,7 +375,7 @@ a.at-card:focus-visible {
   flex-shrink: 0;
   inline-size: 3.5rem;
   block-size: 3.5rem;
-  border-radius: 0.375rem;
+  border-radius: var(--at-radius-inner);
 }
 
 .at-card-image {
@@ -336,7 +432,7 @@ a.at-card:focus-visible {
   min-width: 12rem;
   margin-block-start: var(--at-spacing-xs);
   background: var(--at-bg);
-  border: 1px solid rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--at-divider-strong);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   display: none;
 }
@@ -365,4 +461,104 @@ a.at-card:focus-visible {
 .at-nav-dropdown-panel a:focus-visible {
   background: var(--at-primary);
   color: #fff;
+}
+
+/* ---------------------------------------------------------------------------
+   Narrow viewports.
+   Everything below must stay at the END of this file: brand.css is unlayered
+   on purpose and media queries add no specificity, so a mobile override only
+   wins if it sits after the desktop rule it overrides.
+   --------------------------------------------------------------------------- */
+
+@media (width < 640px) {
+  :root {
+    /* xl padding on top of the md gutter left roughly 290px of text column on
+       a 390px phone. md on both keeps the measure readable without the page
+       looking like it lost its margins. */
+    --page-pad: var(--at-spacing-md);
+  }
+
+  /* base.css full-bleeds images inside .at-main by negative-margining them
+     with the exact xl/lg values it assumes the content box is padded by.
+     --page-pad just changed, so restate it in terms of the token or every
+     figure/inline image overhangs the viewport and the page scrolls
+     sideways. */
+  .at-main > img,
+  .at-main :where(p, figure) > img {
+    margin-inline: calc(-1 * var(--page-pad));
+    width: calc(100% + 2 * var(--page-pad));
+    max-width: none;
+  }
+
+  /* The sticky offset is --at-nav-height, a fixed calc that stops being true
+     the moment the hamburger expands the nav onto extra rows — the strip
+     then either floats over the nav or leaves a gap under it. A breadcrumb
+     trail is orientation, not a control worth pinning to a small screen;
+     let it scroll away. */
+  .at-main > nav.breadcrumbs {
+    position: static;
+  }
+
+  /* The nav dropdown panels are position:absolute popovers hung off an <li>.
+     Inside the hamburger drawer that <li> lives in `.at-nav-links`, which is
+     `overflow: hidden` — the panel was being clipped away entirely. In the
+     drawer there is no reason to be a popover: fall back into normal flow as
+     an indented scrollable sub-list that doesn't steal space from the sibling
+     nav items if it grows. */
+  .at-nav-dropdown-panel {
+    position: static;
+    min-width: 0;
+    margin-block-start: 0;
+    border: none;
+    border-inline-start: 2px solid var(--at-divider);
+    box-shadow: none;
+    max-height: 50vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+  }
+
+  .at-nav-dropdown-host {
+    flex-wrap: wrap;
+  }
+
+  .at-nav-dropdown-host .at-nav-dropdown-panel {
+    flex-basis: 100%;
+    margin-inline-start: var(--at-spacing-sm);
+  }
+
+  /* Comfortable thumb targets in the drawer and its sub-lists. */
+  .at-nav-links > li > a,
+  .at-nav-dropdown-panel a {
+    padding-block: var(--at-spacing-xs);
+    min-block-size: 2.25rem;
+    display: flex;
+    align-items: center;
+  }
+
+  .at-nav-dropdown-toggle {
+    padding: var(--at-spacing-xs);
+  }
+
+  /* A 3.5rem thumbnail plus md gaps crowds a 390px row; the title needs the
+     width more than the image does. */
+  .at-card-image-frame {
+    inline-size: 2.75rem;
+    block-size: 2.75rem;
+  }
+
+  /* Gap only — the inline padding stays at md so card rows and the
+     assessment rows/headings (which keep their own md in
+     AssessmentsGrid.astro) start their text at the same x once both panels
+     bleed to the same edge below. */
+  .at-card {
+    gap: var(--at-spacing-sm);
+  }
+
+  /* Row lists span edge to edge on a phone — the side border and the corner
+     radius only cost width there. */
+  .at-card-grid {
+    margin-inline: calc(-1 * var(--page-pad));
+    border-inline: none;
+    border-radius: 0;
+  }
 }

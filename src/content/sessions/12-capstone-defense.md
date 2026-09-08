@@ -1,7 +1,7 @@
 ---
 title: Capstone defenses
 description:
-  Week 12's session — the final class, where a sample of capstone excuses are
+  Week 12's workshop — the final class, where a sample of capstone excuses are
   defended live in front of the room
 week: 12
 date: 2026-05-18
@@ -9,18 +9,18 @@ teachers:
   - marisol-quaye
   - idris-fenn
 spec:
-  - your capstone is submitted before the session
+  - your capstone is submitted before the workshop
   - you can answer a question about your own excuse's weakest point
 related:
   - assessments/capstone-portfolio
 ---
 
-## Before the session
+## Before the workshop
 
 Submit your [capstone portfolio](/assessments/capstone-portfolio/) by
 Monday's deadline.
 
-## In the session
+## In the workshop
 
 A handful of volunteers (or, if too few, a random draw) defend their excuse
 live in front of the class, taking real cross-examination from twelve weeks

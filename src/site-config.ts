@@ -5,8 +5,8 @@ import { courseMeta } from "./course-config";
 // The underlying collection and URL remain `sessions`; these labels are the
 // language students see. Change them to Studios, Tutorials, Expeditions, etc.
 export const sessionLabels = {
-  singular: "Session",
-  plural: "Sessions",
+  singular: "Workshop",
+  plural: "Workshops",
 } as const;
 
 // Same destinations as the top nav's `links`, reused as the left-hand
@@ -21,7 +21,6 @@ export const sidebarSections: {
   /** Render a divider after this section, grouping it apart from what follows. */
   dividerAfter?: boolean;
 }[] = [
-  { title: "Home", href: "/", icon: "home", dividerAfter: true },
   { title: "Lectures", href: "/lectures/", collection: "lectures", icon: "book" },
   {
     title: sessionLabels.plural,

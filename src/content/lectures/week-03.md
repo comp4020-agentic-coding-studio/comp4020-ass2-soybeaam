@@ -9,10 +9,19 @@ teachers:
   - marisol-quaye
 related:
   - sessions/03-cognitive-dissonance
+slides: /decks/week-03/
 ---
 
 The most durable excuses aren't the cleverest ones — they're the ones the
 speaker has already talked themselves into.
+
+## Learning objectives
+
+By the end of this lecture, you will be able to:
+
+- summarise Festinger's dissonance theory and its prediction about self-justifying speakers
+- distinguish a rationalisation the speaker believes from a lie they know is false
+- explain why a self-justified excuse resists the usual tools for dismantling one
 
 ## Outline
 

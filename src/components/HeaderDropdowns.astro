@@ -32,7 +32,9 @@ const dropdowns = [
 
 {
   dropdowns.map((dropdown) => (
-    <template data-at-dropdown-for={dropdown.target}>
+    /* Nav chrome cloned into the header at runtime --- not page content, so
+       keep its link list out of the Pagefind index. */
+    <template data-at-dropdown-for={dropdown.target} data-pagefind-ignore>
       <button
         type="button"
         class="at-nav-dropdown-toggle"

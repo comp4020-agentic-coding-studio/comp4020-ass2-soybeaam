@@ -2,19 +2,26 @@
 import { getPublishedCollection } from "astro-course-university/content";
 import Card from "astro-theme-university/components/Card.astro";
 import CardGrid from "astro-theme-university/components/CardGrid.astro";
+import WeekFilter from "./WeekFilter.astro";
 import { formatCourseDate } from "../lib/dates";
 
 const lectures = await getPublishedCollection("lectures");
 const visible = lectures.sort((a, b) => a.data.date.getTime() - b.data.date.getTime());
+const weeks = [...new Set(visible.map((lecture) => lecture.data.week))].sort((a, b) => a - b);
 ---
 
-<CardGrid columns={1}>
-  {
-    visible.map((lecture) => (
-      <Card headingLevel="h2" title={lecture.data.title} href={`/lectures/${lecture.id}/`}>
-        {lecture.data.description && <p>{lecture.data.description}</p>}
-        <p><small>Week {lecture.data.week} · {formatCourseDate(lecture.data.date)}</small></p>
-      </Card>
-    ))
-  }
-</CardGrid>
+<WeekFilter scope="lectures" weeks={weeks} />
+<div data-week-filter-target="lectures">
+  <CardGrid columns={1}>
+    {
+      visible.map((lecture) => (
+        <div class="week-filter-item" data-week={lecture.data.week}>
+          <Card headingLevel="h2" title={lecture.data.title} href={`/lectures/${lecture.id}/`}>
+            {lecture.data.description && <p>{lecture.data.description}</p>}
+            <p><small>Week {lecture.data.week} · {formatCourseDate(lecture.data.date)}</small></p>
+          </Card>
+        </div>
+      ))
+    }
+  </CardGrid>
+</div>

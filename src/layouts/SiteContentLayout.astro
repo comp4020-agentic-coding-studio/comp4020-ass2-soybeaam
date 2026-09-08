@@ -2,7 +2,9 @@
 import ContentLayout, { type ContentLayoutProps } from "astro-theme-university/layouts/ContentLayout.astro";
 import "astro-theme-university/styles/sidebar.css";
 import AppSidebar from "../components/AppSidebar.astro";
+import RightSidebar from "../components/RightSidebar.astro";
 import HeaderDropdowns from "../components/HeaderDropdowns.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
 
 type Props = ContentLayoutProps;
 ---
@@ -10,7 +12,13 @@ type Props = ContentLayoutProps;
 <ContentLayout {...Astro.props}>
   <slot name="head" slot="head" />
   <AppSidebar />
+  {/* `display: contents` so the wrapper is invisible to the grid; it exists
+      only to keep the right sidebar's chrome out of the Pagefind index. */}
+  <div data-pagefind-ignore style="display: contents">
+    <RightSidebar />
+  </div>
   <HeaderDropdowns />
+  <Breadcrumbs current={Astro.props.title} />
   <div class="at-sidebar-content">
     <slot />
   </div>

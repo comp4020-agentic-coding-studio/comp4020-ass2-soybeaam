@@ -1,7 +1,7 @@
 ---
 title: Excuses that changed history
 description:
-  Week 6's session — case studies of excuses with historical consequences,
+  Week 6's workshop — case studies of excuses with historical consequences,
   alongside the non-apology lab due this week
 week: 6
 date: 2026-04-06
@@ -15,12 +15,12 @@ related:
   - lectures/week-06
 ---
 
-## Before the session
+## Before the workshop
 
 Bring a complete draft of the [non-apology lab](/assessments/non-apology-lab/),
 due at the end of the week.
 
-## In the session
+## In the workshop
 
 Peer review of drafts, then case studies from the lecture: excuses that
 altered the course of a negotiation, a war, or a succession, and what made

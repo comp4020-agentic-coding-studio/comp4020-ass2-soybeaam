@@ -7,7 +7,7 @@ interface Props {
 }
 
 const { teachers } = Astro.props;
-// A session or lecture with no `teachers:` renders no team at all.
+// A workshop or lecture with no `teachers:` renders no team at all.
 const people = teachers ? await getEntries(teachers) : [];
 ---
 

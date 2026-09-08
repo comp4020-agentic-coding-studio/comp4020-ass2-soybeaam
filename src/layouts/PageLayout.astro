@@ -2,13 +2,27 @@
 import MdxPageLayout from "astro-theme-university/layouts/MdxPageLayout.astro";
 import "astro-theme-university/styles/sidebar.css";
 import AppSidebar from "../components/AppSidebar.astro";
+import RightSidebar from "../components/RightSidebar.astro";
 import HeaderDropdowns from "../components/HeaderDropdowns.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
 import { siteConfig } from "../site-config";
+
+// Frontmatter arrives via `Astro.props.frontmatter` for MDX pages using the
+// `layout:` frontmatter key — MdxPageLayout unwraps it internally, but we
+// need the title ourselves for the breadcrumb trail.
+const frontmatter = Astro.props.frontmatter as Record<string, unknown> | undefined;
+const pageTitle = (frontmatter?.title ?? Astro.props.title) as string;
 ---
 
 <MdxPageLayout siteConfig={siteConfig} {...Astro.props}>
   <AppSidebar />
+  {/* `display: contents` so the wrapper is invisible to the grid; it exists
+      only to keep the right sidebar's chrome out of the Pagefind index. */}
+  <div data-pagefind-ignore style="display: contents">
+    <RightSidebar />
+  </div>
   <HeaderDropdowns />
+  <Breadcrumbs current={pageTitle} />
   <div class="at-sidebar-content">
     <slot />
   </div>

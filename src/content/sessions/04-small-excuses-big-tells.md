@@ -1,7 +1,7 @@
 ---
 title: Small excuses, big tells
 description:
-  Week 4's session — workshopping teardown drafts, and what children's excuses
+  Week 4's workshop — workshopping teardown drafts, and what children's excuses
   reveal about how the skill develops
 week: 4
 date: 2026-03-23
@@ -15,12 +15,12 @@ related:
   - lectures/week-04
 ---
 
-## Before the session
+## Before the workshop
 
 Bring a complete draft of your [teardown](/assessments/excuse-teardown/),
 due at the end of the week.
 
-## In the session
+## In the workshop
 
 Peer workshop on drafts first, then a discussion built around the
 developmental psychology in this week's lecture: excuse-making is a skill

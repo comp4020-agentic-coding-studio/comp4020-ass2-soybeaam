@@ -10,10 +10,19 @@ teachers:
 related:
   - sessions/08-blame-shifting
   - assessments/case-study-presentation
+slides: /decks/week-08/
 ---
 
 Diffusion of responsibility scales. A group under pressure can manufacture a
 scapegoat the same way an individual manufactures a passive-voice sentence.
+
+## Learning objectives
+
+By the end of this lecture, you will be able to:
+
+- explain scapegoating as diffusion of responsibility performed at group scale
+- state why a workable scapegoat must be plausible but not sympathetic
+- apply the scapegoating pattern to select and justify a week-9 case study
 
 ## Outline
 

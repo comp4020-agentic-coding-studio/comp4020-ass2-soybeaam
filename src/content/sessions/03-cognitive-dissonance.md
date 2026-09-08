@@ -1,7 +1,7 @@
 ---
 title: Believing your own excuse
 description:
-  Week 3's session — the psychology of self-justification, and why the best
+  Week 3's workshop — the psychology of self-justification, and why the best
   liar is the one who believes it
 week: 3
 date: 2026-03-09
@@ -14,12 +14,12 @@ related:
   - lectures/week-03
 ---
 
-## Before the session
+## Before the workshop
 
 Read the assigned excerpt on self-justification (linked from the
 [lecture page](/lectures/week-03/)).
 
-## In the session
+## In the workshop
 
 A discussion, not a lecture: we work through cases where the person giving
 the excuse plainly believes it, and ask what that does to how convincing it

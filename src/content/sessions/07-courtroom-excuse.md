@@ -1,7 +1,7 @@
 ---
 title: The excuse under oath
 description:
-  Week 7's session — mock cross-examination of a legal defense, run as a class
+  Week 7's workshop — mock cross-examination of a legal defense, run as a class
   exercise
 week: 7
 date: 2026-04-13
@@ -14,11 +14,11 @@ related:
   - lectures/week-07
 ---
 
-## Before the session
+## Before the workshop
 
 Read the short case brief linked from this week's [lecture](/lectures/week-07/).
 
-## In the session
+## In the workshop
 
 A mock cross-examination, run in pairs and then as a whole class: one person
 gives a legal-style defense, the room cross-examines it the way opposing

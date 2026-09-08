@@ -3,8 +3,8 @@ import { render } from "astro:content";
 import { getPublishedCollection } from "astro-course-university/content";
 import RelatedContent from "astro-course-university/components/RelatedContent.astro";
 import ContentLayout from "../../layouts/SiteContentLayout.astro";
-import { withBase } from "astro-theme-university/url";
 import TeachingTeam from "../../components/TeachingTeam.astro";
+import SlidesLink from "../../components/SlidesLink.astro";
 import { formatCourseDate } from "../../lib/dates";
 import { graphCollections, siteConfig } from "../../site-config";
 
@@ -20,7 +20,7 @@ const title = `Week ${lecture.data.week}: ${lecture.data.title}`;
 
 <ContentLayout title={title} description={lecture.data.description} {...siteConfig}>
   <p><strong>{formatCourseDate(lecture.data.date)}</strong></p>
-  {lecture.data.slides && <p><a href={withBase(lecture.data.slides)}>Open the slides</a></p>}
+  {lecture.data.slides && <SlidesLink href={lecture.data.slides} />}
   <Content />
   <TeachingTeam teachers={lecture.data.teachers} />
   <RelatedContent entry={lecture} collections={graphCollections} />

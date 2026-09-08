@@ -8,10 +8,19 @@ teachers:
   - marisol-quaye
 related:
   - sessions/06-historical-alibis
+slides: /decks/week-06/
 ---
 
 Some excuses only matter to the person giving them. Others reroute treaties,
 successions, and wars.
+
+## Learning objectives
+
+By the end of this lecture, you will be able to:
+
+- describe three documented cases where an excuse changed a historical outcome
+- explain what separates an excuse that lands at scale from one that doesn't
+- account for the audience's own incentive to believe an excuse it is given
 
 ## Outline
 

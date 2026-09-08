@@ -1,7 +1,7 @@
 ---
 title: Designing the graceful exit
 description:
-  Week 11's session — a design workshop for the capstone excuse, plus a look
+  Week 11's workshop — a design workshop for the capstone excuse, plus a look
   at what happens when a machine confabulates one
 week: 11
 date: 2026-05-11
@@ -15,12 +15,12 @@ related:
   - assessments/capstone-portfolio
 ---
 
-## Before the session
+## Before the workshop
 
 Bring a scenario and a rough draft of the excuse you'll defend in the
 [capstone](/assessments/capstone-portfolio/).
 
-## In the session
+## In the workshop
 
 Design workshop: peer feedback on capstone drafts, structured around the
 week's material on machine confabulation — what a hallucinating model does

@@ -1,7 +1,7 @@
 ---
 title: Case study presentations
 description:
-  Week 9's session — the case-study presentations themselves, run as the
+  Week 9's workshop — the case-study presentations themselves, run as the
   scheduled assessment event
 week: 9
 date: 2026-04-27
@@ -15,16 +15,16 @@ related:
   - assessments/case-study-presentation
 ---
 
-## Before the session
+## Before the workshop
 
 Final rehearsal. Confirm your one-page brief is ready to hand in at the start
-of the session.
+of the workshop.
 
-## In the session
+## In the workshop
 
 Groups present in the order posted the week before. Every student is expected
 to ask at least one cross-examination question of a group other than their
-own — participation in the questioning is part of how the session is
+own — participation in the questioning is part of how the workshop is
 observed, even though the mark sits with the presenting group.
 
 ## Afterwards

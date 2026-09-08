@@ -1,12 +1,15 @@
 ---
 import ContentLayout from "../../layouts/SiteContentLayout.astro";
 import SessionsGrid from "../../components/SessionsGrid.astro";
+import heroImage from "../../assets/images/library_books_coffee.png";
 import { sessionLabels, siteConfig } from "../../site-config";
 ---
 
 <ContentLayout
   title={sessionLabels.plural}
   description={`The twelve-week teaching schedule: what happens in each ${sessionLabels.singular.toLowerCase()}, what to prepare, and what leaves the room.`}
+  heroImage={heroImage}
+  heroImageAlt="A stack of books and an open notebook on a table in a sunlit library, with a coffee cup beside them"
   {...siteConfig}
 >
   <p>

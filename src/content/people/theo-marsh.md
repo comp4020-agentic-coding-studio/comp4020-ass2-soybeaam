@@ -6,7 +6,7 @@ description:
 affiliation: Slop University School of Invented Disciplines
 role: tutor
 email: theo.marsh@slop.university
-contact: Ask during sessions, or email for anything that needs a written answer.
+contact: Ask during workshops, or email for anything that needs a written answer.
 ---
 
 Theo spent six years mediating workplace disputes before joining Slop, which

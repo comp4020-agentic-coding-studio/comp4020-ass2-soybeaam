@@ -1,7 +1,7 @@
 ---
 title: The grammar workshop
 description:
-  Week 2's session — pulling apart the sentence-level structures that carry an
+  Week 2's workshop — pulling apart the sentence-level structures that carry an
   excuse's work
 week: 2
 date: 2026-03-02
@@ -14,11 +14,11 @@ related:
   - lectures/week-02
 ---
 
-## Before the session
+## Before the workshop
 
 Bring the excuse you picked in week 1.
 
-## In the session
+## In the workshop
 
 Idris runs a close-reading workshop on five real corporate and political
 excuses, marking up passive voice, agentless constructions ("mistakes were

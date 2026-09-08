@@ -46,9 +46,17 @@ function sectionIsCurrent(sectionHref: string): boolean {
 }
 ---
 
-<input type="checkbox" id="sidebar-collapsed" class="sidebar-collapsed-toggle" />
+{/* Navigation chrome, not page content: keep it out of the Pagefind index so
+    the sidebar's full lecture/session listing doesn't match every query and
+    leak into every search excerpt. */}
+<input
+  type="checkbox"
+  id="sidebar-collapsed"
+  class="sidebar-collapsed-toggle"
+  data-pagefind-ignore
+/>
 
-<div class="at-sidebar">
+<div class="at-sidebar" data-pagefind-ignore>
   <div class="sidebar-brand-row">
     <label for="sidebar-collapsed" class="sidebar-toggle-label" title="Toggle sidebar">
       <img
@@ -141,6 +149,7 @@ function sectionIsCurrent(sectionHref: string): boolean {
        into the rest of the rail instead of reading as a second nav strip
        stacked on top of the site's real nav bar. */
     border-block-end: none;
+    line-height: 1;
   }
 
   /* The toggle button IS the crest now (no separate hamburger glyph) — a
@@ -178,6 +187,7 @@ function sectionIsCurrent(sectionHref: string): boolean {
   .sidebar-toggle-logo {
     inline-size: 1.5rem;
     block-size: 1.5rem;
+    vertical-align: middle;
     transition: transform 0.15s ease;
   }
 

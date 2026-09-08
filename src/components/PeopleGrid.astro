@@ -86,7 +86,7 @@ const bySection = sections
     margin: 0;
     padding: 0;
     border: 1px solid var(--at-divider, #000);
-    border-radius: var(--at-border-radius, 0.5rem);
+    border-radius: var(--at-radius-panel, 0.5rem);
     overflow: hidden;
   }
 
@@ -142,15 +142,35 @@ const bySection = sections
   }
 
   @media (max-width: 40rem) {
+    /* Same edge-to-edge treatment .at-card-grid and the homepage week list
+       get below 640px (brand.css) — the side border and corner radius only
+       cost width on a phone, and People shouldn't be the one index page that
+       still sits inset. */
+    .people-list {
+      margin-inline: calc(-1 * var(--page-pad));
+      border-inline: none;
+      border-radius: 0;
+    }
+
     .people-row-link {
       grid-template-columns: 2.5rem 1fr;
       grid-template-areas:
         "avatar name"
         "avatar email"
         "avatar role";
+      /* The md gap is a column gap on desktop; once the three fields stack it
+         also becomes the row gap and blows one person up to ~5rem tall. */
+      gap: 0.15rem var(--at-spacing-sm, 0.75rem);
     }
     .people-avatar {
       grid-area: avatar;
+      /* Vertically centred against a 3-row stack reads as floating; pin it to
+         the name it belongs to. */
+      align-self: start;
+    }
+    .people-role {
+      text-align: start;
+      color: var(--at-text-muted, #6b6b6b);
     }
     .people-name {
       grid-area: name;

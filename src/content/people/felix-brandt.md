@@ -6,7 +6,7 @@ description:
 affiliation: Slop University School of Invented Disciplines
 role: tutor
 email: felix.brandt@slop.university
-contact: Ask during sessions, or email for anything that needs a written answer.
+contact: Ask during workshops, or email for anything that needs a written answer.
 ---
 
 Felix directed theatre before this, which turns out to be exactly the

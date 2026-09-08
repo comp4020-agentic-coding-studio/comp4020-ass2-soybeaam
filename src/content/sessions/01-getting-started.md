@@ -1,7 +1,7 @@
 ---
 title: Getting started
 description:
-  The first session — what an excuse is, why it needs its own vocabulary, and
+  The first workshop — what an excuse is, why it needs its own vocabulary, and
   the excuse each of you brings to class
 week: 1
 date: 2026-02-23
@@ -13,12 +13,12 @@ spec:
   - you have picked the excuse you will analyse for week 4
 ---
 
-## Before the session
+## Before the workshop
 
 Bring three real excuses — yours, a family member's, or one from the news.
 They do not need to be good ones.
 
-## In the session
+## In the workshop
 
 We open by sorting the excuses you brought into a rough taxonomy on the board:
 denial, justification, and diffusion of responsibility. Then a short lecture

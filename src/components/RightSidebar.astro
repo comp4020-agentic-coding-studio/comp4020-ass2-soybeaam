@@ -1,0 +1,232 @@
+---
+// A right-hand panel showing the live clock/date and a current-month
+// calendar. It does NOT reserve its own column in the body grid — it's a
+// fixed overlay that sits on top of the content column on the right edge.
+// Below the theme's own mobile breakpoint it has nowhere sensible to overlay
+// from, so it clones into the theme's existing hamburger-menu dropdown
+// instead of just disappearing.
+---
+
+<template id="right-sidebar-clock-template">
+  <div class="right-sidebar-clock">
+    <span class="right-sidebar-time">--:--</span>
+    <span class="right-sidebar-date">&nbsp;</span>
+  </div>
+  <div class="right-sidebar-calendar">
+    <div class="right-sidebar-calendar-title">&nbsp;</div>
+    <div class="right-sidebar-calendar-weekdays">
+      <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+    </div>
+    <div class="right-sidebar-calendar-grid"></div>
+  </div>
+</template>
+
+<div class="at-right-sidebar">
+  <div class="right-sidebar-clock-host" data-right-sidebar-clock-host></div>
+</div>
+
+<style>
+  /* Fixed overlay, not a grid participant — but it still needs a gutter
+     reserved for it or it sits on top of the content column (brand.css
+     otherwise extends .at-sidebar-content/.at-nav-inner/breadcrumbs to the
+     viewport's right edge, on the assumption that gutter is unused — see the
+     `body:has(.at-right-sidebar)` overrides added there). Sizing this to
+     the SAME --at-sidebar-inset the left sidebar reserves (rather than an
+     arbitrary width) means the two stay in sync automatically, including
+     when the left sidebar's collapse toggle shrinks that variable to 3rem —
+     no separate collapse-sympathy rule needed. */
+  .at-right-sidebar {
+    position: fixed;
+    inset-block: 0;
+    inset-inline-end: 0;
+    width: var(--at-sidebar-inset, 20rem);
+    overflow-y: auto;
+    /* Higher than the theme nav's z-index:100 (components.css) so the panel
+       actually reads as flush with the top of the viewport instead of being
+       masked by the nav bar in that top-right corner. */
+    z-index: 110;
+    background: #fff;
+    border-inline-start: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: -0.5rem 0 1.5rem rgba(0, 0, 0, 0.08);
+    padding: var(--at-spacing-md);
+  }
+
+  @media (width <= 768px) {
+    .at-right-sidebar {
+      display: none;
+    }
+  }
+
+  /* Collapsing the left sidebar shrinks --at-sidebar-inset to 3rem — enough
+     for icons on the left, but not enough room for a clock/calendar on the
+     right. Hide rather than render an unusable sliver; brand.css gives the
+     reclaimed gutter back to content in this same state. */
+  :global(body:has(.sidebar-collapsed-toggle:checked)) .at-right-sidebar {
+    display: none;
+  }
+
+  .right-sidebar-clock-host:empty {
+    display: none;
+  }
+
+  :global(.right-sidebar-clock) {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    padding: var(--at-spacing-sm);
+    margin-block-end: var(--at-spacing-md);
+    border-radius: 0.375rem;
+    background: #f7f7f7;
+    font-size: var(--at-font-size-sm);
+  }
+
+  :global(.right-sidebar-time) {
+    font-size: 1.375rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: #000;
+  }
+
+  :global(.right-sidebar-date) {
+    color: rgba(0, 0, 0, 0.6);
+    font-weight: 600;
+  }
+
+  :global(.right-sidebar-calendar) {
+    font-size: var(--at-font-size-xs, 0.75rem);
+  }
+
+  :global(.right-sidebar-calendar-title) {
+    font-weight: 700;
+    font-size: var(--at-font-size-sm);
+    color: rgba(0, 0, 0, 0.85);
+    padding: 0 var(--at-spacing-2xs, 0.25rem);
+    margin-block-end: var(--at-spacing-2xs, 0.25rem);
+  }
+
+  :global(.right-sidebar-calendar-weekdays),
+  :global(.right-sidebar-calendar-grid) {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.125rem;
+    text-align: center;
+  }
+
+  :global(.right-sidebar-calendar-weekdays span) {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: rgba(0, 0, 0, 0.4);
+    padding-block: 0.125rem;
+  }
+
+  :global(.right-sidebar-calendar-grid span) {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.25rem;
+    font-size: 0.7rem;
+    color: rgba(0, 0, 0, 0.75);
+  }
+
+  :global(.right-sidebar-calendar-grid span.is-today) {
+    background: var(--at-primary, #000);
+    color: var(--at-on-primary, #fff);
+    font-weight: 700;
+  }
+
+  /* The clone injected into the nav's mobile dropdown (see script below)
+     lands as a <li> inside `.at-nav-links`; `.at-nav-links-wrapper` is
+     `display: contents` above the theme's own nav breakpoint (640px), which
+     would otherwise let it render inline in the top bar itself. */
+  @media (width >= 640px) {
+    :global(.at-right-sidebar-mobile-item) {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  function ensureClockInstance(host: Element) {
+    const template = document.getElementById("right-sidebar-clock-template") as HTMLTemplateElement | null;
+    if (!template || host.childNodes.length > 0) return;
+    host.append(template.content.cloneNode(true));
+  }
+
+  function ensureDesktopClock() {
+    const host = document.querySelector("[data-right-sidebar-clock-host]");
+    if (host) ensureClockInstance(host);
+  }
+
+  function ensureMobileClone() {
+    const list = document.querySelector(".at-nav-links");
+    if (!list || list.querySelector(".at-right-sidebar-mobile-item")) return;
+
+    const template = document.getElementById("right-sidebar-clock-template") as HTMLTemplateElement | null;
+    if (!template) return;
+
+    const item = document.createElement("li");
+    item.className = "at-right-sidebar-mobile-item";
+    item.append(template.content.cloneNode(true));
+    list.append(item);
+  }
+
+  function renderClock() {
+    const now = new Date();
+    const time = now.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
+    const date = now.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" });
+
+    for (const el of document.querySelectorAll(".right-sidebar-time")) {
+      el.textContent = time;
+    }
+    for (const el of document.querySelectorAll(".right-sidebar-date")) {
+      el.textContent = date;
+    }
+  }
+
+  function renderCalendar() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    const today = now.getDate();
+    const title = now.toLocaleDateString(undefined, { month: "long", year: "numeric" });
+
+    const firstWeekday = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    for (const titleEl of document.querySelectorAll(".right-sidebar-calendar-title")) {
+      titleEl.textContent = title;
+    }
+
+    for (const gridEl of document.querySelectorAll(".right-sidebar-calendar-grid")) {
+      gridEl.replaceChildren();
+      for (let i = 0; i < firstWeekday; i++) {
+        gridEl.append(document.createElement("span"));
+      }
+      for (let day = 1; day <= daysInMonth; day++) {
+        const cell = document.createElement("span");
+        cell.textContent = String(day);
+        if (day === today) cell.classList.add("is-today");
+        gridEl.append(cell);
+      }
+    }
+  }
+
+  function start() {
+    ensureDesktopClock();
+    ensureMobileClone();
+    renderClock();
+    renderCalendar();
+  }
+
+  start();
+  document.addEventListener("astro:page-load", start);
+
+  let intervalId: ReturnType<typeof setInterval> | undefined;
+  function startClockInterval() {
+    if (intervalId) clearInterval(intervalId);
+    intervalId = setInterval(renderClock, 15000);
+  }
+  startClockInterval();
+  document.addEventListener("astro:page-load", startClockInterval);
+</script>

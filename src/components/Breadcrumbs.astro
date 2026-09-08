@@ -1,0 +1,91 @@
+---
+import { withBase } from "astro-theme-university/url";
+import { sessionLabels } from "../site-config";
+
+export interface Props {
+  /** Label for the current (final) page in the trail. */
+  current: string;
+}
+
+const { current } = Astro.props;
+
+const SECTION_LABELS: Record<string, string> = {
+  lectures: "Lectures",
+  sessions: sessionLabels.plural,
+  assessments: "Assessment",
+  people: "People",
+  policies: "Policies",
+};
+
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
+let pathname = Astro.url.pathname;
+if (basePath && pathname.startsWith(basePath)) {
+  pathname = pathname.slice(basePath.length);
+}
+const segments = pathname.split("/").filter(Boolean);
+const sectionSlug = segments[0];
+const sectionLabel = sectionSlug ? SECTION_LABELS[sectionSlug] : undefined;
+
+const isSectionIndex = current === sectionLabel;
+const isHome = segments.length === 0;
+
+const crumbs = [
+  { label: "Home", href: withBase("/") },
+  ...(sectionLabel && !isSectionIndex ? [{ label: sectionLabel, href: withBase(`/${sectionSlug}/`) }] : []),
+  { label: current, href: undefined },
+];
+---
+
+{!isHome && (
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol>
+    {
+      crumbs.map((crumb, i) => (
+        <li>
+          {crumb.href ? <a href={crumb.href}>{crumb.label}</a> : <span aria-current="page">{crumb.label}</span>}
+          {i < crumbs.length - 1 && <span class="breadcrumb-sep" aria-hidden="true">/</span>}
+        </li>
+      ))
+    }
+  </ol>
+</nav>
+)}
+
+<style>
+  .breadcrumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    list-style: none;
+    margin: 0 0 var(--at-spacing-md);
+    padding: 0;
+    font-size: var(--at-font-size-sm);
+  }
+
+  .breadcrumbs li {
+    display: flex;
+    align-items: center;
+    gap: var(--at-spacing-2xs, 0.4rem);
+  }
+
+  .breadcrumbs a {
+    color: var(--at-text-secondary);
+    text-decoration: none;
+  }
+
+  .breadcrumbs a:hover,
+  .breadcrumbs a:focus-visible {
+    text-decoration: underline;
+    color: var(--at-text);
+  }
+
+  .breadcrumbs span[aria-current="page"] {
+    color: var(--at-text);
+    font-weight: 600;
+  }
+
+  .breadcrumb-sep {
+    color: var(--at-text-secondary);
+    opacity: 0.6;
+  }
+</style>

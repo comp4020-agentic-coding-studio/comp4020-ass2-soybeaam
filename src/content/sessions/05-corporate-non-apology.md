@@ -1,7 +1,7 @@
 ---
 title: Reading the corporate non-apology
 description:
-  Week 5's session — close-reading real corporate statements before the
+  Week 5's workshop — close-reading real corporate statements before the
   non-apology lab opens
 week: 5
 date: 2026-03-30
@@ -14,12 +14,12 @@ related:
   - lectures/week-05
 ---
 
-## Before the session
+## Before the workshop
 
 Find one corporate statement responding to a public failure — a data breach,
 a product recall, a service outage.
 
-## In the session
+## In the workshop
 
 We build a checklist, live, for what a genuine apology has to contain: a
 named fact, an accepted agent, and a stated consequence. Then we test the

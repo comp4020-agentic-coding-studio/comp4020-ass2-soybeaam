@@ -6,7 +6,7 @@ description:
 affiliation: Slop University School of Invented Disciplines
 role: tutor
 email: wren.okafor@slop.university
-contact: Ask during sessions, or email for anything that needs a written answer.
+contact: Ask during workshops, or email for anything that needs a written answer.
 ---
 
 Wren coached competitive debate for a decade before turning to the more

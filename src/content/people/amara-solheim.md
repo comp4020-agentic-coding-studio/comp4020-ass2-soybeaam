@@ -6,7 +6,7 @@ description:
 affiliation: Slop University School of Invented Disciplines
 role: tutor
 email: amara.solheim@slop.university
-contact: Ask during sessions, or email for anything that needs a written answer.
+contact: Ask during workshops, or email for anything that needs a written answer.
 ---
 
 Amara's research compares how excuses land differently across cultures —
