@@ -603,6 +603,12 @@ a.at-card:focus-visible {
        a 390px phone. md on both keeps the measure readable without the page
        looking like it lost its margins. */
     --page-pad: var(--at-spacing-md);
+    /* Body copy is 1.125rem (18px) by default — sized for a desktop reading
+       column. Every heading token is a fixed rem value read against this same
+       root size, so scaling it down here shrinks body text and headings
+       together in proportion, rather than needing a separate override per
+       element. */
+    --at-font-size-base: 1rem;
   }
 
   /* base.css full-bleeds images inside .at-main by negative-margining them

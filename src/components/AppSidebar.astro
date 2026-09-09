@@ -565,14 +565,24 @@ function sectionIsCurrent(sectionHref: string): boolean {
 <script>
   // Remember the collapsed/open state across page loads. This is the one
   // piece of client JS the sidebar needs — CSS alone can't persist state
-  // between navigations on a static site.
+  // between navigations on a static site. The site runs with ClientRouter
+  // (view transitions) on, which swaps in a fresh, unchecked checkbox on
+  // every navigation — so this has to re-run on `astro:page-load`, the same
+  // way RightSidebar's own rail-state restore does, not just once at
+  // first load.
   const STORAGE_KEY = "sidebar-collapsed";
-  const toggle = document.getElementById("sidebar-collapsed") as HTMLInputElement | null;
 
-  if (toggle) {
+  function restoreSidebarState() {
+    const toggle = document.getElementById("sidebar-collapsed") as HTMLInputElement | null;
+    if (!toggle || toggle.dataset.bound === "true") return;
+    toggle.dataset.bound = "true";
+
     toggle.checked = localStorage.getItem(STORAGE_KEY) === "true";
     toggle.addEventListener("change", () => {
       localStorage.setItem(STORAGE_KEY, String(toggle.checked));
     });
   }
+
+  restoreSidebarState();
+  document.addEventListener("astro:page-load", restoreSidebarState);
 </script>

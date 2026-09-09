@@ -70,6 +70,17 @@ deliberately unlayered and media queries add no specificity, so a narrow
 override at equal specificity only wins by source order. Writing one next to
 the desktop rule it is meant to override is a silent no-op.
 
+## Phone padding/font sizing is settled — don't re-touch it per request
+
+`--page-pad` (md at ≤768px) and `--at-font-size-base` (1rem at <640px) are
+already tuned for phone in the `@media (width < 640px)` block at the end of
+`src/styles/brand.css`. A phone-usability request about a *specific* piece of
+UI (a nav, a card, a new component) should be scoped to that component —
+don't reopen or re-tune the shared padding/font tokens as a side effect
+unless the request is specifically about padding or font size being wrong.
+Treat "make phone usability part of every change" (above) as "don't ship a
+narrow-viewport regression", not "re-derive the spacing scale every time."
+
 ## You are allowed to change .astro files
 
 ## Don't run `pnpm check` unless asked or committing
