@@ -2,6 +2,7 @@
 import { render } from "astro:content";
 import { getPublishedCollection } from "astro-course-university/content";
 import ContentLayout from "../../layouts/SiteContentLayout.astro";
+import Icon from "astro-theme-university/components/Icon.astro";
 import { siteConfig } from "../../site-config";
 
 export async function getStaticPaths() {
@@ -37,42 +38,105 @@ const description = person.data.description;
   heroImageAlt={photoAlt}
   {...siteConfig}
 >
-  <dl>
+  <ul class="person-facts">
     {roleLabel && (
-      <>
-        <dt>Role</dt>
-        <dd>{roleLabel}</dd>
-      </>
+      <li>
+        <Icon name="badge-check" size="1.1rem" />
+        <span class="person-fact-label">Role</span>
+        <span class="person-fact-value">{roleLabel}</span>
+      </li>
     )}
     {person.data.affiliation && (
-      <>
-        <dt>Affiliation</dt>
-        <dd>{person.data.affiliation}</dd>
-      </>
+      <li>
+        <Icon name="building" size="1.1rem" />
+        <span class="person-fact-label">Affiliation</span>
+        <span class="person-fact-value">{person.data.affiliation}</span>
+      </li>
     )}
     {person.data.email && (
-      <>
-        <dt>Email</dt>
-        <dd>
-          <a href={`mailto:${person.data.email}`}>{person.data.email}</a>
-        </dd>
-      </>
+      <li>
+        <Icon name="mail" size="1.1rem" />
+        <span class="person-fact-label">Email</span>
+        <a class="person-fact-value" href={`mailto:${person.data.email}`}>{person.data.email}</a>
+      </li>
     )}
     {person.data.url && (
-      <>
-        <dt>Web</dt>
-        <dd>
-          <a href={person.data.url}>{person.data.url}</a>
-        </dd>
-      </>
+      <li>
+        <Icon name="internet" size="1.1rem" />
+        <span class="person-fact-label">Web</span>
+        <a class="person-fact-value" href={person.data.url}>{person.data.url}</a>
+      </li>
     )}
     {person.data.contact && (
-      <>
-        <dt>Contact</dt>
-        <dd>{person.data.contact}</dd>
-      </>
+      <li>
+        <Icon name="phone" size="1.1rem" />
+        <span class="person-fact-label">Contact</span>
+        <span class="person-fact-value">{person.data.contact}</span>
+      </li>
     )}
-  </dl>
+  </ul>
 
   <Content />
 </ContentLayout>
+
+<style>
+  /* A row of labelled facts with an icon each, rather than a bare <dl> —
+     matches the card language used elsewhere on the site (see SlidesLink)
+     instead of looking like unstyled browser-default definition list markup. */
+  .person-facts {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-block: var(--at-spacing-lg, 1.5rem);
+    padding: 0;
+    list-style: none;
+    border: 1px solid var(--at-divider);
+    border-radius: var(--at-radius-panel, 0.5rem);
+    overflow: hidden;
+  }
+
+  .person-facts li {
+    display: flex;
+    align-items: center;
+    gap: var(--at-spacing-sm, 0.75rem);
+    padding: var(--at-spacing-sm, 0.75rem) var(--at-spacing-md, 1rem);
+    background: var(--at-bg, #fff);
+  }
+
+  .person-facts li + li {
+    border-block-start: 1px solid var(--at-divider);
+  }
+
+  .person-facts :global(svg) {
+    flex: none;
+    color: var(--at-primary);
+  }
+
+  .person-fact-label {
+    flex: none;
+    inline-size: 6rem;
+    font-size: var(--at-font-size-sm, 0.85rem);
+    font-weight: 600;
+    color: var(--at-text-secondary);
+  }
+
+  .person-fact-value {
+    min-width: 0;
+    overflow-wrap: break-word;
+    color: inherit;
+  }
+
+  a.person-fact-value {
+    text-decoration: underline;
+  }
+
+  @media (width <= 480px) {
+    .person-facts li {
+      flex-wrap: wrap;
+    }
+
+    .person-fact-label {
+      inline-size: auto;
+    }
+  }
+</style>

@@ -15,12 +15,23 @@ const panelId = `slides-panel-${href.replace(/[^a-z0-9]/gi, "-")}`;
 <div class="slides-block" data-slides-block data-href={resolved}>
   <div class="slides-block-controls">
     <button type="button" class="slides-toggle" aria-expanded="false" aria-controls={panelId}>
-      <Icon name="presentation" size="1rem" />
-      <span>{label}</span>
+      <span class="slides-toggle-icon">
+        <Icon name="presentation" size="1.15rem" />
+      </span>
+      <span class="slides-toggle-text">
+        <span class="slides-toggle-title">{label}</span>
+        <span class="slides-toggle-subtitle">Open the interactive deck</span>
+      </span>
     </button>
-    <a class="slides-newtab" href={resolved} target="_blank" rel="noopener">
-      Open in new tab
-      <Icon name="open-new-window" size="0.85rem" aria-label="Opens in a new tab" />
+    <a
+      class="slides-newtab"
+      href={resolved}
+      target="_blank"
+      rel="noopener"
+      title="Open in new tab"
+      aria-label="Open slides in a new tab"
+    >
+      <Icon name="open-new-window" size="1rem" />
     </a>
   </div>
   <div class="slides-panel" id={panelId} hidden>
@@ -122,44 +133,91 @@ const panelId = `slides-panel-${href.replace(/[^a-z0-9]/gi, "-")}`;
 
   .slides-block-controls {
     display: flex;
-    align-items: center;
+    align-items: stretch;
     gap: var(--at-spacing-sm, 0.75rem);
-    flex-wrap: wrap;
   }
 
+  /* A small card rather than a bare button: an icon chip, a title/subtitle
+     pair, so the slide deck reads as a distinct piece of content on the page
+     instead of one anonymous control among the prose. */
   .slides-toggle {
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    gap: 0.35rem;
+    gap: var(--at-spacing-sm, 0.75rem);
+    flex: 1 1 auto;
+    min-width: 0;
+    text-align: start;
     font: inherit;
-    font-weight: 600;
     text-decoration: none;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    border-radius: 0.35rem;
-    padding-block: 0.3rem;
-    padding-inline: 0.65rem;
+    border: 1px solid var(--at-divider);
+    border-radius: var(--at-radius-panel, 0.5rem);
+    padding: var(--at-spacing-sm, 0.75rem);
     background: var(--at-bg, #fff);
     color: inherit;
     cursor: pointer;
+    transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
   }
 
   .slides-toggle:hover,
   .slides-toggle:focus-visible {
-    background: rgba(0, 0, 0, 0.05);
+    border-color: var(--at-primary);
+    box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.08);
+  }
+
+  .slides-toggle-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    inline-size: 2.5rem;
+    block-size: 2.5rem;
+    border-radius: var(--at-radius-inner, 0.375rem);
+    background: color-mix(in srgb, var(--at-primary) 14%, transparent);
+    color: var(--at-primary);
+  }
+
+  .slides-toggle-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
+  }
+
+  .slides-toggle-title {
+    font-weight: 600;
+  }
+
+  .slides-toggle-subtitle {
+    font-size: var(--at-font-size-sm, 0.85rem);
+    color: var(--at-text-secondary);
   }
 
   .slides-toggle[aria-expanded="true"] {
-    background: rgba(185, 125, 28, 0.12);
-    border-color: var(--at-primary, #b97d1c);
+    background: color-mix(in srgb, var(--at-primary) 8%, var(--at-bg, #fff));
+    border-color: var(--at-primary);
+  }
+
+  .slides-toggle[aria-expanded="true"] .slides-toggle-icon {
+    background: var(--at-primary);
+    color: var(--at-on-primary, #fff);
   }
 
   .slides-newtab {
     display: inline-flex;
     align-items: center;
-    gap: 0.3rem;
-    font-size: 0.85rem;
+    justify-content: center;
+    flex: none;
+    inline-size: 2.5rem;
+    border: 1px solid var(--at-divider);
+    border-radius: var(--at-radius-inner, 0.375rem);
     color: var(--at-text-secondary);
-    text-decoration: underline;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .slides-newtab:hover,
+  .slides-newtab:focus-visible {
+    border-color: var(--at-primary);
+    color: var(--at-primary);
   }
 
   .slides-panel[hidden] {
