@@ -1,7 +1,7 @@
 ---
 title: Blame-Shifting and Scapegoats
 description:
-  Week 8 — the sociology of collective excuse-making, when the diffusion of
+  The sociology of collective excuse-making, when the diffusion of
   responsibility happens at group scale
 week: 8
 date: 2026-04-20
@@ -29,4 +29,4 @@ By the end of this lecture, you will be able to:
 - scapegoating as diffusion of responsibility performed by a group
 - why a scapegoat has to be plausible but not sympathetic
 - what this predicts about your week-9 case studies
-- reading before next week: none — case-study research begins now
+- reading before next week: none; case-study research begins now

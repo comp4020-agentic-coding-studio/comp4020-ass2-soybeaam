@@ -1,0 +1,63 @@
+---
+// The theme's SearchDialog (astro-theme-university/components/SearchDialog.astro)
+// offers only a keyboard `Esc` hint for dismissal, which is a dead end on a
+// phone where there is no Esc key and no hover. This component owns no markup:
+// it upgrades that dialog in place, so the nav trigger, the Cmd/Ctrl+K binding
+// and NotFoundSearch's `at-search-open` handoff all keep working untouched.
+//
+// Styles live in src/styles/brand.css, not in a <style> block here: the close
+// button is created at runtime and so carries no `data-astro-cid-*` attribute,
+// which means a scoped rule would never match it.
+---
+
+<script>
+  function enhanceSearchDialog() {
+    const dialog = document.querySelector<HTMLDialogElement>("[data-at-search-dialog]");
+    // ClientRouter swaps the whole document on navigation, so a fresh (un-enhanced)
+    // dialog arrives each time; the guard belongs on the element, not the root.
+    if (!dialog || dialog.dataset.atSearchEnhanced) return;
+    dialog.dataset.atSearchEnhanced = "true";
+
+    // Swap the `Esc` hint for a real control. Esc keeps working — this adds the
+    // tap/click route it never had.
+    const kbd = dialog.querySelector(".at-search-kbd");
+    if (kbd) {
+      const closeButton = document.createElement("button");
+      closeButton.type = "button";
+      closeButton.className = "at-search-close";
+      closeButton.setAttribute("aria-label", "Close search");
+      closeButton.title = "Close search (Esc)";
+      closeButton.innerHTML =
+        '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+        'stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false">' +
+        '<path d="M18 6 6 18M6 6l12 12"></path></svg>';
+      closeButton.addEventListener("click", () => dialog.close());
+      kbd.replaceWith(closeButton);
+    }
+
+    // The theme writes "Searching…" / "No results for X" here but never
+    // announces it; a live region makes the state audible as well as visible.
+    const status = dialog.querySelector("[data-at-search-status]");
+    if (status && !status.hasAttribute("role")) {
+      status.setAttribute("role", "status");
+      status.setAttribute("aria-live", "polite");
+    }
+
+    // The panel is a child of the dialog, so a click whose target is the
+    // dialog itself landed on the backdrop area outside the panel.
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+
+    // Every path that fires `close` — Esc, the backdrop, the button above — is
+    // a dismissal, so focus always belongs back on the trigger that opened it.
+    // Following a result is not one of those paths: it navigates instead, and
+    // ClientRouter swaps the document without the dialog ever closing.
+    dialog.addEventListener("close", () => {
+      document.querySelector<HTMLElement>("[data-search-trigger]")?.focus();
+    });
+  }
+
+  enhanceSearchDialog();
+  document.addEventListener("astro:page-load", enhanceSearchDialog);
+</script>

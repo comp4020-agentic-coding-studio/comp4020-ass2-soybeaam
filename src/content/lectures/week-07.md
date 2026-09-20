@@ -1,7 +1,7 @@
 ---
 title: The Courtroom Excuse
 description:
-  Week 7 — legal defenses as rhetorical performance, built for a hostile
+  Legal defenses as rhetorical performance, built for a hostile
   audience rather than a sympathetic one
 week: 7
 date: 2026-04-13

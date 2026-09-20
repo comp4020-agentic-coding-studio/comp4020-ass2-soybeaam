@@ -134,7 +134,7 @@ const panelId = `slides-panel-${href.replace(/[^a-z0-9]/gi, "-")}`;
   .slides-block-controls {
     display: flex;
     align-items: stretch;
-    gap: var(--at-spacing-sm, 0.75rem);
+    gap: var(--at-spacing-sm);
   }
 
   /* A small card rather than a bare button: an icon chip, a title/subtitle
@@ -143,15 +143,15 @@ const panelId = `slides-panel-${href.replace(/[^a-z0-9]/gi, "-")}`;
   .slides-toggle {
     display: flex;
     align-items: center;
-    gap: var(--at-spacing-sm, 0.75rem);
+    gap: var(--at-spacing-sm);
     flex: 1 1 auto;
     min-width: 0;
     text-align: start;
     font: inherit;
     text-decoration: none;
     border: 1px solid var(--at-divider);
-    border-radius: var(--at-radius-panel, 0.5rem);
-    padding: var(--at-spacing-sm, 0.75rem);
+    border-radius: var(--at-radius-panel);
+    padding: var(--at-spacing-sm);
     background: var(--at-bg, #fff);
     color: inherit;
     cursor: pointer;
@@ -171,7 +171,7 @@ const panelId = `slides-panel-${href.replace(/[^a-z0-9]/gi, "-")}`;
     flex: none;
     inline-size: 2.5rem;
     block-size: 2.5rem;
-    border-radius: var(--at-radius-inner, 0.375rem);
+    border-radius: var(--at-radius-inner);
     background: color-mix(in srgb, var(--at-primary) 14%, transparent);
     color: var(--at-primary);
   }
@@ -188,7 +188,7 @@ const panelId = `slides-panel-${href.replace(/[^a-z0-9]/gi, "-")}`;
   }
 
   .slides-toggle-subtitle {
-    font-size: var(--at-font-size-sm, 0.85rem);
+    font-size: var(--at-font-size-sm);
     color: var(--at-text-secondary);
   }
 
@@ -209,7 +209,7 @@ const panelId = `slides-panel-${href.replace(/[^a-z0-9]/gi, "-")}`;
     flex: none;
     inline-size: 2.5rem;
     border: 1px solid var(--at-divider);
-    border-radius: var(--at-radius-inner, 0.375rem);
+    border-radius: var(--at-radius-inner);
     color: var(--at-text-secondary);
     transition: border-color 0.15s ease, color 0.15s ease;
   }
@@ -275,7 +275,7 @@ const panelId = `slides-panel-${href.replace(/[^a-z0-9]/gi, "-")}`;
     background: #fff;
   }
 
-  @media (width <= 640px) {
+  @media (width < 640px) {
     .slides-panel {
       padding: 0;
     }

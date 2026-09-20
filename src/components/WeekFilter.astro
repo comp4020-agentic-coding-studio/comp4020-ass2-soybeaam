@@ -12,9 +12,19 @@ const { scope, weeks } = Astro.props;
 ---
 
 <div class="week-filter" data-week-filter={scope}>
-  <button type="button" class="week-filter-toggle" aria-expanded="false" aria-haspopup="true">
-    <Icon name="filter" size="1rem" />
-    <span>Filter by week</span>
+  {/* Icon-only: the visible "Filter by week" text is gone, so the button
+      carries its name via aria-label and title instead — an icon with no
+      accessible name is unusable with a screen reader, and unlabelled with
+      no hover on touch. */}
+  <button
+    type="button"
+    class="week-filter-toggle"
+    aria-expanded="false"
+    aria-haspopup="true"
+    aria-label="Filter by week"
+    title="Filter by week"
+  >
+    <Icon name="filter" size="1.125rem" />
     <span class="week-filter-count" hidden></span>
   </button>
   <div class="week-filter-panel" hidden>
@@ -106,15 +116,22 @@ const { scope, weeks } = Astro.props;
     margin: 0 0 var(--at-spacing-lg);
   }
 
+  /* Square icon button. Sized to the 2.25rem touch-target floor rather than
+     to the glyph, since dropping the label removed the padding that used to
+     make it thumb-sized. */
   .week-filter-toggle {
+    position: relative;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.4rem;
     font: inherit;
     font-weight: 600;
     border: 1px solid var(--at-divider-strong);
-    border-radius: var(--at-radius-inner, 0.375rem);
-    padding: 0.4rem 0.75rem;
+    border-radius: var(--at-radius-inner);
+    inline-size: 2.25rem;
+    block-size: 2.25rem;
+    padding: 0;
     background: var(--at-bg, #fff);
     color: inherit;
     cursor: pointer;
@@ -126,11 +143,16 @@ const { scope, weeks } = Astro.props;
   }
 
   .week-filter-toggle[aria-expanded="true"] {
-    background: rgba(185, 125, 28, 0.12);
-    border-color: var(--at-primary, #b97d1c);
+    background: color-mix(in srgb, var(--at-primary) 12%, transparent);
+    border-color: var(--at-primary);
   }
 
+  /* With no label to sit beside, the count rides the button's top-right
+     corner instead of sitting inline. */
   .week-filter-count {
+    position: absolute;
+    inset-block-start: -0.4rem;
+    inset-inline-end: -0.4rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -138,14 +160,14 @@ const { scope, weeks } = Astro.props;
     height: 1.25rem;
     padding-inline: 0.3rem;
     border-radius: 999px;
-    background: var(--at-primary, #b97d1c);
+    background: var(--at-primary);
     color: #fff;
     font-size: 0.75rem;
   }
 
   .week-filter-panel {
     position: absolute;
-    inset-block-start: calc(100% + var(--at-spacing-xs, 0.5rem));
+    inset-block-start: calc(100% + var(--at-spacing-xs));
     inset-inline-start: 0;
     z-index: 20;
     min-width: 16rem;
@@ -158,7 +180,7 @@ const { scope, weeks } = Astro.props;
     padding: var(--at-spacing-sm) var(--at-spacing-md);
     background: var(--at-bg, #fff);
     border: 1px solid var(--at-divider-strong);
-    border-radius: var(--at-radius-panel, 0.5rem);
+    border-radius: var(--at-radius-panel);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
 
@@ -170,8 +192,8 @@ const { scope, weeks } = Astro.props;
   .week-filter-options {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--at-spacing-xs, 0.5rem);
-    margin-block-end: var(--at-spacing-xs, 0.5rem);
+    gap: var(--at-spacing-xs);
+    margin-block-end: var(--at-spacing-xs);
   }
 
   .week-filter-option {
@@ -189,8 +211,8 @@ const { scope, weeks } = Astro.props;
   }
 
   .week-filter-option:has(input:checked) {
-    background: rgba(185, 125, 28, 0.15);
-    border-color: var(--at-primary, #b97d1c);
+    background: color-mix(in srgb, var(--at-primary) 15%, transparent);
+    border-color: var(--at-primary);
     font-weight: 600;
   }
 

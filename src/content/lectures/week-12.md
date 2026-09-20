@@ -1,7 +1,7 @@
 ---
 title: Closing lecture
 description:
-  Week 12 — no new material; a short retrospective before the capstone
+  No new material; a short retrospective before the capstone
   defenses in the workshop
 week: 12
 date: 2026-05-18
@@ -13,8 +13,9 @@ related:
 slides: /decks/week-12/
 ---
 
-No new material this week. A short retrospective on the semester's taxonomy —
-what held up, what strained — before the workshop's live capstone defenses.
+No new material this week. A short retrospective on the semester's
+taxonomy, what held up and what strained, before the workshop's live
+capstone defenses.
 
 ## Learning objectives
 

@@ -338,7 +338,7 @@ body:has(.at-sidebar) .at-main > h1 {
    desktop (where the sidebar is visible) drop the nav bar's copy rather than
    showing the brand twice. Below 768px the sidebar (and its header) is
    hidden entirely, so the nav keeps its own brand as the only wordmark. */
-@media (width >= 769px) {
+@media (width > 768px) {
   body:has(.at-sidebar) .at-nav-brand {
     display: none;
   }
@@ -381,13 +381,85 @@ body:has(.at-sidebar) .at-main > h1 {
   flex-shrink: 0;
 }
 
-.at-nav-logo {
-  height: 2rem;
+/* Top nav carries only search once the left sidebar is on screen: the sidebar
+   lists every destination the nav links did, so the row was duplicating it.
+   The boundary is `> 768px`, not `>= 768px`, and that matters: sidebar.css
+   hides .at-sidebar at `<= 768px` while the theme hides .at-nav-toggle at
+   `>= 640px`. Hiding the links at >= 768px would leave 768px exactly with no
+   sidebar, no hamburger and no links — no navigation at all. Below this the
+   wrapper is left alone so the hamburger drawer (< 640px) and the inline row
+   (640–768px, where the sidebar has not appeared yet) both still work. */
+@media (width > 768px) {
+  .at-nav-links-wrapper {
+    display: none;
+  }
 }
 
-.at-sidebar-content {
-  margin-block: var(--at-spacing-sm);
-  padding: var(--at-spacing-lg);
+/* The theme gives the input `flex: 1`, which leaves `min-width: auto` — an
+   input's intrinsic minimum is its default character width, so at phone
+   widths the input refuses to shrink and pushes the close button past the
+   panel edge instead. The panel clips rather than scrolls, so that failure
+   would be silent. Same `min-width: 0` idiom as `.at-nav-links` above. */
+.at-search-input {
+  min-width: 0;
+}
+
+/* `type="search"` makes Chromium draw its own clear-field ×, which lands right
+   beside the dialog's close × and reads as a duplicate of it — two identical
+   glyphs, two different actions. It is also Chromium-only (Firefox draws
+   nothing), so keeping it would mean the header differed per browser. Drop it
+   and let the one × mean exactly one thing. */
+.at-search-input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Close control that SearchEnhancements.astro substitutes for the theme's
+   `Esc` hint in the search dialog header. Sized to the 2.25rem minimum touch
+   target rather than the `<kbd>`'s text box, since its whole reason to exist
+   is the pointer/touch route Esc doesn't give. Declared here, not in the
+   component, because the button is created at runtime and so has no scoped
+   `data-astro-cid-*` attribute for a component <style> rule to match. */
+.at-search-close {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 2.25rem;
+  block-size: 2.25rem;
+  padding: 0;
+  border: 1px solid var(--at-divider);
+  border-radius: var(--at-border-radius);
+  background: transparent;
+  color: var(--at-text-muted);
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+}
+
+/* The theme's `.at-search-header svg` rule (for the magnifier) also matches the
+   × and sets its colour directly, which beats inheriting from the button — so
+   the hover/focus states below would never reach the icon without this. */
+.at-search-close svg {
+  color: inherit;
+}
+
+.at-search-close:hover {
+  background: var(--at-accent-soft);
+  color: var(--at-text);
+}
+
+/* Hover is unavailable on touch, so the focus state carries the affordance on
+   its own there — keep it a visible ring, not a colour swap. */
+.at-search-close:focus-visible {
+  outline: 2px solid var(--at-accent);
+  outline-offset: 2px;
+  color: var(--at-text);
+}
+
+.at-nav-logo {
+  height: 2rem;
 }
 
 /* Breadcrumbs render as a direct .at-main child (a sibling of the h1/.lead
@@ -428,6 +500,17 @@ body:has(.at-sidebar) .at-main > nav.breadcrumbs {
   border-block-start: 1px solid var(--at-divider-strong);
 }
 
+/* The body grid's first track is `--at-gutter + --at-sidebar-inset`, so
+   `content-start` lands exactly on the fixed sidebar's right edge — and the
+   theme gives .at-footer-inner `padding: 2xl 0`, i.e. no inline padding at
+   all. The licence and acknowledgement lines therefore began flush against
+   the rail. --page-pad rather than a fixed value so the footer starts at the
+   same x as the body copy above it (2rem desktop, 1rem phone), instead of
+   introducing a third margin that agrees with neither. */
+.at-footer-inner {
+  padding-inline: var(--page-pad);
+}
+
 /* List-style card grids: one bordered list of rows instead of a tiled wall
  * of boxes. A row scans faster than a card for exactly the content these
  * grids hold (a title plus a line or two of detail — lecture/session/
@@ -455,6 +538,58 @@ body:has(.at-sidebar) .at-main > nav.breadcrumbs {
   display: none;
 }
 
+/* Row eyebrow: the small uppercase label naming a row's place in a sequence —
+ * the week number on the lecture/workshop indexes, the assignment number on
+ * assessment. It sits above the row's own link rather than inside it, so a
+ * student scanning for "week 7" hits the marker first instead of hunting for
+ * it in the dateline underneath.
+ *
+ * Defined here, once, rather than restated in each grid component: the three
+ * index pages are meant to read as one idiom, and this is also what gives
+ * twelve otherwise-identical rows their vertical rhythm without breaking the
+ * single bordered panel the whole site uses for lists. */
+.row-eyebrow {
+  /* The week number and the date now read as one metadata line. The
+     date used to trail the description as a bare <small>, which put the
+     single most-looked-up fact on the page at the bottom of each row and
+     below a paragraph of variable length, so it never sat at a predictable
+     height. Kept left-aligned and adjacent rather than pushed apart with
+     space-between: on a wide laptop column the two halves would sit at
+     opposite edges and stop reading as one line. Wraps, rather than shrinks,
+     on narrow screens. */
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--at-spacing-sm);
+  margin: var(--at-spacing-sm) var(--at-spacing-md) 0;
+  font-size: var(--at-font-size-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--at-primary);
+}
+
+/* Secondary to the week number, so it reads as the date of that week rather
+   than competing with it. Not uppercased — dates are harder to scan in caps. */
+.row-eyebrow-date {
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: normal;
+  color: var(--at-text-secondary);
+}
+
+/* A row carrying an eyebrow gives back the top padding the eyebrow already
+   supplies, and takes a fuller measure at the bottom so consecutive weeks
+   read as separated blocks instead of one undifferentiated ladder. Padding
+   for these rows lives here rather than in the components so the two grids
+   and the assessment grid cannot drift apart; the components deliberately
+   declare none. */
+.row-eyebrow + .at-card,
+.row-eyebrow + .assessment-row {
+  padding-block: var(--at-spacing-xs) var(--at-spacing-md);
+  padding-inline: var(--at-spacing-md);
+}
+
 .at-card {
   display: flex;
   align-items: center;
@@ -467,7 +602,7 @@ body:has(.at-sidebar) .at-main > nav.breadcrumbs {
 
 a.at-card:hover,
 a.at-card:focus-visible {
-  background: rgba(185, 125, 28, 0.08);
+  background: color-mix(in srgb, var(--at-primary) 8%, transparent);
 }
 
 .at-card-image-frame {
@@ -493,9 +628,9 @@ a.at-card:focus-visible {
 }
 
 .at-card-body p {
-  margin-block: var(--at-spacing-2xs, 0.25rem) 0;
+  margin-block: var(--at-spacing-xs) 0;
   color: var(--at-text-secondary);
-  font-size: 0.9rem;
+  font-size: var(--at-font-size-sm);
 }
 
 .at-nav-dropdown-host {
@@ -507,8 +642,8 @@ a.at-card:focus-visible {
 .at-nav-dropdown-toggle {
   display: inline-flex;
   align-items: center;
-  padding: var(--at-spacing-2xs, 0.25rem);
-  margin-inline-start: var(--at-spacing-2xs, 0.25rem);
+  padding: var(--at-spacing-xs);
+  margin-inline-start: var(--at-spacing-xs);
   border: none;
   background: none;
   color: inherit;
@@ -608,7 +743,21 @@ a.at-card:focus-visible {
        root size, so scaling it down here shrinks body text and headings
        together in proportion, rather than needing a separate override per
        element. */
-    --at-font-size-base: 1rem;
+    --at-font-size-base: 0.9375rem;
+  }
+
+  /* Phone side padding is 1rem TOTAL, not 1rem twice. --at-gutter and
+     --page-pad stack (gutter on the body grid, page-pad inside the content
+     box), so both at md put 2rem between the screen edge and the first
+     character. Zeroing the gutter here leaves --page-pad as the single
+     16px inset the request asks for.
+
+     This has to be re-declared on `body:has(.at-sidebar)`, not :root: the
+     <=768px block far above sets --at-gutter on that same body selector, and
+     a value set on <body> beats one inherited from :root for everything
+     inside it, regardless of which rule comes later. */
+  body:has(.at-sidebar) {
+    --at-gutter: 0px;
   }
 
   /* base.css full-bleeds images inside .at-main by negative-margining them

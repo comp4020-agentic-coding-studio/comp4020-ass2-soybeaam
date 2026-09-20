@@ -12,15 +12,21 @@ const weeks = [...new Set(visible.map((session) => session.data.week))].sort((a,
 
 <WeekFilter scope="sessions" weeks={weeks} />
 <div data-week-filter-target="sessions">
-  <CardGrid columns={2}>
+  {/* No `columns` prop: brand.css renders every .at-card-grid as a single
+      bordered column of rows, so a column count here would be silently
+      ignored (this grid asked for two and never got them). The week eyebrow
+      is what separates one week from the next — see `.row-eyebrow` in
+      brand.css. */}
+  <CardGrid>
     {
       visible.map((session) => (
         <div class="week-filter-item" data-week={session.data.week}>
+          <p class="row-eyebrow">
+            <span>Week {session.data.week}</span>
+            <span class="row-eyebrow-date">{formatCourseDate(session.data.date)}</span>
+          </p>
           <Card headingLevel="h2" title={session.data.title} href={`/sessions/${session.id}/`}>
             {session.data.description && <p>{session.data.description}</p>}
-            <p>
-              <small>Week {session.data.week} · {formatCourseDate(session.data.date)}</small>
-            </p>
           </Card>
         </div>
       ))

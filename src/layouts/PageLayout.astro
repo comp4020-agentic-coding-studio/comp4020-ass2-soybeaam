@@ -3,8 +3,8 @@ import MdxPageLayout from "astro-theme-university/layouts/MdxPageLayout.astro";
 import "astro-theme-university/styles/sidebar.css";
 import AppSidebar from "../components/AppSidebar.astro";
 import RightSidebar from "../components/RightSidebar.astro";
-import HeaderDropdowns from "../components/HeaderDropdowns.astro";
 import Breadcrumbs from "../components/Breadcrumbs.astro";
+import SearchEnhancements from "../components/SearchEnhancements.astro";
 import { siteConfig } from "../site-config";
 
 // Frontmatter arrives via `Astro.props.frontmatter` for MDX pages using the
@@ -21,9 +21,9 @@ const pageTitle = (frontmatter?.title ?? Astro.props.title) as string;
   <div data-pagefind-ignore style="display: contents">
     <RightSidebar />
   </div>
-  <HeaderDropdowns />
   <Breadcrumbs current={pageTitle} />
   <div class="at-sidebar-content">
     <slot />
   </div>
+  <SearchEnhancements />
 </MdxPageLayout>

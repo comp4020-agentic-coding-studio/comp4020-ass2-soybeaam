@@ -1,7 +1,7 @@
 ---
 title: Believing your own excuse
 description:
-  Week 3's workshop — the psychology of self-justification, and why the best
+  The psychology of self-justification, and why the best
   liar is the one who believes it
 week: 3
 date: 2026-03-09
@@ -28,5 +28,5 @@ not the same thing.
 
 ## Afterwards
 
-Nothing due. Start reading for week 4 if you're ahead — the teardown brief
+Nothing due. Start reading for week 4 if you're ahead: the teardown brief
 drops this week.

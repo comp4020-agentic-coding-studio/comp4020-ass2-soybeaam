@@ -1,7 +1,7 @@
 ---
 title: The excuse under oath
 description:
-  Week 7's workshop — mock cross-examination of a legal defense, run as a class
+  Mock cross-examination of a legal defense, run as a class
   exercise
 week: 7
 date: 2026-04-13
@@ -27,5 +27,5 @@ persuades a friend and one built to survive a hostile audience.
 
 ## Afterwards
 
-Start thinking about your case-study group for week 9 — groups of three to
+Start thinking about your case-study group for week 9: groups of three to
 four, self-selected, due to be finalised by week 8.

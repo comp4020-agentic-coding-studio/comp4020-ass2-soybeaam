@@ -1,7 +1,7 @@
 ---
 title: Presentation week
 description:
-  Week 9 — no new lecture material; the workshop itself is the case-study
+  No new lecture material; the workshop itself is the case-study
   presentations
 week: 9
 date: 2026-04-27
@@ -13,7 +13,7 @@ related:
 slides: /decks/week-09/
 ---
 
-No new lecture this week — the scheduled time is the
+No new lecture this week. The scheduled time is given over to the
 [case-study presentations](/assessments/case-study-presentation/) themselves.
 
 ## Learning objectives

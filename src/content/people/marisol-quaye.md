@@ -14,12 +14,12 @@ photoAlt: A stylised silhouette portrait, flat black shapes with a gold fringe a
 Marisol spent nine years writing statements for companies that had done
 something wrong and needed to say so without saying so. She now teaches the
 craft from the other side: how to read what a non-apology is actually admitting,
-and — in the capstone — how to write one that holds up under questioning.
+and, in the capstone, how to write one that holds up under questioning.
 
 ## Consultation
 
 Drop-in hours are announced each week in the workshop brief. For anything that
-cannot wait, email — expect a reply within two working days, not an
+cannot wait, email, but expect a reply within two working days, not an
 instantaneous one; that would defeat the point of the course.
 
 ## Escalation

@@ -3,6 +3,7 @@ import { render } from "astro:content";
 import { getPublishedCollection } from "astro-course-university/content";
 import ContentLayout from "../../layouts/SiteContentLayout.astro";
 import Icon from "astro-theme-university/components/Icon.astro";
+import { heroForSlug } from "../../lib/hero-images";
 import { siteConfig } from "../../site-config";
 
 export async function getStaticPaths() {
@@ -26,6 +27,17 @@ const roleLabel = person.data.role ? roleLabels[person.data.role] : undefined;
 // so narrow the alt at the rendering boundary as well.
 const rawPhotoAlt = (person.data as { photoAlt?: unknown }).photoAlt;
 const photoAlt = typeof rawPhotoAlt === "string" ? rawPhotoAlt : "";
+// Only two of the six people have a portrait on file, so four tutor pages were
+// the one detail-page type in the site that opened with no banner at all.
+// Fall back to the same shared pool the lecture, workshop and assessment pages
+// draw from, keyed to the slug so a person keeps their image across builds.
+// A portrait, where one exists, still wins: the pool is a backdrop, not a
+// stand-in for someone's face, which is also why the list avatar keeps its
+// initials rather than dropping a lecture hall into a 40px circle.
+const fallbackHero = heroForSlug(person.id);
+const hero = person.data.photo
+  ? { image: person.data.photo, alt: photoAlt }
+  : fallbackHero;
 // Every page owes a description --- it is what a search result and a shared
 // link show underneath the title.
 const description = person.data.description;
@@ -34,8 +46,8 @@ const description = person.data.description;
 <ContentLayout
   title={person.data.title}
   description={description}
-  heroImage={person.data.photo ?? undefined}
-  heroImageAlt={photoAlt}
+  heroImage={hero.image}
+  heroImageAlt={hero.alt}
   {...siteConfig}
 >
   <ul class="person-facts">
@@ -87,19 +99,19 @@ const description = person.data.description;
     display: flex;
     flex-direction: column;
     gap: 0;
-    margin-block: var(--at-spacing-lg, 1.5rem);
+    margin-block: var(--at-spacing-lg);
     padding: 0;
     list-style: none;
     border: 1px solid var(--at-divider);
-    border-radius: var(--at-radius-panel, 0.5rem);
+    border-radius: var(--at-radius-panel);
     overflow: hidden;
   }
 
   .person-facts li {
     display: flex;
     align-items: center;
-    gap: var(--at-spacing-sm, 0.75rem);
-    padding: var(--at-spacing-sm, 0.75rem) var(--at-spacing-md, 1rem);
+    gap: var(--at-spacing-sm);
+    padding: var(--at-spacing-sm) var(--at-spacing-md);
     background: var(--at-bg, #fff);
   }
 
@@ -115,7 +127,7 @@ const description = person.data.description;
   .person-fact-label {
     flex: none;
     inline-size: 6rem;
-    font-size: var(--at-font-size-sm, 0.85rem);
+    font-size: var(--at-font-size-sm);
     font-weight: 600;
     color: var(--at-text-secondary);
   }
@@ -130,7 +142,7 @@ const description = person.data.description;
     text-decoration: underline;
   }
 
-  @media (width <= 480px) {
+  @media (width < 640px) {
     .person-facts li {
       flex-wrap: wrap;
     }

@@ -1,7 +1,7 @@
 ---
 title: The Corporate Non-Apology
 description:
-  Week 5 — a working definition of a genuine apology, built to test corporate
+  A working definition of a genuine apology, built to test corporate
   statements against
 week: 5
 date: 2026-03-30

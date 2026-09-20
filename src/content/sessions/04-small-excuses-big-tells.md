@@ -1,7 +1,7 @@
 ---
 title: Small excuses, big tells
 description:
-  Week 4's workshop — workshopping teardown drafts, and what children's excuses
+  Workshopping teardown drafts, and what children's excuses
   reveal about how the skill develops
 week: 4
 date: 2026-03-23

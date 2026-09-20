@@ -1,7 +1,7 @@
 ---
 title: Capstone portfolio
 description:
-  The final piece — an original excuse, designed from scratch and defended in
+  The final piece, an original excuse designed from scratch and defended in
   writing against everything the semester taught you to notice
 week: 12
 due: 2026-05-11T12:00:00+10:00
@@ -13,7 +13,7 @@ marking:
     genuinely original rather than a rehash of an earlier assignment, whether
     it deploys the semester's vocabulary with precision rather than as
     decoration, and whether the written defense anticipates the strongest
-    objection a classmate could raise against it — because at this point in
+    objection a classmate could raise against it, because at this point in
     the semester, someone will raise it.
 spec:
   - an original excuse for a real or plausible scenario you invent
@@ -30,19 +30,19 @@ related:
 > a semester turning into skeptics.
 
 You've spent eleven weeks learning to see through excuses. Now build one that
-survives that scrutiny. Invent a scenario (real or plausible — a missed
+survives that scrutiny. Invent a scenario (real or plausible: a missed
 deadline, a broken promise, a public misstep) and design the excuse you'd
 actually give, choosing its taxonomy and its grammar deliberately rather than
 by instinct.
 
 Start from the scenario, not the vocabulary. Pick a situation with real
-stakes — the kind where an excuse would actually need to work on someone —
+stakes, the kind where an excuse would actually need to work on someone,
 and only then decide which combination of denial, justification, and
 diffusion the situation calls for. An excuse assembled by working backwards
 from a checklist of techniques ("I need one denial move and two hedges")
 reads as an exercise rather than something a person would say; the
 strongest submissions read as though the taxonomy was discovered inside the
-excuse, not imposed on it. Consider mixing mechanisms deliberately — a
+excuse, not imposed on it. Consider mixing mechanisms deliberately. A
 denial that shifts into a diffusion once it becomes untenable is a more
 sophisticated (and more realistic) construction than a single mechanism
 run straight through.
@@ -52,7 +52,7 @@ analytical vocabulary has to do real work. Treat it as a rhetorical brief
 you are submitting for your own construction: name the taxonomy category
 for each move, name the grammatical devices carrying it (passive voice,
 hedges, nominalisation, agentless constructions), and explain the causal
-link between the device and the effect you wanted — not just that a hedge
+link between the device and the effect you wanted: not just that a hedge
 is present, but what specific admission it was designed to avoid. The
 defense is being read by people who have spent a semester learning to spot
 exactly these moves, so vague gestures at "using rhetorical techniques"
@@ -60,7 +60,7 @@ will read as thin next to a defense that can point to its own sentences.
 
 ## Submission Requirements
 
-The excuse itself (as it would actually be delivered — an email, a
+The excuse itself (as it would actually be delivered: an email, a
 statement, a spoken script), plus a 1000–1200 word written defense
 explaining every choice by name and pre-empting its weakest point. The
 excuse should be submitted in the form it would actually take (a formatted
@@ -68,13 +68,13 @@ email with a subject line, a transcript of a spoken statement with stage
 directions if delivery matters to its effect) rather than as plain prose
 description of what you would say. The defense follows immediately after,
 addressed to the reader as an argument rather than as a reflective journal
-entry — it should read as though you are defending a real decision under
+entry. It should read as though you are defending a real decision under
 real scrutiny, because within the assessment's fiction, you are.
 
 ## Marking rubric
 
 The capstone is marked holistically, but against the three dimensions
-below — each judged on the scale, not allocated a mark count.
+below, each judged on the scale, not allocated a mark count.
 
 | Criteria | High Distinction (5) | Distinction (4) | Credit (3) | Pass (2) | Fail (1) |
 | --- | --- | --- | --- | --- | --- |

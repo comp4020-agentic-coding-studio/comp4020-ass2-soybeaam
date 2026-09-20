@@ -1,7 +1,7 @@
 ---
 title: Excuses that changed history
 description:
-  Week 6's workshop — case studies of excuses with historical consequences,
+  Case studies of excuses with historical consequences,
   alongside the non-apology lab due this week
 week: 6
 date: 2026-04-06

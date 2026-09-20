@@ -1,7 +1,7 @@
 ---
 title: Scapegoats and shared blame
 description:
-  Week 8's workshop — forming case-study groups and picking topics for week 9
+  Forming case-study groups and picking topics for week 9
 week: 8
 date: 2026-04-20
 teachers:
@@ -27,4 +27,4 @@ case candidates against Idris and each other.
 
 ## Afterwards
 
-Groups are locked in. Start research — you present in week 9.
+Groups are locked in. Start research now; you present in week 9.

@@ -194,8 +194,8 @@ import Icon from "astro-theme-university/components/Icon.astro";
     font-weight: 700;
     font-size: var(--at-font-size-sm);
     color: rgba(0, 0, 0, 0.85);
-    padding: 0 var(--at-spacing-2xs, 0.25rem);
-    margin-block-end: var(--at-spacing-2xs, 0.25rem);
+    padding: 0 var(--at-spacing-xs);
+    margin-block-end: var(--at-spacing-xs);
   }
 
   :global(.right-sidebar-calendar-weekdays),
@@ -224,7 +224,7 @@ import Icon from "astro-theme-university/components/Icon.astro";
   }
 
   :global(.right-sidebar-calendar-grid span.is-today) {
-    background: var(--at-primary, #000);
+    background: var(--at-primary);
     color: var(--at-on-primary, #fff);
     font-weight: 700;
   }
@@ -237,6 +237,15 @@ import Icon from "astro-theme-university/components/Icon.astro";
     :global(.at-right-sidebar-mobile-item) {
       display: none;
     }
+  }
+
+  /* Calendar off on phone, clock kept. No media query needed: this clone is
+     the phone-only copy (the rule above hides it from 640px up), so scoping
+     to it IS scoping to phone, and the desktop rail keeps both halves.
+     `:global` because the clone is built from a <template> at runtime and so
+     carries no scoped `data-astro-cid-*` for a plain rule to match. */
+  :global(.at-right-sidebar-mobile-item .right-sidebar-calendar) {
+    display: none;
   }
 </style>
 

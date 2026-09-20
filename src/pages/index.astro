@@ -56,9 +56,9 @@ const orderedWeeks = [...weeks.values()].sort((a, b) => a.week - b.week);
 
   <h2>What you will do</h2>
   <p>
-    You will take excuses apart. Every week you read or watch a real one —
+    You will take excuses apart. Every week you read or watch a real one:
     a late-work email, a corporate apology, a courtroom defense, a toddler's
-    alibi, a chatbot's confident wrong answer — and work out what it is
+    alibi, a chatbot's confident wrong answer. You then work out what it is
     actually doing: which blame it is moving, and where. By the end you
     design and defend an original excuse of your own, built to survive
     cross-examination.
@@ -67,7 +67,7 @@ const orderedWeeks = [...weeks.values()].sort((a, b) => a.week - b.week);
   <h2>Who it is for</h2>
   <p>
     Anyone who has ever been unconvinced by an apology and wanted to know
-    why. No prior rhetoric, psychology, or law background is assumed — the
+    why. No prior rhetoric, psychology, or law background is assumed, because the
     course builds its own vocabulary from week 1. It suits students in
     communications, law, psychology, design, or anyone who negotiates,
     manages, or apologises for a living.
@@ -108,7 +108,7 @@ const orderedWeeks = [...weeks.values()].sort((a, b) => a.week - b.week);
   </ol>
 
   <h2>Where to go next</h2>
-  <CardGrid columns={2}>
+  <CardGrid>
     <Card title={sessionLabels.plural} href="/sessions/">
       <p>The weekly schedule and what happens in each teaching session.</p>
     </Card>
@@ -125,18 +125,18 @@ const orderedWeeks = [...weeks.values()].sort((a, b) => a.week - b.week);
   .course-tags {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-block: 0 2rem;
+    gap: var(--at-spacing-sm);
+    margin-block: 0 var(--at-spacing-xl);
     padding: 0;
     list-style: none;
   }
 
   .course-tags li {
-    padding: 0.25rem 0.65rem;
+    padding: var(--at-spacing-xs) var(--at-spacing-sm);
     border-radius: 999px;
     color: var(--at-text-secondary);
     background: var(--at-bg-alt);
-    font-size: 0.9rem;
+    font-size: var(--at-font-size-sm);
   }
 
   /* One bordered panel of hairline-separated rows, the same idiom the
@@ -145,7 +145,7 @@ const orderedWeeks = [...weeks.values()].sort((a, b) => a.week - b.week);
      ladder and made the homepage the odd page out. */
   .week-list {
     list-style: none;
-    margin: 0 0 2rem;
+    margin: 0 0 var(--at-spacing-xl);
     padding: 0;
     display: flex;
     flex-direction: column;
@@ -170,7 +170,7 @@ const orderedWeeks = [...weeks.values()].sort((a, b) => a.week - b.week);
   .week-number {
     display: flex;
     align-items: center;
-    gap: var(--at-spacing-xs, 0.5rem);
+    gap: var(--at-spacing-xs);
     font-weight: 600;
     color: var(--at-primary);
     cursor: pointer;
@@ -196,29 +196,39 @@ const orderedWeeks = [...weeks.values()].sort((a, b) => a.week - b.week);
     list-style: none;
     margin: var(--at-spacing-xs) 0 0;
     padding-inline-start: var(--at-spacing-md);
-    border-inline-start: 2px solid rgba(185, 125, 28, 0.3);
+    border-inline-start: 2px solid color-mix(in srgb, var(--at-primary) 30%, transparent);
     display: flex;
     flex-direction: column;
-    gap: var(--at-spacing-2xs, 0.25rem);
+    gap: var(--at-spacing-xs);
   }
 
   .week-items li {
     display: flex;
     align-items: center;
-    gap: var(--at-spacing-xs, 0.5rem);
+    gap: var(--at-spacing-xs);
     flex-wrap: wrap;
+  }
+
+  /* The lecture and the workshop are two different commitments in a week, but
+     an 0.25rem gap ran them together as one four-line block. A rule and real
+     space between them makes the week's two halves separable at a glance.
+     `> li` so the nested slides list is not also split off from its lecture. */
+  .week-items > li + li {
+    margin-block-start: var(--at-spacing-sm);
+    padding-block-start: var(--at-spacing-sm);
+    border-block-start: 1px solid var(--at-divider);
   }
 
   .week-subitems {
     list-style: none;
-    margin: var(--at-spacing-2xs, 0.25rem) 0 0;
+    margin: var(--at-spacing-xs) 0 0;
     padding-inline-start: var(--at-spacing-md);
     border-inline-start: 2px solid var(--at-divider);
     flex-basis: 100%;
   }
 
   .week-subitems a {
-    font-size: 0.9rem;
+    font-size: var(--at-font-size-sm);
   }
 
   .week-items a,

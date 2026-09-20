@@ -1,7 +1,7 @@
 ---
 title: Why We Excuse
 description:
-  The opening lecture — what an excuse is for, and the three-part taxonomy the
+  The opening lecture, covering what an excuse is for and the three-part taxonomy the
   rest of the course builds on
 week: 1
 date: 2026-02-23
@@ -28,4 +28,4 @@ By the end of this lecture, you will be able to:
 - what an excuse is doing that "sorry" is not
 - the three-part taxonomy: denial, justification, diffusion of responsibility
 - why the taxonomy will keep breaking all semester, and why that is useful
-- reading before week 2: none — bring your own excuses instead
+- reading before week 2: none; bring your own excuses instead

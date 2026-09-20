@@ -1,7 +1,7 @@
 ---
 title: Capstone defenses
 description:
-  Week 12's workshop — the final class, where a sample of capstone excuses are
+  The final class, where a sample of capstone excuses are
   defended live in front of the room
 week: 12
 date: 2026-05-18

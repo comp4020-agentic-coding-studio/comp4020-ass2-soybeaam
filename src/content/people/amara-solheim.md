@@ -9,7 +9,7 @@ email: amara.solheim@slop.university
 contact: Ask during workshops, or email for anything that needs a written answer.
 ---
 
-Amara's research compares how excuses land differently across cultures —
-the same non-apology can read as gracious in one room and evasive in
+Amara's research compares how excuses land differently across cultures.
+The same non-apology can read as gracious in one room and evasive in
 another. She marks the cross-cultural-excuses unit and runs its comparison
 seminar.

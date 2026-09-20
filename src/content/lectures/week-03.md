@@ -1,7 +1,7 @@
 ---
 title: Cognitive Dissonance and Self-Justification
 description:
-  Week 3 — why people believe their own excuses, and what that does to how
+  Why people believe their own excuses, and what that does to how
   persuasive they are
 week: 3
 date: 2026-03-09
@@ -12,7 +12,7 @@ related:
 slides: /decks/week-03/
 ---
 
-The most durable excuses aren't the cleverest ones — they're the ones the
+The most durable excuses aren't the cleverest ones. They're the ones the
 speaker has already talked themselves into.
 
 ## Learning objectives

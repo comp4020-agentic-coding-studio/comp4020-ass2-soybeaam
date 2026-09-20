@@ -44,6 +44,12 @@ const sections = await Promise.all(
 function sectionIsCurrent(sectionHref: string): boolean {
   return currentPath.startsWith(sectionHref);
 }
+
+// `logoCompact` is optional on the theme's site-config type (ours arrives via
+// slopBranding). Narrow it here and fall back to a plain menu glyph, the same
+// way the theme's own Nav guards it — the toggle is the only way to reopen a
+// collapsed rail, so it must render an affordance even with no crest set.
+const logoCompact = siteConfig.logoCompact;
 ---
 
 {/* Navigation chrome, not page content: keep it out of the Pagefind index so
@@ -57,20 +63,33 @@ function sectionIsCurrent(sectionHref: string): boolean {
 />
 
 <div class="at-sidebar" data-pagefind-ignore>
+  {/* The crest used to BE the collapse toggle, so clicking it opened/closed
+      the rail instead of going anywhere. It is a home link now, and the
+      collapse control is its own separate button — which it has to be: if
+      the crest merely navigated, a collapsed rail would have nothing left
+      to reopen it with. */}
   <div class="sidebar-brand-row">
-    <label for="sidebar-collapsed" class="sidebar-toggle-label" title="Toggle sidebar">
-      <img
-        src={siteConfig.logoCompact.src}
-        width={siteConfig.logoCompact.width}
-        height={siteConfig.logoCompact.height}
-        alt=""
-        class="sidebar-toggle-logo"
-      />
-      <span class="sr-only">Toggle sidebar</span>
-    </label>
-    <a href={withBase("/")} class="sidebar-brand">
+    <a
+      href={withBase("/")}
+      class="sidebar-brand"
+      aria-label={`${siteConfig.name} home`}
+      aria-current={currentPath === withBase("/") ? "page" : undefined}
+    >
+      {logoCompact && (
+        <img
+          src={logoCompact.src}
+          width={logoCompact.width}
+          height={logoCompact.height}
+          alt=""
+          class="sidebar-brand-logo"
+        />
+      )}
       <span class="sidebar-brand-name">{siteConfig.name}</span>
     </a>
+    <label for="sidebar-collapsed" class="sidebar-toggle-label" title="Toggle sidebar">
+      <Icon name="menu" size="1.25rem" />
+      <span class="sr-only">Toggle sidebar</span>
+    </label>
   </div>
   <nav aria-label="Sections">
     <ul>
@@ -161,9 +180,14 @@ function sectionIsCurrent(sectionHref: string): boolean {
     white-space: nowrap;
   }
 
+  /* The crest is centred in the rail, so the toggle is taken out of flow and
+     pinned to the trailing edge — leaving it as a flex sibling would push
+     the crest off-centre by half the toggle's width. */
   .sidebar-brand-row {
+    position: relative;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: var(--at-spacing-xs);
     padding-block-end: var(--at-spacing-sm);
     margin-block-end: var(--at-spacing-sm);
@@ -181,6 +205,10 @@ function sectionIsCurrent(sectionHref: string): boolean {
      hidden` a scaled-up box also got clipped mid-animation. Background
      feedback reads as clickable without moving anything. */
   .sidebar-toggle-label {
+    position: absolute;
+    inset-inline-end: 0;
+    inset-block-start: 50%;
+    translate: 0 -50%;
     flex-shrink: 0;
     display: flex;
     align-items: center;
@@ -206,18 +234,34 @@ function sectionIsCurrent(sectionHref: string): boolean {
     outline-offset: 2px;
   }
 
-  .sidebar-toggle-logo {
+  .sidebar-brand-logo {
     inline-size: 1.5rem;
     block-size: 1.5rem;
+    flex-shrink: 0;
     vertical-align: middle;
   }
 
   .sidebar-brand {
     display: flex;
     align-items: center;
+    justify-content: center;
+    gap: var(--at-spacing-xs);
     min-width: 0;
+    /* Clear the pinned toggle so a long site name cannot slide under it. */
+    max-inline-size: calc(100% - 2.75rem);
+    padding: var(--at-spacing-xs);
+    border-radius: 0.375rem;
     text-decoration: none;
     color: #000;
+  }
+
+  .sidebar-brand:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  .sidebar-brand:focus-visible {
+    outline: 2px solid var(--at-primary);
+    outline-offset: 2px;
   }
 
   .sidebar-brand-name {
@@ -238,18 +282,29 @@ function sectionIsCurrent(sectionHref: string): boolean {
     max-width: 0;
   }
 
+  /* Collapsed, the 3rem rail has ~2rem of usable track, so the home crest
+     and the collapse toggle stack instead of sitting side by side. The
+     toggle must stay on screen here: it is the only control that can
+     reopen the rail. */
   .sidebar-collapsed-toggle:checked ~ .at-sidebar .sidebar-brand-row {
+    flex-direction: column;
     justify-content: center;
-    gap: 0;
+    gap: var(--at-spacing-xs);
   }
 
-  /* The brand-name link's text collapses to max-width:0, but the <a> itself
-     keeps real padding (from the collapsed a/summary padding rule below),
-     so it survives as a second flex child next to the logo and throws off
-     centering — nothing to show once collapsed, so drop it from flow
-     entirely rather than trying to zero it out piecemeal. */
+  .sidebar-collapsed-toggle:checked ~ .at-sidebar .sidebar-toggle-label {
+    position: static;
+    translate: none;
+  }
+
+  /* Previously the whole brand link was dropped when collapsed, because it
+     was only a text wordmark sitting beside the crest. It now carries the
+     crest and is the home link, so it has to stay: only its text collapses
+     (the rule above), and the padding is zeroed so the crest centres in the
+     2rem track rather than being pushed off by its own box. */
   .sidebar-collapsed-toggle:checked ~ .at-sidebar .sidebar-brand {
-    display: none;
+    max-inline-size: none;
+    padding: 0;
   }
 
   /* Without this, the icon+label flex row still reserves its `gap` even
@@ -270,7 +325,7 @@ function sectionIsCurrent(sectionHref: string): boolean {
   }
 
   .at-sidebar li + li {
-    margin-block-start: var(--at-spacing-2xs, 0.25rem);
+    margin-block-start: var(--at-spacing-xs);
   }
 
   .at-sidebar a {
@@ -414,7 +469,7 @@ function sectionIsCurrent(sectionHref: string): boolean {
   .sidebar-items {
     list-style: none;
     margin: 0;
-    padding-inline-start: var(--at-spacing-lg, 1.5rem);
+    padding-inline-start: var(--at-spacing-lg);
     font-size: var(--at-font-size-sm);
   }
 
@@ -428,8 +483,8 @@ function sectionIsCurrent(sectionHref: string): boolean {
   .sidebar-items a {
     display: flex;
     align-items: center;
-    gap: var(--at-spacing-2xs, 0.25rem);
-    padding-block: var(--at-spacing-2xs, 0.25rem);
+    gap: var(--at-spacing-xs);
+    padding-block: var(--at-spacing-xs);
     color: rgba(0, 0, 0, 0.65);
     font-weight: 600;
     line-height: 1.3;
@@ -507,7 +562,7 @@ function sectionIsCurrent(sectionHref: string): boolean {
   .sidebar-section-toggle:checked ~ .sidebar-items {
     opacity: 1;
     max-height: 60rem;
-    margin-block-start: var(--at-spacing-2xs, 0.25rem);
+    margin-block-start: var(--at-spacing-xs);
     pointer-events: auto;
   }
 
@@ -529,7 +584,7 @@ function sectionIsCurrent(sectionHref: string): boolean {
 
   .sidebar-collapsed-toggle:checked ~ .at-sidebar a {
     justify-content: center;
-    padding-inline: var(--at-spacing-2xs, 0.25rem);
+    padding-inline: var(--at-spacing-xs);
   }
 
   /* The rail is 3rem wide with var(--at-spacing-sm) (0.5rem) of padding on

@@ -1,7 +1,7 @@
 ---
 title: Excuse-Making Across Cultures
 description:
-  Week 10 — an anthropological look at face-saving norms the course's
+  An anthropological look at face-saving norms the course's
   taxonomy wasn't built from
 week: 10
 date: 2026-05-04

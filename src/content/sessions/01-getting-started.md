@@ -1,7 +1,7 @@
 ---
 title: Getting started
 description:
-  The first workshop — what an excuse is, why it needs its own vocabulary, and
+  The first workshop, covering what an excuse is, why it needs its own vocabulary, and
   the excuse each of you brings to class
 week: 1
 date: 2026-02-23
@@ -15,7 +15,7 @@ spec:
 
 ## Before the workshop
 
-Bring three real excuses — yours, a family member's, or one from the news.
+Bring three real excuses: yours, a family member's, or one from the news.
 They do not need to be good ones.
 
 ## In the workshop
@@ -28,5 +28,5 @@ doing different jobs, even when they show up in the same sentence.
 ## Afterwards
 
 Pick the excuse you will spend week 4's [teardown](/assessments/excuse-teardown/)
-on. It can be one from today or a new one — the only rule is that it has to
+on. It can be one from today or a new one. The only rule is that it has to
 be real, not invented.

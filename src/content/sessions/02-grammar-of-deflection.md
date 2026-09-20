@@ -1,7 +1,7 @@
 ---
 title: The grammar workshop
 description:
-  Week 2's workshop — pulling apart the sentence-level structures that carry an
+  Pulling apart the sentence-level structures that carry an
   excuse's work
 week: 2
 date: 2026-03-02
@@ -23,7 +23,7 @@ Bring the excuse you picked in week 1.
 Idris runs a close-reading workshop on five real corporate and political
 excuses, marking up passive voice, agentless constructions ("mistakes were
 made"), and hedges ("to be fair", "look"). Then you rewrite your own excuse
-three ways — as a denial, a justification, and a diffusion — to feel the
+three ways, as a denial, a justification, and a diffusion, to feel the
 grammar change under your hands.
 
 ## Afterwards

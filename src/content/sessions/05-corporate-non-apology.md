@@ -1,7 +1,7 @@
 ---
 title: Reading the corporate non-apology
 description:
-  Week 5's workshop — close-reading real corporate statements before the
+  Close-reading real corporate statements before the
   non-apology lab opens
 week: 5
 date: 2026-03-30
@@ -16,7 +16,7 @@ related:
 
 ## Before the workshop
 
-Find one corporate statement responding to a public failure — a data breach,
+Find one corporate statement responding to a public failure: a data breach,
 a product recall, a service outage.
 
 ## In the workshop
@@ -27,5 +27,5 @@ statements you brought against it.
 
 ## Afterwards
 
-Keep your statement — you'll need one just like it (or this one) for the
+Keep your statement. You'll need one just like it (or this one) for the
 [non-apology lab](/assessments/non-apology-lab/), open from this week.

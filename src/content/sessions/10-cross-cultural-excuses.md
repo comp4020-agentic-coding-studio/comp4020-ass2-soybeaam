@@ -1,7 +1,7 @@
 ---
 title: Excuses across cultures
 description:
-  Week 10's workshop — testing the taxonomy against excuse-making norms from
+  Testing the taxonomy against excuse-making norms from
   outside the ones assumed so far
 week: 10
 date: 2026-05-04
@@ -23,7 +23,7 @@ Read the assigned anthropological excerpt, linked from
 
 A discussion testing the course's taxonomy against face-saving norms it
 wasn't built from. The taxonomy holds up better than expected in some places
-and badly in others — naming which is the point of the exercise.
+and badly in others, and naming which is the point of the exercise.
 
 ## Afterwards
 

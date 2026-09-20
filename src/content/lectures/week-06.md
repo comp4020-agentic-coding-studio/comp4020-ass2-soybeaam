@@ -1,7 +1,7 @@
 ---
 title: Historical Alibis
 description:
-  Week 6 — excuses that changed the outcome of real historical events
+  Excuses that changed the outcome of real historical events
 week: 6
 date: 2026-04-06
 teachers:
