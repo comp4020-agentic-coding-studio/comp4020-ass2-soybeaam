@@ -554,8 +554,17 @@ function sectionIsCurrent(sectionHref: string): boolean {
     padding-block-end: 0;
   }
 
-  :global(body:has(.sidebar-collapsed-toggle:checked)) {
-    --at-sidebar-inset: 3rem;
+  /* Gated above the theme's mobile breakpoint, because the collapsed state
+     persists in localStorage: without the gate a student who collapsed the
+     rail on a laptop got a 3rem track reserved on BOTH sides of the body
+     grid on their phone, for a sidebar that is `display: none` there. It
+     outspecifies brand.css's `body:has(.at-sidebar)` mobile reset (0,2,1 vs
+     0,1,1) and media queries add no specificity, so the reset could not
+     undo it — the page just rendered 48px narrower on each edge. */
+  @media (width > 768px) {
+    :global(body:has(.sidebar-collapsed-toggle:checked)) {
+      --at-sidebar-inset: 3rem;
+    }
   }
 
   /* Below the theme's own mobile breakpoint (sidebar.css hides .at-sidebar

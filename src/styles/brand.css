@@ -738,7 +738,9 @@ a.at-card:focus-visible {
   :root {
     /* xl padding on top of the md gutter left roughly 290px of text column on
        a 390px phone. md on both keeps the measure readable without the page
-       looking like it lost its margins. */
+       looking like it lost its margins. The index grids escape it entirely
+       (they full-bleed at the end of this block), so md here is what lands
+       prose and card text on the same x rather than what insets the cards. */
     --page-pad: var(--at-spacing-md);
     /* Body copy is 1.125rem (18px) by default — sized for a desktop reading
        column. Every heading token is a fixed rem value read against this same
@@ -843,5 +845,26 @@ a.at-card:focus-visible {
      AssessmentsGrid.astro) start their text at the same x. */
   .at-card {
     gap: var(--at-spacing-sm);
+  }
+
+  /* The index rows reach both screen edges, the same way .week-list (home)
+     and .people-list already do — the side borders and corner radius only
+     cost width on a phone, and --page-pad's 16px was being spent twice over
+     on a row that already carries its own md of inline padding. Bleeding the
+     grid rather than shrinking --page-pad is what puts a card's text on the
+     same x as the prose above it: both now start one md in from the glass. */
+  .at-card-grid {
+    margin-inline: calc(-1 * var(--page-pad));
+  }
+
+  /* Shadow goes with them: a card flush to the glass has nothing to cast
+     onto at its sides, so --at-shadow-sm renders as a smudge down the screen
+     edge. Without borders or radius these read as full-width bands, not
+     floating cards — the same thing .week-list and .people-list become. */
+  .at-card-grid > .at-card,
+  .at-card-grid > .week-filter-item {
+    border-inline: none;
+    border-radius: 0;
+    box-shadow: none;
   }
 }
