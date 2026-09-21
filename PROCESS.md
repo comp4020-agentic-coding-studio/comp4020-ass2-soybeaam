@@ -28,22 +28,25 @@ sync across client-side navigations. Content and layout were built together:
 the twelve weeks of material are what the nav, grids, and detail pages exist
 to present.
 
-## How I got here
+## How I got here (`784772d`, `3b4cafa`)
 
-I asked Claude for course ideas fitting the brief's constraint, niche enough
-no real curriculum committee would approve it, but with real disciplinary
-depth. From five options it offered, I picked "The Art of the Excuse" for
-having the most obvious backbone (rhetoric and social psychology) to sustain
-twelve distinct weeks without repeating itself.
+The idea started from "my dog ate my homework": I wanted a satirical course
+built around that reflex, and asked Claude for options fitting the brief's
+constraint, niche enough no real curriculum committee would approve it, but
+with real disciplinary depth. From five options it offered, I picked "The
+Art of the Excuse" for having the most obvious backbone (rhetoric and social
+psychology) to sustain twelve distinct weeks without repeating itself.
 
 Before writing content, Claude explored the template's actual schema,
 `src/content.config.ts`'s four collections, `course-config.ts`'s validated
 fields, and existing placeholder files, rather than guessing the shape, and
 proposed a plan I approved before any file changed: course meta first, then
-people, then all twelve weeks in three passes, then custom spec checks, then
-this file.
+people, then a layout pass modelled loosely on a real LMS like Canvas (a
+persistent left sidebar, card-style week grids, rather than the starter
+theme's plain page list), then all twelve weeks in three passes, then custom
+spec checks, then this file.
 
-## Building the course content
+## Building the course content (`c43cfb8`, `5039403`, `fa3d3c7`, `65e5810`)
 
 Setting the course record, homepage copy, and policies page came first. This
 is where I made the one deliberate policy joke, that extensions are not
@@ -74,21 +77,36 @@ not just at the end, and when I walked the built site myself (homepage,
 weeks 1, 6 and 12, an assessment, the week-1 deck, and the policies page), the
 same tour the assessment page says a marker runs.
 
-## The sidebar logo that took several tries to actually fix
+## The sidebar logo and hover shadow that only reverting fixed (`636a86f`, `b4625e3`, `756bccb`, `de3f6e7`, `cb4d90f`, `2eac250`, `49182b1`, `45fd600`, `9b3ca81`)
 
-The collapsed sidebar's logo and its hover shadow were misaligned from early
-in the layout work, and getting them centred took repeated passes rather than
-one: `636a86f` first merged the logo, site name, and collapse toggle into a
-single sidebar header; `b4625e3` came back to specifically centre the
-collapsed-mode icons and flush the sidebar against the breadcrumbs; `756bccb`
-and `de3f6e7` each touched sidebar/toggle styling again for other reasons;
-and `2eac250` is the commit that finally fixes the collapsed logo and
-right-aligns the search icon. Each earlier attempt visibly moved the problem
-(centred the icon but not the shadow, fixed the shadow but broke flush
-alignment against the header) rather than resolving it, which is why this
-took five commits spread across most of the UI work instead of one.
+The collapsed sidebar's crest icon and its hover shadow were misaligned from
+early in the layout work, and asking Claude to fix it head-on kept moving the
+problem rather than closing it: `636a86f` first merged the logo, site name,
+and collapse toggle into a single sidebar header; `b4625e3` came back to
+centre the collapsed-mode icons and flush the sidebar against the
+breadcrumbs; `756bccb` and `de3f6e7` each touched sidebar/toggle styling
+again for other reasons without landing the centring; and `cb4d90f`'s later
+restructuring (merging logo, name, and toggle into one row again, plus a
+docked search bar) made it worse. `2eac250` was the next direct attempt, and
+it genuinely fixed the bug it named, a missing `min-width:0` that let an
+invisible site-name span push the logo past the collapsed rail's clipped
+edge, but the result still wasn't the centred, shadow-aligned crest I'd
+actually asked for, so I reverted the whole commit (`49182b1`).
 
-## Phone-width regressions that kept coming back
+That blanket revert was too blunt: it also deleted unrelated fixes it had no
+business touching (`.row-eyebrow` week/date styling, footer padding, the
+phone double-gutter fix), which `45fd600` had to restore by hand, while
+keeping the sidebar itself reverted to its simpler pre-`cb4d90f` markup
+rather than trying to patch the newer structure forward again. Only once the
+sidebar was back on that simpler, known-good structure did a real, narrower
+bug show up under actual verification: a headless-Chrome screenshot showed
+the collapsed rail's current-page highlight rendering as a 32x24 rectangle
+instead of a 32x32 square next to it, fixed in one line in `9b3ca81`. Four
+rounds of forward patching on the restructured header never converged;
+reverting to the last simple version and re-checking against a real render
+did, in the end.
+
+## Phone-width regressions that kept coming back (`756bccb`, `4388abf`, `cb4d90f`, `9b3ca81`)
 
 Layout changes made and verified on desktop repeatedly broke, or silently
 dropped, phone-width fixes made earlier in the same file. `756bccb` was the
@@ -99,13 +117,14 @@ desktop alone. `4388abf` and `cb4d90f` each had to re-touch phone behaviour
 again (sidebar collapse state, phone font size, mobile layout fixes bundled
 into the search feature commit), because a later desktop-focused change kept
 overwriting or bypassing the earlier narrow-viewport rule rather than
-composing with it. This recurrence is why `CLAUDE.md` now has two standing
-rules rather than one piece of advice: check every layout change at desktop,
-768px, and ~390px every time, and treat the phone padding/font tokens as
-already-tuned so a component-scoped fix doesn't reopen and re-break the
-shared values other pages depend on.
+composing with it. Asking Claude to fix desktop layout was not, on its own,
+enough to keep it from regressing phone width, so I had Claude add two
+standing rules to `CLAUDE.md` rather than leaving it as one-off advice: check
+every layout change at desktop, 768px, and ~390px every time, and treat the
+phone padding/font tokens as already-tuned so a component-scoped fix doesn't
+reopen and re-break the shared values other pages depend on.
 
-## State that reset itself across navigations
+## State that reset itself across navigations (`4388abf`, `de3f6e7`)
 
 A third recurring failure mode was state that looked correct on first load
 but reset the moment Astro's `ClientRouter` ran a client-side view
@@ -121,7 +140,7 @@ single page load but not for the persistent, client-routed session the rest
 of the site relies on, only visible by actually clicking through the site
 rather than reloading a single page.
 
-## Other fixes along the way
+## Other fixes along the way (`cec93d4`, `f521680`)
 
 Some index/detail pages shipped without their layout wiring entirely
 (`cec93d4`, "fix: wire missing layout on stock listing pages"), a reminder
