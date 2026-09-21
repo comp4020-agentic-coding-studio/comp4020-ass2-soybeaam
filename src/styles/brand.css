@@ -377,18 +377,8 @@ body:has(.at-sidebar) .at-main > h1 {
   min-width: 0;
 }
 
-/* The theme normally right-aligns the trigger for free: `.at-nav-links`
-   (desktop) or `.at-nav-toggle` (mobile) carries `margin-inline-start: auto`
-   and, being an earlier flex sibling, pushes everything after it — the
-   search trigger included — to the row's end. Above 768px the links wrapper
-   is display:none (search-only nav), which removes that flex item and its
-   auto-margin entirely, so the trigger fell back to sitting immediately
-   after the brand instead of at the far right. Give it its own auto-margin
-   so it's right-aligned unconditionally, independent of whichever sibling
-   would otherwise have carried that job. */
 .at-search-trigger {
   flex-shrink: 0;
-  margin-inline-start: auto;
 }
 
 /* Top nav carries only search once the left sidebar is on screen: the sidebar
@@ -466,71 +456,6 @@ body:has(.at-sidebar) .at-main > h1 {
   outline: 2px solid var(--at-accent);
   outline-offset: 2px;
   color: var(--at-text);
-}
-
-/* Dock the search dialog into the nav strip instead of leaving it as a
-   centred pop-out card. `showModal()` promotes the dialog to the browser's
-   top layer, which is why this still works despite `.at-nav-inner` being
-   `position: sticky`: top-layer content always paints above it regardless
-   of z-index. Top-layer promotion only changes *paint order*, not the CSS
-   box model, so the dialog's own UA-default centring (fixed + inset:0 +
-   margin:auto) can be overridden the same as any other fixed element —
-   pinned to the same rect the nav bar occupies, it reads as the nav row
-   turning into a search field rather than a separate surface opening on
-   top of the page. --at-nav-height already accounts for the nav's real
-   padding (see its definition above), so it stays correct at every width
-   this rule doesn't override. */
-.at-search-dialog {
-  position: fixed;
-  inset-block-start: 0;
-  inset-inline: 0;
-  margin: 0;
-  max-width: none;
-  width: 100%;
-  block-size: var(--at-nav-height);
-  border-radius: 0;
-  background: var(--at-bg, #fff);
-}
-
-.at-search-dialog::backdrop {
-  /* No dimming: the bar isn't overlaying the page, it IS the nav bar. */
-  background: transparent;
-}
-
-.at-search-panel {
-  position: relative;
-  block-size: 100%;
-  border: none;
-  border-radius: 0;
-  border-block-end: 1px solid var(--at-divider-strong);
-  box-shadow: none;
-  background: transparent;
-}
-
-.at-search-header {
-  block-size: 100%;
-  /* Zeroed, not inherited from the theme's md all-sides padding: the close
-     button is a 2.25rem touch target, and with the nav's fixed height (see
-     .at-search-dialog above) the theme's block padding left too little
-     room for it, overflowing the docked bar. align-items: center (theme)
-     still centres everything within the full nav height. */
-  padding-block: 0;
-  padding-inline: var(--page-pad);
-  border-block-end: none;
-}
-
-/* Results/status render as a dropdown from the bottom of the docked bar,
-   not inside its fixed height — same panel styling (elevated surface,
-   shadow, scroll) the old centred card used, just anchored under the bar
-   instead of wrapped around the input. */
-.at-search-results,
-.at-search-empty {
-  position: absolute;
-  inset-inline: 0;
-  inset-block-start: 100%;
-  background: var(--at-bg-elevated);
-  border-block-start: 1px solid var(--at-divider);
-  box-shadow: var(--at-shadow-lg);
 }
 
 .at-nav-logo {

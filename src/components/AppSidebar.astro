@@ -277,17 +277,9 @@ const logoCompact = siteConfig.logoCompact;
       max-width 0.2s ease;
   }
 
-  /* min-width: 0 is load-bearing, not decoration: flex items default to
-     min-width: auto (their content's own intrinsic size), which wins over
-     max-width: 0 and left the site name reserving its full ~10rem of
-     invisible layout width in the collapsed rail. Centered against the
-     logo, that phantom width is what pushed the visible crest out past the
-     3rem rail's edge to be clipped by its own overflow: hidden — "no logo,
-     odd padding where the name used to be" was one bug, not two. */
   .sidebar-collapsed-toggle:checked ~ .at-sidebar .sidebar-brand-name {
     opacity: 0;
     max-width: 0;
-    min-width: 0;
   }
 
   /* Collapsed, the 3rem rail has ~2rem of usable track, so the home crest
@@ -322,8 +314,7 @@ const logoCompact = siteConfig.logoCompact;
      sections. */
   .sidebar-collapsed-toggle:checked ~ .at-sidebar .sidebar-row-label,
   .sidebar-collapsed-toggle:checked ~ .at-sidebar .sidebar-top-link,
-  .sidebar-collapsed-toggle:checked ~ .at-sidebar .sidebar-section-row,
-  .sidebar-collapsed-toggle:checked ~ .at-sidebar .sidebar-brand {
+  .sidebar-collapsed-toggle:checked ~ .at-sidebar .sidebar-section-row {
     gap: 0;
   }
 
