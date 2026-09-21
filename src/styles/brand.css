@@ -497,24 +497,34 @@ body:has(.at-sidebar) .at-main > nav.breadcrumbs {
   padding-inline: var(--page-pad);
 }
 
-/* List-style card grids: one bordered list of rows instead of a tiled wall
- * of boxes. A row scans faster than a card for exactly the content these
- * grids hold (a title plus a line or two of detail — lecture/session/
- * assessment names, the homepage's "where to go next" links), and a single
- * column reads top-to-bottom the same way at every viewport width instead
- * of reflowing between 1/2/3 columns. */
+/* List-style card grids: a stack of individually boxed rows instead of a
+ * tiled wall or one flush panel. A row still scans faster than a wide card
+ * for exactly the content these grids hold (a title plus a line or two of
+ * detail — lecture/session/assessment names, the homepage's "where to go
+ * next" links), and a single column reads top-to-bottom the same way at
+ * every viewport width instead of reflowing between 1/2/3 columns — but each
+ * row gets real air and its own border/corners rather than a hairline
+ * dividing it from its neighbour. Laptop and up get a wider gap: there's
+ * headroom to spare there that a phone screen doesn't have. */
 .at-card-grid {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: var(--at-spacing-md);
+}
+
+@media (width > 768px) {
+  .at-card-grid {
+    gap: var(--at-spacing-lg);
+  }
+}
+
+.at-card-grid > .at-card,
+.at-card-grid > .week-filter-item {
   border: 1px solid var(--at-divider);
   border-radius: var(--at-radius-panel);
   overflow: hidden;
-}
-
-.at-card-grid > .at-card + .at-card,
-.at-card-grid > .week-filter-item + .week-filter-item {
-  border-block-start: 1px solid var(--at-divider);
+  background: var(--at-bg);
+  box-shadow: var(--at-shadow-sm);
 }
 
 /* Grid components wrap each Card in a `.week-filter-item` for the week
@@ -555,17 +565,6 @@ body:has(.at-sidebar) .at-main > nav.breadcrumbs {
   color: var(--at-primary);
 }
 
-/* The divider between rows (`.week-filter-item + .week-filter-item`, below)
-   is a single hairline sitting flush against the eyebrow above it, which read
-   as one continuous list rather than twelve distinct weeks. Widening the gap
-   only on the *second-and-later* row of each grid — not the first, which
-   already sits right under the week filter with its own spacing — gives each
-   week a visible pocket of air before its heading without touching the
-   hairline colour or the row's own internal padding. */
-.week-filter-item + .week-filter-item .row-eyebrow {
-  margin-block-start: var(--at-spacing-lg);
-}
-
 /* Secondary to the week number, so it reads as the date of that week rather
    than competing with it. Not uppercased — dates are harder to scan in caps. */
 .row-eyebrow-date {
@@ -592,6 +591,12 @@ body:has(.at-sidebar) .at-main > nav.breadcrumbs {
   align-items: center;
   gap: var(--at-spacing-md);
   padding: var(--at-spacing-sm) var(--at-spacing-md);
+  /* Its own box now comes from the wrapper (.at-card-grid > .week-filter-item
+     above, higher specificity than this) on the lecture/session grids, or
+     from .at-card-grid > .at-card directly on the homepage's unwrapped cards
+     — either way, the theme's own default 1px border on .at-card itself
+     would draw a redundant second line just inside that box. */
+  border: none;
   border-radius: 0;
   background: var(--at-bg);
   transition: background-color 0.15s ease;
@@ -835,17 +840,8 @@ a.at-card:focus-visible {
 
   /* Gap only — the inline padding stays at md so card rows and the
      assessment rows/headings (which keep their own md in
-     AssessmentsGrid.astro) start their text at the same x once both panels
-     bleed to the same edge below. */
+     AssessmentsGrid.astro) start their text at the same x. */
   .at-card {
     gap: var(--at-spacing-sm);
-  }
-
-  /* Row lists span edge to edge on a phone — the side border and the corner
-     radius only cost width there. */
-  .at-card-grid {
-    margin-inline: calc(-1 * var(--page-pad));
-    border-inline: none;
-    border-radius: 0;
   }
 }

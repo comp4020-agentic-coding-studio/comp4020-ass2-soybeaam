@@ -142,10 +142,8 @@ const bySection = sections
   }
 
   @media (width < 640px) {
-    /* Same edge-to-edge treatment .at-card-grid and the homepage week list
-       get below 640px (brand.css) — the side border and corner radius only
-       cost width on a phone, and People shouldn't be the one index page that
-       still sits inset. */
+    /* The side border and corner radius only cost width on a phone, and
+       People shouldn't be the one index page that still sits inset. */
     .people-list {
       margin-inline: calc(-1 * var(--page-pad));
       border-inline: none;
