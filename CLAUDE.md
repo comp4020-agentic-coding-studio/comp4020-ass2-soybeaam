@@ -72,14 +72,14 @@ the desktop rule it is meant to override is a silent no-op.
 
 ## Phone padding/font sizing is settled — don't re-touch it per request
 
-`--page-pad` (md at ≤768px) and `--at-font-size-base` (1rem at <640px) are
-already tuned for phone in the `@media (width < 640px)` block at the end of
-`src/styles/brand.css`. A phone-usability request about a *specific* piece of
-UI (a nav, a card, a new component) should be scoped to that component —
-don't reopen or re-tune the shared padding/font tokens as a side effect
-unless the request is specifically about padding or font size being wrong.
-Treat "make phone usability part of every change" (above) as "don't ship a
-narrow-viewport regression", not "re-derive the spacing scale every time."
+Below 640px, on a sidebar page: `--at-gutter: 0px`, `--at-sidebar-inset: 0px`,
+`--page-pad: 16px`. That's the whole edge inset, once. Both live in the
+`@media (width < 640px)` block at the end of `src/styles/brand.css`. A
+phone-usability request about a *specific* piece of UI should be scoped to
+that component — don't reopen or re-tune these shared tokens unless the
+request is specifically about padding or font size being wrong. Never revert
+`brand.css` at the file or commit level (it drags these back) — apply
+targeted `Edit`s to just the hunks you mean to undo instead.
 
 ## You are allowed to change .astro files
 

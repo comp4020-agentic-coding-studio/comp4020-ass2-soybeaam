@@ -448,11 +448,6 @@ body:has(.at-sidebar) .at-main > h1 {
   height: 2rem;
 }
 
-.at-sidebar-content {
-  margin-block: var(--at-spacing-sm);
-  padding: var(--at-spacing-lg);
-}
-
 /* Breadcrumbs render as a direct .at-main child (a sibling of the h1/.lead
    ContentLayout inserts ahead of our slot content) so that grid `order` can
    pull them visually above the h1 without needing to intercept ContentLayout
@@ -558,6 +553,17 @@ body:has(.at-sidebar) .at-main > nav.breadcrumbs {
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--at-primary);
+}
+
+/* The divider between rows (`.week-filter-item + .week-filter-item`, below)
+   is a single hairline sitting flush against the eyebrow above it, which read
+   as one continuous list rather than twelve distinct weeks. Widening the gap
+   only on the *second-and-later* row of each grid — not the first, which
+   already sits right under the week filter with its own spacing — gives each
+   week a visible pocket of air before its heading without touching the
+   hairline colour or the row's own internal padding. */
+.week-filter-item + .week-filter-item .row-eyebrow {
+  margin-block-start: var(--at-spacing-lg);
 }
 
 /* Secondary to the week number, so it reads as the date of that week rather
@@ -735,6 +741,14 @@ a.at-card:focus-visible {
        together in proportion, rather than needing a separate override per
        element. */
     --at-font-size-base: 1rem;
+  }
+
+  /* components.css sets .at-main's own padding-block to --at-spacing-xl
+     (32px) and nothing narrows it — --page-pad/--at-gutter above only ever
+     covered the inline edges. Match --page-pad so top/bottom isn't twice
+     the 16px the sides now get. */
+  .at-main {
+    padding-block: var(--page-pad);
   }
 
   /* Phone side padding is 1rem TOTAL, not 1rem twice. --at-gutter and

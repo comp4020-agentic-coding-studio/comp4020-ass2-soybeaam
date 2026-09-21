@@ -527,9 +527,16 @@ function sectionIsCurrent(sectionHref: string): boolean {
     display: none;
   }
 
+  /* Width alone (padding-inline above) already matches the crest's 2rem
+     track, but nothing squared up the height — a[aria-current="page"]'s
+     grey highlight rendered as a short, wide rectangle instead of a square
+     like the crest's box below. Fix both axes so every icon sits in the
+     same tight 2rem square. */
   .sidebar-collapsed-toggle:checked ~ .at-sidebar a {
     justify-content: center;
     padding-inline: var(--at-spacing-2xs, 0.25rem);
+    inline-size: 2rem;
+    block-size: 2rem;
   }
 
   /* The rail is 3rem wide with var(--at-spacing-sm) (0.5rem) of padding on
