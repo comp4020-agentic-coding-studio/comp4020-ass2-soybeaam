@@ -201,7 +201,13 @@ function sectionIsCurrent(sectionHref: string): boolean {
     background: rgba(0, 0, 0, 0.09);
   }
 
-  .sidebar-toggle-label:focus-visible {
+  /* The focus ring has to hang off the checkbox, not the label: a <label> is
+     never keyboard-focusable, so `.sidebar-toggle-label:focus-visible` could
+     never match and the rail's only control had no visible focus state. The
+     checkbox itself is a 1px transparent square, so its own ring is invisible
+     too. Same sibling-combinator trick the section disclosures already use
+     further down this file. */
+  .sidebar-collapsed-toggle:focus-visible ~ .at-sidebar .sidebar-toggle-label {
     outline: 2px solid var(--at-primary);
     outline-offset: 2px;
   }
@@ -444,13 +450,19 @@ function sectionIsCurrent(sectionHref: string): boolean {
   .sidebar-item-week {
     flex-shrink: 0;
     inline-size: 2.25rem;
-    color: rgba(0, 0, 0, 0.4);
+    /* Was rgba(0, 0, 0, 0.4) — about 2.85:1 on white, under WCAG AA's 4.5:1,
+       on the one label you scan the rail with to find a week. The shared
+       secondary-text token clears it comfortably and is one less bespoke
+       value to keep in sync. */
+    color: var(--at-text-secondary);
     font-weight: 600;
     font-size: var(--at-font-size-sm);
   }
 
+  /* The current page's tag goes darker still, so it stays distinguishable
+     from its neighbours now that they are no longer washed out. */
   .sidebar-items a[aria-current="page"] .sidebar-item-week {
-    color: rgba(0, 0, 0, 0.55);
+    color: var(--at-text);
   }
 
   /* Collapse: shrink the sidebar to an icon-only rail instead of hiding it
@@ -492,23 +504,39 @@ function sectionIsCurrent(sectionHref: string): boolean {
     pointer-events: none;
   }
 
-  /* Closed is the default; the section's own checkbox opens it. */
+  /* Closed is the default; the section's own checkbox opens it.
+     `visibility` is what actually takes the collapsed links out of the tab
+     order and the accessibility tree — `opacity: 0` + `max-height: 0` hide
+     them from sight only, and `pointer-events: none` stops the mouse but not
+     the keyboard. Without it a keyboard user tabbed through every closed
+     section's links (28 invisible stops on the home page, where all three
+     sections start shut) before reaching the page itself.
+     Stepped, not interpolated, so it needs the same delayed-out/immediate-in
+     treatment the right rail already uses — see the note in RightSidebar. */
   .sidebar-items {
     overflow: hidden;
     opacity: 0;
     max-height: 0;
+    visibility: hidden;
     pointer-events: none;
     transition:
       opacity 0.15s ease,
       max-height 0.25s ease,
-      margin-block-start 0.25s ease;
+      margin-block-start 0.25s ease,
+      visibility 0s linear 0.25s;
   }
 
   .sidebar-section-toggle:checked ~ .sidebar-items {
     opacity: 1;
     max-height: 60rem;
     margin-block-start: var(--at-spacing-2xs, 0.25rem);
+    visibility: visible;
     pointer-events: auto;
+    transition:
+      opacity 0.15s ease,
+      max-height 0.25s ease,
+      margin-block-start 0.25s ease,
+      visibility 0s;
   }
 
   /* Collapsed to an icon rail: force every section shut regardless of its own
@@ -518,6 +546,10 @@ function sectionIsCurrent(sectionHref: string): boolean {
     opacity: 0;
     max-height: 0;
     margin-block-start: 0;
+    /* Static override rather than a slide, so no transition delay needed —
+       but it still has to take the links out of the tab order, or collapsing
+       the rail leaves every section's links focusable behind an icon strip. */
+    visibility: hidden;
     pointer-events: none;
   }
 

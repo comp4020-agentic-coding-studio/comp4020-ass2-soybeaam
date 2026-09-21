@@ -14,7 +14,10 @@ marking:
     it deploys the semester's vocabulary with precision rather than as
     decoration, and whether the written defense anticipates the strongest
     objection a classmate could raise against it, because at this point in
-    the semester, someone will raise it.
+    the semester, someone will raise it. The three are not scored separately
+    and strength in one does not buy a weakness in another; an excuse that is
+    original but imprecise, or precise but undefended, reads as unfinished
+    rather than as a near miss.
 spec:
   - an original excuse for a real or plausible scenario you invent
   - a written defense of 1000–1200 words explaining every rhetorical choice by name

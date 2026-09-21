@@ -27,4 +27,4 @@ By the end of this lecture, you will be able to:
 - three case studies of excuses with documented historical consequences
 - what distinguishes an excuse that lands from one that doesn't, at scale
 - the role of the audience's incentive to believe it
-- reading before next week: none
+- reading before next week: Botterell's primer on justification and excuse, on the [week 7 lecture page](/lectures/week-07/)

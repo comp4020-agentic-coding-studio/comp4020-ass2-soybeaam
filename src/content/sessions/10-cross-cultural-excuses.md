@@ -16,8 +16,9 @@ related:
 
 ## Before the workshop
 
-Read the assigned anthropological excerpt, linked from
-[this week's lecture](/lectures/week-10/).
+Read the assigned anthropological excerpt — Hu on the Chinese concepts of
+face — linked at the foot of
+[this week's lecture page](/lectures/week-10/).
 
 ## In the workshop
 
@@ -27,5 +28,5 @@ and badly in others, and naming which is the point of the exercise.
 
 ## Afterwards
 
-Nothing due. Start thinking about your own excuse for the capstone, due
-week 12.
+Nothing due. Start thinking about your own excuse for the
+[capstone](/assessments/capstone-portfolio/) — the brief carries the deadline.

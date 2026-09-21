@@ -10,6 +10,9 @@ teachers:
 related:
   - sessions/03-cognitive-dissonance
 slides: /decks/week-03/
+links:
+  - label: Cognitive Consequences of Forced Compliance (Festinger and Carlsmith, 1959)
+    url: https://doi.org/10.1037/h0041593
 ---
 
 The most durable excuses aren't the cleverest ones. They're the ones the
@@ -28,4 +31,5 @@ By the end of this lecture, you will be able to:
 - Festinger's dissonance theory, briefly, and what it predicts about excuses
 - the difference between a lie and a rationalisation
 - why a self-justified excuse is harder to dismantle than a cynical one
+- reading before this week: Festinger and Carlsmith's forced-compliance experiment, linked below
 - reading before next week: none

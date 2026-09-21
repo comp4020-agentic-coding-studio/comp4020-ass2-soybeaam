@@ -11,6 +11,9 @@ related:
   - sessions/11-graceful-exit-workshop
   - assessments/capstone-portfolio
 slides: /decks/week-11/
+links:
+  - label: Survey of Hallucination in Natural Language Generation (Ji et al., 2022)
+    url: https://arxiv.org/abs/2202.03629
 ---
 
 When a language model is asked to justify a wrong answer, it produces
@@ -32,4 +35,5 @@ By the end of this lecture, you will be able to:
 - confabulation as excuse-shaped output with no motivated speaker behind it
 - what that isolates about the mechanics versus the psychology of an excuse
 - turning the semester's tools around: designing your own excuse deliberately
-- reading before next week: none; the capstone is due
+- where the confabulation material comes from: Ji et al.'s hallucination survey, linked below
+- reading before next week: none; the capstone is the remaining work

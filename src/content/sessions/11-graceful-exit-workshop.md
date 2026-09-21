@@ -29,4 +29,5 @@ even though nothing intended it as one.
 
 ## Afterwards
 
-Refine your draft. The capstone is due next week.
+Refine your draft against the feedback you got. The deadline is on the
+[capstone brief](/assessments/capstone-portfolio/), in full.

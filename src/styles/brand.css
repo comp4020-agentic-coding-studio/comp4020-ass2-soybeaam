@@ -829,8 +829,15 @@ a.at-card:focus-visible {
     align-items: center;
   }
 
+  /* The arrow that opens a nav section in the drawer. Its glyph is 0.9rem and
+     xs padding either side left it ~1.4rem square — the smallest control on
+     the phone layout, and the one sitting closest to the link it must not be
+     confused with. Sized to the same 2.25rem floor as the links beside it. */
   .at-nav-dropdown-toggle {
     padding: var(--at-spacing-xs);
+    justify-content: center;
+    min-inline-size: 2.25rem;
+    min-block-size: 2.25rem;
   }
 
   /* A 3.5rem thumbnail plus md gaps crowds a 390px row; the title needs the

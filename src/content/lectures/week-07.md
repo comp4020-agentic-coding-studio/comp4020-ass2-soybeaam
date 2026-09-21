@@ -10,6 +10,9 @@ teachers:
 related:
   - sessions/07-courtroom-excuse
 slides: /decks/week-07/
+links:
+  - label: A Primer on the Distinction between Justification and Excuse (Botterell, 2009)
+    url: https://doi.org/10.1111/j.1747-9991.2008.00200.x
 ---
 
 A legal defense is an excuse engineered for an audience that starts
@@ -29,4 +32,4 @@ By the end of this lecture, you will be able to:
 - what a legal defense borrows from, and discards from, an ordinary excuse
 - why diffusion of responsibility dominates legal strategy over denial
 - the mock cross-examination exercise, and what to expect
-- reading before this week: the case brief linked from the workshop page
+- reading before this week: Botterell's primer on justification and excuse, linked below

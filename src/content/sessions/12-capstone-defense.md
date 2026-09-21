@@ -17,8 +17,8 @@ related:
 
 ## Before the workshop
 
-Submit your [capstone portfolio](/assessments/capstone-portfolio/) by
-Monday's deadline.
+Submit your [capstone portfolio](/assessments/capstone-portfolio/) before this
+session. The deadline is on the brief.
 
 ## In the workshop
 

@@ -16,8 +16,9 @@ related:
 
 ## Before the workshop
 
-Read the assigned excerpt on self-justification (linked from the
-[lecture page](/lectures/week-03/)).
+Read the assigned excerpt on self-justification: Festinger and Carlsmith's
+forced-compliance experiment, linked at the foot of the
+[week 3 lecture page](/lectures/week-03/).
 
 ## In the workshop
 

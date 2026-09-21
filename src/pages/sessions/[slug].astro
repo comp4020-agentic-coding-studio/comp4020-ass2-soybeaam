@@ -29,9 +29,13 @@ const hero = heroForWeek(session.data.week);
 >
   <p><strong>{formatCourseDate(session.data.date)}</strong></p>
   <Content />
-  <SpecList spec={session.data.spec}>
-    What you bring to the {sessionLabels.singular.toLowerCase()}. Written so a
-    reader can tell whether it has been met without asking you.
+  {/* "The spec" is the right default on an assessment, where the list is a
+      marking contract. On a workshop it is a packing list — a student
+      skimming the page the night before is looking for what to turn up
+      with, and should not have to read a paragraph to find out that is
+      what this section is. */}
+  <SpecList spec={session.data.spec} heading="What to bring">
+    Written so you can tell whether you have met it without asking us.
   </SpecList>
   <TeachingTeam teachers={session.data.teachers} />
   <RelatedContent entry={session} collections={graphCollections} />

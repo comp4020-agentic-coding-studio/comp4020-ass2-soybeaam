@@ -6,7 +6,7 @@ import SpecList from "astro-course-university/components/SpecList.astro";
 import Callout from "astro-theme-university/components/Callout.astro";
 import ContentLayout from "../../layouts/SiteContentLayout.astro";
 import MarkingModel from "../../components/MarkingModel.astro";
-import { formatCourseDate } from "../../lib/dates";
+import { formatCourseDueDate } from "../../lib/dates";
 import { heroForSlug } from "../../lib/hero-images";
 import { graphCollections, siteConfig } from "../../site-config";
 
@@ -42,7 +42,14 @@ const hero = heroForSlug(assessment.id);
       </Callout>
     )
   }
-  <p><strong>Due:</strong> {formatCourseDate(assessment.data.due)} · <strong>Weight:</strong> {assessment.data.weight}%</p>
+  {/* The time is printed here, not just the date: every `due:` in the
+      collection is a midday deadline, and a date-only "11 May 2026" reads as
+      end-of-day to anyone who takes it literally. The index grid stays
+      date-only — see the note on `.assessment-stat` in AssessmentsGrid. */}
+  <p>
+    <strong>Due:</strong> {formatCourseDueDate(assessment.data.due)} <span class="due-zone">Canberra time</span> ·
+    <strong>Weight:</strong> {assessment.data.weight}%
+  </p>
   <Content />
   <SpecList spec={assessment.data.spec}>
     The brief poses the problem and leaves room for a response. The spec is the
@@ -52,3 +59,13 @@ const hero = heroForSlug(assessment.id);
   {assessment.data.marking && <MarkingModel marking={assessment.data.marking} />}
   <RelatedContent entry={assessment} collections={graphCollections} />
 </ContentLayout>
+
+<style>
+  /* Secondary to the deadline it qualifies, but present: a student abroad
+     needs to know which clock the time is on, and it should not compete with
+     the date and weight either side of it. */
+  .due-zone {
+    color: var(--at-text-secondary);
+    font-size: var(--at-font-size-sm);
+  }
+</style>

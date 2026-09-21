@@ -11,6 +11,9 @@ related:
   - sessions/08-blame-shifting
   - assessments/case-study-presentation
 slides: /decks/week-08/
+links:
+  - label: Techniques of Neutralization (Sykes and Matza, 1957)
+    url: https://doi.org/10.2307/2089195
 ---
 
 Diffusion of responsibility scales. A group under pressure can manufacture a
@@ -29,4 +32,5 @@ By the end of this lecture, you will be able to:
 - scapegoating as diffusion of responsibility performed by a group
 - why a scapegoat has to be plausible but not sympathetic
 - what this predicts about your week-9 case studies
+- where the pattern was first named: Sykes and Matza on neutralisation, linked below
 - reading before next week: none; case-study research begins now

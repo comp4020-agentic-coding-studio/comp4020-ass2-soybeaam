@@ -10,6 +10,9 @@ teachers:
 slides: /decks/week-01/
 related:
   - sessions/01-getting-started
+links:
+  - label: A Plea for Excuses (Austin, 1957)
+    url: https://doi.org/10.1093/aristotelian/57.1.1
 ---
 
 An excuse is not an apology, and confusing the two is the single most common
@@ -28,4 +31,5 @@ By the end of this lecture, you will be able to:
 - what an excuse is doing that "sorry" is not
 - the three-part taxonomy: denial, justification, diffusion of responsibility
 - why the taxonomy will keep breaking all semester, and why that is useful
+- where the taxonomy comes from: Austin's plea for excuses, linked below
 - reading before week 2: none; bring your own excuses instead

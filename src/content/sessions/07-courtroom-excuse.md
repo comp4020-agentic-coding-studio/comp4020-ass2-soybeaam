@@ -16,7 +16,9 @@ related:
 
 ## Before the workshop
 
-Read the short case brief linked from this week's [lecture](/lectures/week-07/).
+Read Botterell's short primer on the distinction between justification and
+excuse, linked at the foot of this week's
+[lecture page](/lectures/week-07/).
 
 ## In the workshop
 

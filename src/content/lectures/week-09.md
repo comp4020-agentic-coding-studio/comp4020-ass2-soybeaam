@@ -26,4 +26,4 @@ By the end of this week, you will be able to:
 ## Outline
 
 - presentations run in the workshop, in the posted order
-- reading before next week: the cross-cultural excerpt linked from week 10
+- reading before next week: Hu on the Chinese concepts of face, on the [week 10 lecture page](/lectures/week-10/)

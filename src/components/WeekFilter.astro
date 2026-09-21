@@ -42,6 +42,10 @@ const { scope, weeks } = Astro.props;
       Clear
     </button>
   </div>
+  {/* Filtering is otherwise silent: rows just stop existing. The visible count
+      badge can't carry the news either, because it lives inside a button whose
+      explicit aria-label replaces its entire accessible name. */}
+  <p class="sr-only" role="status" aria-live="polite" data-week-filter-status></p>
 </div>
 
 <script>
@@ -61,9 +65,15 @@ const { scope, weeks } = Astro.props;
       const checkboxes = Array.from(root.querySelectorAll<HTMLInputElement>('input[type="checkbox"]'));
       const clearBtn = root.querySelector<HTMLButtonElement>(".week-filter-clear");
 
+      const status = root.querySelector<HTMLElement>("[data-week-filter-status]");
+
+      // Hiding the panel destroys whatever was focused inside it, which drops
+      // focus to <body> and sends a keyboard user back to the top of the page.
+      // Same thing SearchEnhancements does when its dialog closes.
       const closePanel = () => {
         panel.hidden = true;
         toggle.setAttribute("aria-expanded", "false");
+        toggle.focus();
       };
 
       const apply = () => {
@@ -75,6 +85,13 @@ const { scope, weeks } = Astro.props;
         if (count) {
           count.hidden = selected.length === 0;
           count.textContent = String(selected.length);
+        }
+        if (status) {
+          const shown = items.filter((item) => !item.hidden).length;
+          status.textContent =
+            selected.length === 0
+              ? `Showing all ${items.length} weeks`
+              : `Showing ${shown} of ${items.length}, filtered to week${selected.length > 1 ? "s" : ""} ${selected.join(", ")}`;
         }
       };
 
@@ -98,9 +115,12 @@ const { scope, weeks } = Astro.props;
       for (const checkbox of checkboxes) {
         checkbox.addEventListener("change", apply);
       }
+      // Clear hides itself the moment it runs, so without this the focused
+      // element vanishes mid-interaction and focus falls back to <body>.
       clearBtn?.addEventListener("click", () => {
         for (const checkbox of checkboxes) checkbox.checked = false;
         apply();
+        toggle.focus();
       });
     }
   }
@@ -114,6 +134,17 @@ const { scope, weeks } = Astro.props;
     position: relative;
     display: inline-block;
     margin: 0 0 var(--at-spacing-lg);
+  }
+
+  /* Same idiom as AppSidebar/RightSidebar; Astro scopes styles per component,
+     so it has to be declared here too rather than inherited. */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
   }
 
   /* Square icon button. Sized to the 2.25rem touch-target floor rather than
@@ -202,9 +233,10 @@ const { scope, weeks } = Astro.props;
     gap: 0.3rem;
     font-size: 0.85rem;
     /* Week chips are the primary filter control on a phone — size them for a
-       thumb, not a mouse pointer. */
+       thumb, not a mouse pointer. 2.25rem is the floor CLAUDE.md sets for any
+       control; these were the one place still at 2rem, which is under it. */
     padding: 0.35rem 0.7rem;
-    min-block-size: 2rem;
+    min-block-size: 2.25rem;
     border: 1px solid var(--at-divider-strong);
     border-radius: 999px;
     cursor: pointer;
@@ -216,7 +248,14 @@ const { scope, weeks } = Astro.props;
     font-weight: 600;
   }
 
+  /* Same 2.25rem floor as the chips above it: this is a control inside a panel
+     that is opened by thumb, and at `padding: 0` it was a ~1.2rem-tall line of
+     text. Inline-flex rather than extra padding so the text stays flush with
+     the chips' left edge instead of indenting. */
   .week-filter-clear {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 2.25rem;
     font-size: 0.85rem;
     text-decoration: underline;
     border: none;
@@ -224,5 +263,9 @@ const { scope, weeks } = Astro.props;
     color: var(--at-text-secondary);
     cursor: pointer;
     padding: 0;
+  }
+
+  .week-filter-clear[hidden] {
+    display: none;
   }
 </style>

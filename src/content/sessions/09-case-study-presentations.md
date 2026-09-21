@@ -29,5 +29,5 @@ observed, even though the mark sits with the presenting group.
 
 ## Afterwards
 
-Nothing due. Start reading for week 10's material on cross-cultural
-excuse-making.
+Nothing due. Start on week 10's reading, linked at the foot of the
+[week 10 lecture page](/lectures/week-10/).

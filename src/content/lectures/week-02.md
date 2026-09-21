@@ -10,6 +10,9 @@ teachers:
 related:
   - sessions/02-grammar-of-deflection
 slides: /decks/week-02/
+links:
+  - label: Accounts (Scott and Lyman, 1968)
+    url: https://doi.org/10.2307/2092239
 ---
 
 Where week 1 asked *what* an excuse does, week 2 asks *how*, down to the
@@ -28,4 +31,5 @@ By the end of this lecture, you will be able to:
 - passive voice as agent-removal: "mistakes were made"
 - hedges that buy time: "look", "to be fair", "in fairness"
 - nominalisation: turning an action into a noun to hide who did it
-- reading before next week: none; bring your three rewrites from the workshop
+- where the vocabulary comes from: Scott and Lyman on accounts, linked below
+- reading before next week: Festinger and Carlsmith's forced-compliance experiment, on the [week 3 lecture page](/lectures/week-03/); bring your three rewrites too

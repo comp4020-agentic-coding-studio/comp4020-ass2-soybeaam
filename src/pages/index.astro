@@ -6,6 +6,7 @@ import heroImage from "../assets/images/hero-home.avif";
 import { getPublishedCollection } from "astro-course-university/content";
 import { withBase } from "astro-theme-university/url";
 import { courseMeta } from "../course-config";
+import { formatCourseDate } from "../lib/dates";
 import { sessionLabels, siteConfig } from "../site-config";
 
 const [lectures, sessions] = await Promise.all([
@@ -41,6 +42,36 @@ for (const entry of sessions) {
   });
 }
 const orderedWeeks = [...weeks.values()].sort((a, b) => a.week - b.week);
+
+// "How the course runs" below is derived from the same dates the week list
+// renders from, so moving a week moves the prose with it rather than leaving
+// a sentence quietly asserting something the schedule no longer does.
+// `date:` coerces to UTC midnight, so the weekday has to be read in UTC —
+// `getDay()` would show the day before to anyone west of Greenwich.
+const DAY_MS = 86_400_000;
+const sessionSchedule = sessions
+  .map((entry) => entry.data as { week: number; date: Date })
+  .sort((a, b) => a.date.getTime() - b.date.getTime());
+
+const meetingDays = new Set(sessionSchedule.map((entry) => entry.date.getUTCDay()));
+const meetingDay =
+  meetingDays.size === 1 && sessionSchedule.length > 0
+    ? new Intl.DateTimeFormat("en-AU", { weekday: "long", timeZone: "UTC" }).format(
+        sessionSchedule[0].date
+      )
+    : null;
+
+// More than a week between consecutive teaching weeks is a break. The week
+// list shows it only as an absence, and the absence is invisible there: the
+// break falls *between* two consecutively numbered weeks, so the numbering
+// runs straight through it. Only the dates give it away, so the dates are
+// what this reports.
+const teachingBreaks = sessionSchedule.slice(1).flatMap((next, index) => {
+  const previous = sessionSchedule[index];
+  const gapDays = (next.date.getTime() - previous.date.getTime()) / DAY_MS;
+  if (gapDays <= 7.5) return [];
+  return [{ starts: new Date(previous.date.getTime() + 7 * DAY_MS), previous, next }];
+});
 ---
 
 <ContentLayout
@@ -72,6 +103,27 @@ const orderedWeeks = [...weeks.values()].sort((a, b) => a.week - b.week);
     communications, law, psychology, design, or anyone who negotiates,
     manages, or apologises for a living.
   </p>
+
+  <h2>How it runs</h2>
+  <p>
+    {courseMeta.session} {courseMeta.year}, from {formatCourseDate(courseMeta.startDate)} to {
+      formatCourseDate(courseMeta.endDate)
+    }. {sessionSchedule.length} teaching weeks, each one lecture and one {
+      sessionLabels.singular.toLowerCase()
+    }{meetingDay && `, both on a ${meetingDay}`}. Budget around ten hours a week
+    across the two classes, the week's excuse, and your own writing.
+  </p>
+  {
+    teachingBreaks.map((gap) => (
+      <p>
+        There is no teaching in the week of {formatCourseDate(gap.starts)}.
+        Week {gap.previous.week} meets on {formatCourseDate(gap.previous.date)}
+        and week {gap.next.week} on {formatCourseDate(gap.next.date)} — the
+        numbering runs straight through, so check the date rather than the week
+        number when you plan around the break.
+      </p>
+    ))
+  }
 
   <h2>Week by week</h2>
   <ol class="week-list">
@@ -109,6 +161,13 @@ const orderedWeeks = [...weeks.values()].sort((a, b) => a.week - b.week);
 
   <h2>Where to go next</h2>
   <CardGrid>
+    {/* Lectures are half the week and the week list above links them, but
+        this grid used to offer every destination in the nav except that one
+        — a reader who navigates by cards was told the course had workshops
+        and assessment and no lectures. */}
+    <Card title="Lectures" href="/lectures/">
+      <p>The week's argument, and the slides that go with it.</p>
+    </Card>
     <Card title={sessionLabels.plural} href="/sessions/">
       <p>The weekly schedule and what happens in each teaching session.</p>
     </Card>
@@ -171,6 +230,11 @@ const orderedWeeks = [...weeks.values()].sort((a, b) => a.week - b.week);
     display: flex;
     align-items: center;
     gap: var(--at-spacing-xs);
+    /* This summary is the only way into a week's contents on the home page,
+       and it is the first control a phone visitor meets. At its natural line
+       height it was ~1.6rem tall — under the 2.25rem floor, and a miss just
+       collapses the week the reader was aiming for. */
+    min-block-size: 2.25rem;
     font-weight: 600;
     color: var(--at-primary);
     cursor: pointer;

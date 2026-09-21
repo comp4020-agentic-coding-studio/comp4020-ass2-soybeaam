@@ -10,22 +10,37 @@
 import { getPublishedCollection } from "astro-course-university/content";
 import { withBase } from "astro-theme-university/url";
 import Icon from "astro-theme-university/components/Icon.astro";
+import { sessionLabels } from "../site-config";
 
-const lectures = (await getPublishedCollection("lectures"))
-  .slice()
-  .sort((a, b) => (a.data as { week: number }).week - (b.data as { week: number }).week)
-  .map((entry) => ({
-    label: `Week ${(entry.data as { week: number }).week}`,
-    href: withBase(`/lectures/${entry.id}/`),
-  }));
+// Week-numbered collections list by week; the week *is* the name a reader
+// navigates by here, and it keeps the two paired dropdowns identical. The
+// assessments below list by title instead because they aren't week-numbered.
+//
+// Takes the awaited entries rather than a collection name: getPublishedCollection
+// is generic over that name, so passing a "lectures" | "sessions" union would
+// return a union of two array types, and .sort()/.map() across that union has
+// no compatible signature.
+const byWeek = (entries: { id: string; data: unknown }[], segment: string) =>
+  entries
+    .map((entry) => ({ id: entry.id, week: (entry.data as { week: number }).week }))
+    .sort((a, b) => a.week - b.week)
+    .map(({ id, week }) => ({ label: `Week ${week}`, href: withBase(`/${segment}/${id}/`) }));
+
+const lectures = byWeek(await getPublishedCollection("lectures"), "lectures");
+const sessions = byWeek(await getPublishedCollection("sessions"), "sessions");
 
 const assessments = (await getPublishedCollection("assessments"))
   .slice()
   .sort((a, b) => new Date(a.data.due).getTime() - new Date(b.data.due).getTime())
   .map((entry) => ({ label: entry.data.title, href: withBase(`/assessments/${entry.id}/`) }));
 
+// Workshops sit here for the same reason lectures do: below 768px the left
+// sidebar is `display: none`, so without a dropdown the only route to a
+// specific week's workshop is the header link to the index and a scroll —
+// while lectures, the other half of the same week, are one tap away.
 const dropdowns = [
   { target: withBase("/lectures/"), label: "Lectures", items: lectures },
+  { target: withBase("/sessions/"), label: sessionLabels.plural, items: sessions },
   { target: withBase("/assessments/"), label: "Assessment", items: assessments },
 ];
 ---

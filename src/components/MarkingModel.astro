@@ -19,7 +19,17 @@ const { marking } = Astro.props;
 <section aria-labelledby="how-marked">
   <h2 id="how-marked">How it is marked</h2>
   {marking.mode === "holistic" ? (
-    <p>{marking.description}</p>
+    <Fragment>
+      {/* Three of the four assessments render a criterion table under this
+          same heading, so reaching the fourth — the 40% one — and finding a
+          bare paragraph reads like a rubric that failed to load. Say that
+          there isn't one before saying what stands in its place. */}
+      <p>
+        This piece carries no criterion weights. It is marked holistically,
+        against the description below, rather than scored part by part.
+      </p>
+      <p>{marking.description}</p>
+    </Fragment>
   ) : (
     <table>
       <thead><tr><th scope="col">Criterion</th><th scope="col">Weight</th></tr></thead>
