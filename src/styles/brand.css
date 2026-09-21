@@ -338,7 +338,7 @@ body:has(.at-sidebar) .at-main > h1 {
    desktop (where the sidebar is visible) drop the nav bar's copy rather than
    showing the brand twice. Below 768px the sidebar (and its header) is
    hidden entirely, so the nav keeps its own brand as the only wordmark. */
-@media (width > 768px) {
+@media (width >= 769px) {
   body:has(.at-sidebar) .at-nav-brand {
     display: none;
   }
@@ -379,20 +379,6 @@ body:has(.at-sidebar) .at-main > h1 {
 
 .at-search-trigger {
   flex-shrink: 0;
-}
-
-/* Top nav carries only search once the left sidebar is on screen: the sidebar
-   lists every destination the nav links did, so the row was duplicating it.
-   The boundary is `> 768px`, not `>= 768px`, and that matters: sidebar.css
-   hides .at-sidebar at `<= 768px` while the theme hides .at-nav-toggle at
-   `>= 640px`. Hiding the links at >= 768px would leave 768px exactly with no
-   sidebar, no hamburger and no links — no navigation at all. Below this the
-   wrapper is left alone so the hamburger drawer (< 640px) and the inline row
-   (640–768px, where the sidebar has not appeared yet) both still work. */
-@media (width > 768px) {
-  .at-nav-links-wrapper {
-    display: none;
-  }
 }
 
 /* The theme gives the input `flex: 1`, which leaves `min-width: auto` — an
@@ -460,6 +446,11 @@ body:has(.at-sidebar) .at-main > h1 {
 
 .at-nav-logo {
   height: 2rem;
+}
+
+.at-sidebar-content {
+  margin-block: var(--at-spacing-sm);
+  padding: var(--at-spacing-lg);
 }
 
 /* Breadcrumbs render as a direct .at-main child (a sibling of the h1/.lead
@@ -743,7 +734,7 @@ a.at-card:focus-visible {
        root size, so scaling it down here shrinks body text and headings
        together in proportion, rather than needing a separate override per
        element. */
-    --at-font-size-base: 0.9375rem;
+    --at-font-size-base: 1rem;
   }
 
   /* Phone side padding is 1rem TOTAL, not 1rem twice. --at-gutter and
